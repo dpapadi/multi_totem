@@ -75,7 +75,7 @@ class FlowRemovalHandler (EventMixin):
         args = (event.ofp.match, str(connection.dpid), str(time.time()))
         b = pickle.dumps(args)
         a = server.move_to_expired(b)
-        c = pickle.loads(a)
+        #c = pickle.loads(a)
         log2.debug('Flow Removed from switch: %s', event.connection)
         # log2.debug(c)
 
