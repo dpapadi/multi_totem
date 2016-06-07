@@ -128,9 +128,8 @@ def sflowParser():
 
             try:
                 server.collect_sflow(b)
-            except:
-
-                print 'Unknown Error'
+            except  Exception,e:
+                print   str(e)
 
         # ---- Condition to split the fields of flowsamples
         if switch == 1:
