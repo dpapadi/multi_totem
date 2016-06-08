@@ -380,6 +380,7 @@ def collect_sflow(flow):
     print 'mac_table[dpid]: '
     print mac_table[dpid]
     raw_input()
+
     match['in_port'] = mac_table[dpid][match['dl_src']]
 
     # print 'OpenFlow Match:'
