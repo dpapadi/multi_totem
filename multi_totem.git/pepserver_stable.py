@@ -375,6 +375,8 @@ def collect_sflow(flow):
             match[mapper[a]] = sflow.pop(a)
 
     # modify ingress port using mac_table
+    print 'dl_src: '
+    print match['dl_src']
     match['in_port'] = mac_table[dpid][match['dl_src']]
 
     # print 'OpenFlow Match:'
