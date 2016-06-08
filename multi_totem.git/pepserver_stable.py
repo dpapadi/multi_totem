@@ -262,8 +262,10 @@ def construct_new_entry(serialized_match):
         if dpid not in mac_table:
             mac_table[dpid] = {}
             mac_table[dpid][hlp['dl_src']] = hlp['in_port']
+            print 'mac table updated'
         else:
             mac_table[dpid][hlp['dl_src']] = hlp['in_port']
+            print 'mac table updated'
 
         # assign the flow entry to a flowspace
         # assign_flowspace(d, dpid)
@@ -276,8 +278,10 @@ def construct_new_entry(serialized_match):
     if dpid not in mac_table:
         mac_table[dpid] = {}
         mac_table[dpid][hlp['dl_src']] = hlp['in_port']
+        print 'mac table updated'
     else:
         mac_table[dpid][hlp['dl_src']] = hlp['in_port']
+        print 'mac table updated'
 
     # assign_flowspace(d, dpid)
 
