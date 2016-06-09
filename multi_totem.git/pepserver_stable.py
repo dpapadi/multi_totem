@@ -341,9 +341,9 @@ def collect_sflow(flow):
 
     # convert dl_type
     dpid = sflow.pop('dpid')
-    print dpid
-    dpid = 256
-    print dpid
+    #print dpid
+    #dpid = 256
+    #print dpid
     match['dl_type'] = sflow.pop('dl_type')
 
     # manipulate VLAN tag
@@ -382,8 +382,8 @@ def collect_sflow(flow):
             match[mapper[a]] = sflow.pop(a)
 
     # modify ingress port using mac_table
-    print 'mac_table[dpid]: '
-    print mac_table[dpid][match['dl_src']]
+    #print 'mac_table[dpid]: '
+    #print mac_table[dpid][match['dl_src']]
     try:
         match['in_port'] = mac_table[dpid][match['dl_src']]
     except Exception, g:
