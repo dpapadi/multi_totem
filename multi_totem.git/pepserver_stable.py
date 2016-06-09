@@ -383,9 +383,14 @@ def collect_sflow(flow):
 
     # modify ingress port using mac_table
     print 'mac_table[dpid]: '
-    print mac_table[dpid]
+    print mac_table[dpid][match['dl_src']]
+    try:
+        match['in_port'] = mac_table[dpid][match['dl_src']]
+    except Exception, g:
+        print str(g)
+        match['in_port'] = 0
 
-    match['in_port'] = mac_table[dpid][match['dl_src']]
+
 
     # print 'OpenFlow Match:'
     # print match
