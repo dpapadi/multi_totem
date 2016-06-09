@@ -342,7 +342,7 @@ def collect_sflow(flow):
     # convert dl_type
     dpid = sflow.pop('dpid')
     #print dpid
-    #dpid = 256
+    dpid = '256'
     #print dpid
     match['dl_type'] = sflow.pop('dl_type')
 
