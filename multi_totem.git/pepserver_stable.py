@@ -456,11 +456,11 @@ def collect_sflow(flow):
             else:
                 print 'Hash Reconstrution failed.\n'
     except Exception, e:
+        print str(e)
         print 'Error caught.\nPrinting match field'
         print sflow
         print match
         print 'This should not have happened'
-        print str(e)
     # print ("Switch: %s,\t sFlow(Hash): %s" % (dpid, d))
 
 
