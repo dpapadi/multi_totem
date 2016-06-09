@@ -342,7 +342,7 @@ def collect_sflow(flow):
     # convert dl_type
     dpid = sflow.pop('dpid')
     #print dpid
-    dpid = '256'
+    #dpid = '256'
     #print dpid
     match['dl_type'] = sflow.pop('dl_type')
 
@@ -386,7 +386,7 @@ def collect_sflow(flow):
     #print mac_table[dpid][match['dl_src']]
     try:
         match['in_port'] = mac_table[dpid][match['dl_src']]
-    except Exception, g:
+    except Exception,g:
         print str(g)
         match['in_port'] = 0
 
