@@ -151,6 +151,7 @@ if __name__ == "__main__":
                 for line in f:
                     (key, val) = line.split()
                     sflow_dpid[key] = val
+            print hi
             print sflow_dpid
             sflowParser()
         except IOError:
