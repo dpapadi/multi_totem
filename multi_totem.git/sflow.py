@@ -114,8 +114,6 @@ def sflowParser():
                 flow['sourceId'] = flow['sourceId'][3:]
                 flow['dpid'] = str(int(flow['sourceId']) + 1)
             else:
-                print 'before the error: '
-                print flow['sourceId'][3:]
                 flow['dpid'] = sflow_dpid[flow['sourceId']]
 
             print 'flow:'
