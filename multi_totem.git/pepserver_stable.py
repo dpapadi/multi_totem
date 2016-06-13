@@ -135,6 +135,7 @@ def assign_flowspace(hash_val, dpid):
         else:
             # exhausted flow rule, so flowspace is found
             active[dpid][hash_val]['slice_Owner'] = flowspace[a]['slice-action'][0]['slice-name']
+            print 'slice owner'
             print active[dpid][hash_val]['slice_Owner']
             break
     else:
