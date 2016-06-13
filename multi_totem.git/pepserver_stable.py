@@ -72,6 +72,10 @@ def assign_flowspace(hash_val, dpid):
 	               'nw_proto', 'nw_src', 'nw_dst', 'nw_tos', 'tp_src', 'tp_dst']
 
     # List throught all flowspace rules
+    print 'assign_flowspace inpute: '
+    print 'hash_val, dpid'
+    print hash_val
+    print dpid
     for a in range(0, len(flowspace)):
         # if we examine a flowspace rule that refers to another dpid, continue
         if flowspace[a]['dpid'][-1] != dpid:
