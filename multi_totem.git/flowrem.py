@@ -17,7 +17,7 @@ log1 = core.getLogger("Flow Installed")
 log2 = core.getLogger("Flow Removed")
 
 # Create a new jsonrpclib.Server object, bound to an IP
-server = jsonrpclib.Server('http://localhost:8081')
+server = jsonrpclib.Server('http://localhost:8085')
 
 
 class CustomEvent(Event):
