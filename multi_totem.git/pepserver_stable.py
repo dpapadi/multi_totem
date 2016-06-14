@@ -270,6 +270,7 @@ def construct_new_entry(serialized_match):
 	# else increment a counter measuring multiple packetIns
     else:
         active[dpid][d]['counters']['mult_Packet_in'] += 1
+        hlp = active[dpid][d]['match']
 
 
     # MAC Table
