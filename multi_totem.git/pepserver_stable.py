@@ -72,7 +72,7 @@ def assign_flowspace(hash_val, dpid):
 	               'nw_proto', 'nw_src', 'nw_dst', 'nw_tos', 'tp_src', 'tp_dst']
 
     # List throught all flowspace rules
-    print 'assign_flowspace inpute: '
+    print 'assign_flowspace input: '
     print 'hash_val, dpid'
     print hash_val
     print dpid
@@ -90,6 +90,7 @@ def assign_flowspace(hash_val, dpid):
                 # flowspace field is not a wildcard
                 # if flow space does not  have the same value, break
                 # print '2'
+                print 'is NONE'
                 break
             elif flowspace[a]['match'][k] == active[dpid][hash_val]['match'][k]:
                 # if both above conditions are not met, check if their values are identical
@@ -104,6 +105,7 @@ def assign_flowspace(hash_val, dpid):
 
                     if len(fsp) == 1:
                         # if length is equal to 1 its just an IP ( A.B.C.D ) not a subnet
+                        print 'len(fsp)==1'
                         break
                     else:
                         # A.B.C.D/M
@@ -117,6 +119,7 @@ def assign_flowspace(hash_val, dpid):
                             if (unpack("!L", inet_aton(frl[0]))[0] & fsp_mask) == unpack("!L", inet_aton(fsp[0]))[0]:
                                 continue
                             else:
+                                print 'not unpack'
                                 break
                         else:
                             # flow rule is a.b.c.d/m
@@ -125,15 +128,18 @@ def assign_flowspace(hash_val, dpid):
                             frl_mask = int ((tmp * '1' + (32 - tmp) * '0'), 2)
 
                             if frl_mask > fsp_mask:
+                                print 'frl_mask boolean'
                                 break
                             elif (unpack("!L", inet_aton(frl[0]))[0] & fsp_mask) == unpack("!L", inet_aton(fsp[0]))[0]:
                                 continue
                             else:
+                                print 'unpack boolean'
                                 break
 
                 else:
                     # not same value, (or something else)
                     # print '4'
+                    print 'last else'
                     break
 
         else:
