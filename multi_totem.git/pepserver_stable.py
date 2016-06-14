@@ -273,7 +273,7 @@ def construct_new_entry(serialized_match):
             mac_table[dpid][hlp['dl_src']] = hlp['in_port']
 
         # assign the flow entry to a flowspace
-        # assign_flowspace(d, dpid)
+         assign_flowspace(d, dpid)
 	# else increment a counter measuring multiple packetIns
     else:
         active[dpid][d]['counters']['mult_Packet_in'] += 1
@@ -286,7 +286,7 @@ def construct_new_entry(serialized_match):
     else:
         mac_table[dpid][hlp['dl_src']] = hlp['in_port']
 
-    # assign_flowspace(d, dpid)
+    assign_flowspace(d, dpid)
 
 
 def move_to_expired(serialized_match):
