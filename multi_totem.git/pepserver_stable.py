@@ -76,6 +76,8 @@ def assign_flowspace(hash_val, dpid):
     print 'hash_val, dpid'
     print hash_val
     print dpid
+    print 'flowspace: '
+    print flowspace
     for a in range(0, len(flowspace)):
         # if we examine a flowspace rule that refers to another dpid, continue
         if flowspace[a]['dpid'][-1] != dpid:
