@@ -10,7 +10,7 @@ import jsonrpclib
 sflow_dpid = {}
 
 # Crate a new object of class jsonrpclib.Server
-server = jsonrpclib.Server('http://localhost:8080')
+server = jsonrpclib.Server('http://localhost:8081')
 
 
 # https://stackoverflow.com/questions/1283061/python-capture-popen-stdout-and-display-on-console
