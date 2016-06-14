@@ -393,7 +393,8 @@ def collect_sflow(flow):
 
         print 'Printing Hash: %d\n\n' % d
         # print 'Printing of all flows of the DPID: %s' % dpid
-        # print active[dpid]
+        print'this active: '
+        print active[dpid]
 
         if d in active[dpid]:
             print 'Hash Found'
