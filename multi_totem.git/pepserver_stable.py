@@ -448,7 +448,7 @@ def collect_sflow(flow):
                     break
             else:
                 print 'Hash Reconstrution failed.\n'
-    except Exception, sd:
+    except Exception,sd:
         print str(sd)
         print 'Error caught.\nPrinting match field'
         print sflow
