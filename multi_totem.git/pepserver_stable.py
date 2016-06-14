@@ -72,12 +72,6 @@ def assign_flowspace(hash_val, dpid):
 	               'nw_proto', 'nw_src', 'nw_dst', 'nw_tos', 'tp_src', 'tp_dst']
 
     # List throught all flowspace rules
-    print 'assign_flowspace input: '
-    print 'hash_val, dpid'
-    print hash_val
-    print dpid
-    print 'flowspace: '
-    print flowspace
     for a in range(0, len(flowspace)):
         # if we examine a flowspace rule that refers to another dpid, continue
         if flowspace[a]['dpid'][-1] != dpid:
@@ -92,7 +86,6 @@ def assign_flowspace(hash_val, dpid):
                 # flowspace field is not a wildcard
                 # if flow space does not  have the same value, break
                 # print '2'
-                print 'is NONE'
                 break
             elif flowspace[a]['match'][k] == active[dpid][hash_val]['match'][k]:
                 # if both above conditions are not met, check if their values are identical
@@ -107,7 +100,6 @@ def assign_flowspace(hash_val, dpid):
 
                     if len(fsp) == 1:
                         # if length is equal to 1 its just an IP ( A.B.C.D ) not a subnet
-                        print 'len(fsp)==1'
                         break
                     else:
                         # A.B.C.D/M
@@ -121,7 +113,6 @@ def assign_flowspace(hash_val, dpid):
                             if (unpack("!L", inet_aton(frl[0]))[0] & fsp_mask) == unpack("!L", inet_aton(fsp[0]))[0]:
                                 continue
                             else:
-                                print 'not unpack'
                                 break
                         else:
                             # flow rule is a.b.c.d/m
@@ -129,32 +120,26 @@ def assign_flowspace(hash_val, dpid):
                             tmp = int (frl[1])
                             frl_mask = int ((tmp * '1' + (32 - tmp) * '0'), 2)
 
-                            if frl_mask > fsp_mask:
-                                print 'frl_mask boolean'
+                            if frl_mask > fsp_mask :
                                 break
                             elif (unpack("!L", inet_aton(frl[0]))[0] & fsp_mask) == unpack("!L", inet_aton(fsp[0]))[0]:
                                 continue
                             else:
-                                print 'unpack boolean'
                                 break
 
                 else:
                     # not same value, (or something else)
                     # print '4'
-                    print 'last else'
                     break
 
         else:
             # exhausted flow rule, so flowspace is found
             active[dpid][hash_val]['slice_Owner'] = flowspace[a]['slice-action'][0]['slice-name']
-            print 'slice owner'
-            print active[dpid][hash_val]['slice_Owner']
             break
     else:
         # not part of any flowspace
         print 'Not part of any flowspace'
         active[dpid][hash_val]['slice_Owner'] = None
-        print active[dpid][hash_val]['slice_Owner']
 
 
 def return_active():
@@ -281,7 +266,7 @@ def construct_new_entry(serialized_match):
             mac_table[dpid][hlp['dl_src']] = hlp['in_port']
 
         # assign the flow entry to a flowspace
-        assign_flowspace(d, dpid)
+        # assign_flowspace(d, dpid)
 	# else increment a counter measuring multiple packetIns
     else:
         active[dpid][d]['counters']['mult_Packet_in'] += 1
@@ -294,7 +279,7 @@ def construct_new_entry(serialized_match):
     else:
         mac_table[dpid][hlp['dl_src']] = hlp['in_port']
 
-    assign_flowspace(d, dpid)
+    # assign_flowspace(d, dpid)
 
 
 def move_to_expired(serialized_match):
