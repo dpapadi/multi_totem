@@ -458,7 +458,7 @@ def collect_sflow(flow):
 
 if __name__ == "__main__":
     # binding server to port
-    server = SimpleJSONRPCServer(('localhost', 8080))
+    server = SimpleJSONRPCServer(('localhost', 8081))
 
     # register functions for usage
     server.register_function(construct_new_entry)
