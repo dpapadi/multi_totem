@@ -10,7 +10,7 @@ flow_match = ['in_port', 'dl_src', 'dl_dst', 'dl_type',
               'nw_tos', 'tp_src', 'tp_dst']
 
 import jsonrpclib
-server = jsonrpclib.Server('http://localhost:8080')
+server = jsonrpclib.Server('http://localhost:8085')
 
 
 def construct_hashed_sflow(match):
