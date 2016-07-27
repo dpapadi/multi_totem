@@ -47,7 +47,7 @@ def address_mapping(ten_id, ten_ip): #ten_id --> tenant id (example 1)
     for phIp, virtIp in tmp.iteritems():    #phIp   --> Ip visible to controller
         if virtIp == ten_ip:                #virtIp --> Ip visible to OVX
             print virtIp + "-->" + phIp
-            raw_input() #to test mapping
+            raw_in  put() #to test mapping
             return phIp
     else:
         print "There is no address mapping for %s in Tenant Network: %s" % ten_ip % ten_id
@@ -363,9 +363,9 @@ def collect_sflow(flow):
     #print dpid
     match['dl_type'] = sflow.pop('dl_type')
 
-    if sflow['srcIp'] not in known_addresses:
-        sflow['srcIp'] = address_mapping(1, sflow['srcIp'])
-        if sflow['srcIp'] == "NONE":
+    if sflow['srcIP'] not in known_addresses:
+        sflow['srcIP'] = address_mapping(1, sflow['srcIP'])
+        if sflow['srcIP'] == "NONE":
             print "No mapping found"
             return
 
