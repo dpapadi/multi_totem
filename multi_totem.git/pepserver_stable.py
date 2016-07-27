@@ -368,6 +368,7 @@ def collect_sflow(flow):
             print "No mapping found"
             return
 
+
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
         match['dl_vlan'] = 65535
