@@ -9,7 +9,7 @@ from socket import inet_aton
 
 #Directory of hypervisor's utils
 
-DIR = "/home/ovx/OpenVirteX/utils"
+HYP_DIR = "/home/ovx/OpenVirteX/utils"
 
 # Global Dictionaries
 
@@ -38,8 +38,8 @@ mapper = {'inputPort': 'in_port',
 known_addresses = ['10.0.0.30', '10.0.0.25', '10.0.0.33']
 
 
-def address_mapping(ten_id, ten_ip): #ten_ip --> tenant id (example 1)
-    os.chdir(DIR)                    #ten_ip --> IP to be de-virtualized
+def address_mapping(ten_id, ten_ip): #ten_id --> tenant id (example 1)
+    os.chdir(HYP_DIR)                #ten_ip --> IP to be de-virtualized
     commands = []
     commands.append("python ovxctl.py -n getVirtualAddressMapping %s \n" % ten_id)
     tmp = os.popen(commands[0]).read()
@@ -52,6 +52,7 @@ def address_mapping(ten_id, ten_ip): #ten_ip --> tenant id (example 1)
     else:
         print "There is no address mapping for %s in Tenant Network: %s" % ten_ip % ten_id
         return "NONE"
+
 def check_flowspace():
     """
 	:params None
