@@ -3,8 +3,13 @@
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 import pickle
 import hashlib
+import os #for address_mapping
 from struct import unpack
 from socket import inet_aton
+
+#Directory of hypervisor's utils
+
+DIR = "/home/ovx/OpenVirteX/utils"
 
 # Global Dictionaries
 
@@ -29,6 +34,24 @@ mapper = {'inputPort': 'in_port',
           'srcIP': 'nw_src',
           'dstIP': 'nw_dst'}
 
+#List of network known addresses
+known_addresses = ['10.0.0.30', '10.0.0.25', '10.0.0.33']
+
+
+def address_mapping(ten_id, ten_ip): #ten_ip --> tenant id (example 1)
+    os.chdir(DIR)                    #ten_ip --> IP to be de-virtualized
+    commands = []
+    commands.append("python ovxctl.py -n getVirtualAddressMapping %s \n" % ten_id)
+    tmp = os.popen(commands[0]).read()
+    tmp = ast.literal_eval(tmp) #converts string to dictionary
+    for phIp, virtIp in tmp.iteritems():    #phIp   --> Ip visible to controller
+        if virtIp == ten_ip:                #virtIp --> Ip visible to OVX
+            print virtIp + "-->" + phIp
+            raw_input() #to test mapping
+            return phIp
+    else:
+        print "There is no address mapping for %s in Tenant Network: %s" % ten_ip % ten_id
+        return "NONE"
 def check_flowspace():
     """
 	:params None
@@ -338,6 +361,12 @@ def collect_sflow(flow):
     #dpid = '256'
     #print dpid
     match['dl_type'] = sflow.pop('dl_type')
+
+    if sflow['srcIp'] not in known_addresses:
+        sflow['srcIp'] = address_mapping(1, sflow['srcIp'])
+        if sflow['srcIp'] == "NONE":
+            print "No mapping found"
+            return
 
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
