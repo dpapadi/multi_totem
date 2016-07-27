@@ -364,11 +364,14 @@ def collect_sflow(flow):
     #print dpid
     match['dl_type'] = sflow.pop('dl_type')
 
-    if sflow['srcIP'] not in known_addresses:
-        sflow['srcIP'] = address_mapping(1, sflow['srcIP'])
-        if sflow['srcIP'] == "NONE":
-            print "No mapping found"
-            return
+    if 'srcIP' not in sflow.keys():
+        return
+    else:
+        if sflow['srcIP'] not in known_addresses:
+            sflow['srcIP'] = address_mapping(1, sflow['srcIP'])
+            if sflow['srcIP'] == "NONE":
+                print "No mapping found"
+                return
 
 
     # manipulate VLAN tag
