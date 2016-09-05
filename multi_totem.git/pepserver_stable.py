@@ -48,7 +48,7 @@ def address_mapping(ten_id, ten_ip): #ten_id --> tenant id (example 1)
     for phIp, virtIp in tmp.iteritems():    #phIp   --> Ip visible to controller
         if virtIp == ten_ip:                #virtIp --> Ip visible to OVX
             print virtIp + "-->" + phIp
-            raw_input() #to test mapping
+            #raw_input() #to test mapping
             return phIp
     else:
         print "There is no address mapping for %s in Tenant Network: %s" % ten_ip % ten_id
@@ -365,6 +365,7 @@ def collect_sflow(flow):
     match['dl_type'] = sflow.pop('dl_type')
 
     if 'srcIP' not in sflow.keys():
+        print "Sample with no info" #sample due to OpenVirteX internal signals (?)
         return
     else:
         if sflow['srcIP'] not in known_addresses:
@@ -373,6 +374,15 @@ def collect_sflow(flow):
                 print "No mapping found"
                 return
 
+    if 'dstIP' not in sflow.keys():
+        #print "Sample with no info"  # sample due to OpenVirteX internal signals (?)
+        return
+    else:
+        if sflow['dstIP'] not in known_addresses:
+            sflow['dstIP'] = address_mapping(1, sflow['srcIP'])
+            if sflow['dstIP'] == "NONE":
+                print "No mapping found"
+                return
 
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
