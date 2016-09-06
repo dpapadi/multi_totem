@@ -51,7 +51,7 @@ def address_mapping(ten_id, ten_ip): #ten_id --> tenant id (example 1)
             #raw_input() #to test mapping
             return phIp
     else:
-        print "There is no address mapping for %s in Tenant Network: %s" % ten_ip % ten_id
+        print "There is no address mapping for %s in Tenant Network: %s" % (ten_ip , ten_id)
         return "NONE"
 
 def check_flowspace():
