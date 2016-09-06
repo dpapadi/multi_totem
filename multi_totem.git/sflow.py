@@ -119,6 +119,7 @@ def sflowParser():
                 flow['dpid'] = sflow_dpid[flow['sourceId']]
 
             print '2nd sourceID ' + flow['sourceId']
+            print 'dpid ' + flow['dpid']
 
             print 'flow:'
             print flow
