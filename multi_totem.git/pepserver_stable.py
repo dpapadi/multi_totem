@@ -262,7 +262,6 @@ def construct_new_entry(serialized_match):
     match = args[0]
     dpid = args[1]
     print "dpid "+dpid #temp
-    raw_input()
     time = float(args[2])
     # print '\n\n___Installing New Entry___'
 
