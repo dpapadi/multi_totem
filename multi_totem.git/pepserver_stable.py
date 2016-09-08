@@ -443,6 +443,7 @@ def collect_sflow(flow):
         # print 'Printing of all flows of the DPID: %s' % dpid
         print'this active: '
         print active[dpid]
+        print match['nw_src']
 
         if d in active[dpid]:
             print 'Hash Found'
