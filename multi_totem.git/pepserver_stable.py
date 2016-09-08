@@ -428,7 +428,7 @@ def collect_sflow(flow):
     try:
         match['in_port'] = mac_table[dpid][match['dl_src']]
     except Exception,g:
-        print str(g)
+        print 'hi ' + str(g)
         match['in_port'] = 0
 
 
