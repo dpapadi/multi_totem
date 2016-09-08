@@ -372,6 +372,7 @@ def collect_sflow(flow):
         return
     else:
         if sflow['srcIP'] not in known_addresses:
+            tmp = sflow['srcIP'] #debug issue
             sflow['srcIP'] = address_mapping(1, sflow['srcIP'])
             if sflow['srcIP'] == "NONE":
                 print "No mapping found"
@@ -443,7 +444,7 @@ def collect_sflow(flow):
         # print 'Printing of all flows of the DPID: %s' % dpid
         print'this active: '
         print active[dpid]
-        print match['nw_src']
+        print tmp
 
         if d in active[dpid]:
             print 'Hash Found'
