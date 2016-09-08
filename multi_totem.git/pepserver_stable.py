@@ -306,7 +306,7 @@ def construct_new_entry(serialized_match):
         mac_table[dpid][hlp['dl_src']] = hlp['in_port']
 
 
-    print mac_table
+    #print mac_table
 
     # assign_flowspace(d, dpid)
 
