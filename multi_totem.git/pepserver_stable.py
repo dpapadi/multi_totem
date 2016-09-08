@@ -444,8 +444,10 @@ def collect_sflow(flow):
         # print 'Printing of all flows of the DPID: %s' % dpid
         print'this active: '
         print active[dpid]
-        print tmp
-
+        try:
+            print tmp
+        except:
+            print 'No need!'
         if d in active[dpid]:
             print 'Hash Found'
             active[dpid][d]['counters']['counterX'] += 1
