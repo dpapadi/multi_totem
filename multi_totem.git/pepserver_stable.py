@@ -382,7 +382,7 @@ def collect_sflow(flow):
         return
     else:
         if sflow['dstIP'] not in known_addresses:
-            sflow['dstIP'] = address_mapping(1, sflow['srcIP'])
+            sflow['dstIP'] = address_mapping(1, sflow['dstIP'])
             if sflow['dstIP'] == "NONE":
                 print "No mapping found"
                 return
