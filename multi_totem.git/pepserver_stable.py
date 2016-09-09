@@ -36,22 +36,33 @@ mapper = {'inputPort': 'in_port',
           'dstIP': 'nw_dst'}
 
 #List of network known addresses
-known_addresses = ['10.0.0.30', '10.0.0.25', '10.0.0.33']
+#known_addresses = ['10.0.0.30', '10.0.0.25', '10.0.0.33']
 
 
-def address_mapping(ten_id, ten_ip): #ten_id --> tenant id (example 1)
+def address_mapping(ten_ip): #ten_id --> tenant id (example 1)
     os.chdir(HYP_DIR)                #ten_ip --> IP to be de-virtualized
+    ten_id = ten_ip[0]
     commands = []
-    commands.append("python ovxctl.py -n getVirtualAddressMapping %s \n" % ten_id)
-    tmp = os.popen(commands[0]).read()
-    tmp = ast.literal_eval(tmp) #converts string to dictionary
-    for phIp, virtIp in tmp.iteritems():    #phIp   --> Ip visible to controller
-        if virtIp == ten_ip:                #virtIp --> Ip visible to OVX
-            print virtIp + "-->" + phIp
-            return phIp
+    commands.append("python ovxctl.py -n getPhysicalHosts\n")
+    commands.append("python ovxctl.py -n getVirtualHosts %s\n" % ten_id)
+    tmp = ast.literal_eval(os.popen(commands[0]).read())
+    for k in tmp:
+        if k["ipAddress"] == ten_ip:
+            mac = k["mac"]
+            break
     else:
-        print "There is no address mapping for %s in Tenant Network: %s" % (ten_ip , ten_id)
+        print "There is no address mapping for %s in Tenant Network: %s" % (ten_ip, ten_id)
         return "NONE"
+    tmp = ast.literal_eval(os.popen(commands[1]).read())
+    for k in tmp:
+        if k["mac"] == mac:
+            ip = k["ipAddress"]
+            break
+    print "For physical ip: " + ten_ip + "from tenant network: " + ten_id
+    print "\nmac --> " + mac
+    print "ip  --> " + ip
+
+    return (mac, ip)
 
 def check_flowspace():
     """
@@ -371,9 +382,9 @@ def collect_sflow(flow):
         print "Sample with no info" #sample due to OpenVirteX internal signals (?)
         return
     else:
-        if sflow['srcIP'] not in known_addresses:
+        if sflow['srcIP'][:2] != '10':
             tmp = sflow['srcIP'] #debug issue
-            sflow['srcIP'] = address_mapping(1, sflow['srcIP'])
+            (sflow['srcMAC'],sflow['srcIP']) = address_mapping(sflow['srcIP'])
             if sflow['srcIP'] == "NONE":
                 print "No mapping found"
                 return
@@ -382,8 +393,8 @@ def collect_sflow(flow):
         #print "Sample with no info"  # sample due to OpenVirteX internal signals (?)
         return
     else:
-        if sflow['dstIP'] not in known_addresses:
-            sflow['dstIP'] = address_mapping(1, sflow['dstIP'])
+        if sflow['dstIP'][:2] != '10':
+            (sflow['dstMAC'],sflow['dstIP']) = address_mapping(sflow['dstIP'])
             if sflow['dstIP'] == "NONE":
                 print "No mapping found"
                 return
