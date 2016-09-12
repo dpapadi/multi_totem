@@ -472,6 +472,10 @@ def collect_sflow(flow):
             print "\n match: "
             print match
             print
+            print
+            print
+            print
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
             raw_input()
             # same functionality as in assign_flowspace()
             for kk, vv in active[dpid].iteritems():
