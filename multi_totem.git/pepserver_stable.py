@@ -469,6 +469,9 @@ def collect_sflow(flow):
             # print active
         else:
             print 'Hash not found'
+            print "\n match: "
+            print match
+            print
             # same functionality as in assign_flowspace()
             for kk, vv in active[dpid].iteritems():
                 for ll, ww in vv['match'].iteritems():
