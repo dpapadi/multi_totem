@@ -395,7 +395,7 @@ def collect_sflow(flow):
                 print "No mapping found for srcIP"
                 return
         else:
-            if sflow['srcMAC'][:8] == 'a4:23:05'
+            if sflow['srcMAC'][:8] == 'a4:23:05':
                 print 'Error within the sflow!' #??
                 raw_input()
                 return
