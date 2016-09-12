@@ -58,7 +58,7 @@ def address_mapping(ten_ip): #ten_id --> tenant id (example 1)
         if k["mac"] == mac:
             ip = k["ipAddress"]
             break
-    print "For physical ip: " + ten_ip + "from tenant network: " + ten_id
+    print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
     print "\nmac --> " + mac
     print "ip  --> " + ip
 
@@ -384,20 +384,15 @@ def collect_sflow(flow):
     else:
         if sflow['srcIP'][:2] != '10':
             tmp = sflow['srcIP'] #debug issue
-            (sflow['srcMAC'],sflow['srcIP']) = address_mapping(sflow['srcIP'])
+            (sflow['srcMAC'], sflow['srcIP']) = address_mapping(sflow['srcIP'])
+            (sflow['dstMAC'], sflow['dstIP']) = address_mapping(sflow['dstIP'])
+            if sflow['dstIP'] == "NONE":
+                print "No mapping found for dstIP"
+                return
             if sflow['srcIP'] == "NONE":
-                print "No mapping found"
+                print "No mapping found for srcIP"
                 return
 
-    if 'dstIP' not in sflow.keys():
-        #print "Sample with no info"  # sample due to OpenVirteX internal signals (?)
-        return
-    else:
-        if sflow['dstIP'][:2] != '10':
-            (sflow['dstMAC'],sflow['dstIP']) = address_mapping(sflow['dstIP'])
-            if sflow['dstIP'] == "NONE":
-                print "No mapping found"
-                return
 
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
