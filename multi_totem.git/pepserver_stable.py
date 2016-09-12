@@ -41,27 +41,29 @@ mapper = {'inputPort': 'in_port',
 
 def address_mapping(ten_ip): #ten_id --> tenant id (example 1)
     os.chdir(HYP_DIR)                #ten_ip --> IP to be de-virtualized
-    ten_id = ten_ip[0]
+    ten_id = ten_ip[0] #works for 1-9 tenants
     commands = []
     commands.append("python ovxctl.py -n getPhysicalHosts\n")
     commands.append("python ovxctl.py -n getVirtualHosts %s\n" % ten_id)
     tmp = ast.literal_eval(os.popen(commands[0]).read())
-    for k in tmp:
-        if k["ipAddress"] == ten_ip:
-            mac = k["mac"]
-            break
-    else:
-        print "There is no address mapping for %s in Tenant Network: %s" % (ten_ip, ten_id)
-        return "NONE"
-    tmp = ast.literal_eval(os.popen(commands[1]).read())
-    for k in tmp:
-        if k["mac"] == mac:
-            ip = k["ipAddress"]
-            break
-    print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
-    print "\nmac --> " + mac
-    print "ip  --> " + ip
-
+    try:
+        for k in tmp:
+            if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
+                mac = k["mac"]
+                break
+        else:
+            print "There is no address mapping for %s in Tenant Network: %s" % (ten_ip, ten_id)
+            return "NONE"
+        tmp = ast.literal_eval(os.popen(commands[1]).read())
+        for k in tmp:
+            if 'ipAddress' in k.keys() and k["mac"] == mac:
+                ip = k["ipAddress"]
+                break
+        print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
+        print "\nmac --> " + mac
+        print "ip  --> " + ip
+    except :
+        print "Error in address_mapping function!\n"
     return (mac, ip)
 
 def check_flowspace():
