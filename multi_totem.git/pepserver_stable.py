@@ -272,7 +272,8 @@ def construct_new_entry(serialized_match):
     """
     args = pickle.loads(serialized_match)
     match = args[0]
-    dpid = hex(int(args[1]))
+    dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
+    dpid = dpid[:-2]
     print "dpid "+dpid #temp
     time = float(args[2])
     # print '\n\n___Installing New Entry___'
