@@ -41,7 +41,7 @@ mapper = {'inputPort': 'in_port',
 
 
 def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (example 1)
-    port=0
+    port=[]
     os.chdir(HYP_DIR)   #ten_ip --> IP to be de-virtualized
     commands = []
     if repair_mac: # if repair_mac = true we fix the broken sflow
@@ -82,7 +82,7 @@ def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (
             print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
             print "\nmac --> " + mac
             print "ip  --> " + ip
-            return (mac, ip, port)
+            return (mac, ip, port[0])
         except :
             print "Error in address_mapping function, with repair_mac=False!\n"
             return ("NONE", "NONE")
