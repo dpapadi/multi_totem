@@ -418,6 +418,8 @@ def collect_sflow(flow):
                 print "Correct port mapping!"
             else:
                 print "Wrong port mapping!"
+                print "Wrong port:  " = port
+                print "Correct port:" = mac_table[dpid][sflow['srcMAC']]
         else:
             if sflow['srcMAC'][:8] == 'a4:23:05':
                 tid = sflow['srcMAC'][10:11]
