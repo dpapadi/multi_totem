@@ -437,6 +437,7 @@ def collect_sflow(flow):
            #     raw_input()
             #    return
 
+
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
         match['dl_vlan'] = 65535
