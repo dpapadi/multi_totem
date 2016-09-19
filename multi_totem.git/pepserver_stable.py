@@ -71,7 +71,7 @@ def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (
                     break
             else:
                 print "There is no address mapping for %s in Tenant Network: %s" % (ten_ip, ten_id)
-                return "NONE"
+                return ("NONE", "NONE")
             tmp = ast.literal_eval(os.popen(commands[1]).read())
             for k in tmp:
                 if 'ipAddress' in k.keys() and k["mac"] == mac:
@@ -416,9 +416,7 @@ def collect_sflow(flow):
                 tid = sflow['srcMAC'][10:11]
                 sflow['srcMAC'] = address_mapping(sflow['srcIP'], True, tid)
                 sflow['dstMAC'] = address_mapping(sflow['dstIP'], True, tid)
-            else:
-                print "Unknown Error! \nsrcMAC: " + sflow['srcMAC']
-                print "srcIP: " + sflow['srcIP']
+                raw_input()
         if sflow['dstIP'] == "NONE":
             print "No mapping found for dstIP"
             return
