@@ -413,7 +413,7 @@ def collect_sflow(flow):
         if sflow['srcIP'][:2] != '10':
             tmp = sflow['srcIP'] #debug issue
             (sflow['srcMAC'], sflow['srcIP'], port) = address_mapping(sflow['srcIP'])
-            (sflow['dstMAC'], sflow['dstIP'], port) = address_mapping(sflow['dstIP'])
+            (sflow['dstMAC'], sflow['dstIP'], prt) = address_mapping(sflow['dstIP'])
             if mac_table[dpid][sflow['srcMAC']] == port:
                 print "Correct port mapping!"
             else:
