@@ -41,6 +41,7 @@ mapper = {'inputPort': 'in_port',
 
 
 def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (example 1)
+    port=0
     os.chdir(HYP_DIR)   #ten_ip --> IP to be de-virtualized
     commands = []
     if repair_mac: # if repair_mac = true we fix the broken sflow
@@ -76,14 +77,16 @@ def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (
             for k in tmp:
                 if 'ipAddress' in k.keys() and k["mac"] == mac:
                     ip = k["ipAddress"]
+                    port=k["port"]
                     break
             print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
             print "\nmac --> " + mac
             print "ip  --> " + ip
+            return (mac, ip, port)
         except :
             print "Error in address_mapping function, with repair_mac=False!\n"
             return ("NONE", "NONE")
-        return (mac, ip)
+
 
 def check_flowspace():
     """
@@ -409,14 +412,17 @@ def collect_sflow(flow):
             return
         if sflow['srcIP'][:2] != '10':
             tmp = sflow['srcIP'] #debug issue
-            (sflow['srcMAC'], sflow['srcIP']) = address_mapping(sflow['srcIP'])
-            (sflow['dstMAC'], sflow['dstIP']) = address_mapping(sflow['dstIP'])
+            (sflow['srcMAC'], sflow['srcIP'], port) = address_mapping(sflow['srcIP'])
+            (sflow['dstMAC'], sflow['dstIP'], port) = address_mapping(sflow['dstIP'])
+            if mac_table[dpid][sflow['srcMAC']] == port:
+                print "Correct port mapping!"
+            else:
+                print "Wrong port mapping!"
         else:
             if sflow['srcMAC'][:8] == 'a4:23:05':
                 tid = sflow['srcMAC'][10:11]
                 sflow['srcMAC'] = address_mapping(sflow['srcIP'], True, tid)
                 sflow['dstMAC'] = address_mapping(sflow['dstIP'], True, tid)
-                raw_input()
         if sflow['dstIP'] == "NONE":
             print "No mapping found for dstIP"
             return
