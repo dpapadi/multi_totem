@@ -77,12 +77,12 @@ def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (
             for k in tmp:
                 if 'ipAddress' in k.keys() and k["mac"] == mac:
                     ip = k["ipAddress"]
-                    port=k["port"]
+                    port=int(k["port"])
                     break
             print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
             print "\nmac --> " + mac
             print "ip  --> " + ip
-            return (mac, ip, port[0])
+            return (mac, ip, port)
         except :
             print "Error in address_mapping function, with repair_mac=False!\n"
             return ("NONE", "NONE")
