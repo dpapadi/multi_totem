@@ -437,6 +437,7 @@ def collect_sflow(flow):
           #      tid = sflow['srcMAC'][10:11]
            #     sflow['srcMAC'] = address_mapping(sflow['srcIP'], True, tid)
             #    sflow['dstMAC'] = address_mapping(sflow['dstIP'], True, tid)
+
         if sflow['dstIP'] == "NONE":
             print "No mapping found for dstIP"
             if sflow['srcIP'] == "NONE":
