@@ -40,11 +40,11 @@ mapper = {'inputPort': 'in_port',
 
 
 
-def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (example 1)
+def address_mapping(ten_ip, ten_id): #ten_id --> tenant id (example 1)
     port=[]
     os.chdir(HYP_DIR)   #ten_ip --> IP to be de-virtualized
     commands = []
-    if repair_mac: # if repair_mac = true we fix the broken sflow
+    if False: #repair_mac: # if repair_mac = true we fix the broken sflow #if False statement instead of commenting out the code
         commands.append("python ovxctl.py -n getVirtualHosts %s\n" % ten_id)
         tmp = ast.literal_eval(os.popen(commands[0]).read())
         try:
@@ -61,7 +61,7 @@ def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (
             print "Error in address_mapping function, with repair_mac=True!\n"
             return "NONE"
     else:
-        ten_id = ten_ip[0]  # works for 1-9 tenants
+        #ten_id = ten_ip[0]  # works for 1-9 tenants
         commands.append("python ovxctl.py -n getPhysicalHosts\n")
         commands.append("python ovxctl.py -n getVirtualHosts %s\n" % ten_id)
         tmp = ast.literal_eval(os.popen(commands[0]).read())
@@ -71,8 +71,19 @@ def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (
                     mac = k["mac"]
                     break
             else:
-                print "There is no address mapping for %s in Tenant Network: %s" % (ten_ip, ten_id)
-                return ("NONE", "NONE")
+                tmp = ast.literal_eval(os.popen(commands[1]).read())
+                for k in tmp:
+                    if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
+                        mac = k["mac"]
+                        port=int(k["port"])
+                        break
+                else:
+                    return ("NONE", "NONE", "NONE")
+                print "MAC reparation successfull!"
+                print "Tenant ID:     " + ten_id
+                print "IP       :     " + ten_ip
+                print "MAC(repaired): " + mac
+                return (mac, ten_ip, port)
             tmp = ast.literal_eval(os.popen(commands[1]).read())
             for k in tmp:
                 if 'ipAddress' in k.keys() and k["mac"] == mac:
@@ -84,8 +95,8 @@ def address_mapping(ten_ip, repair_mac=False, ten_id=0): #ten_id --> tenant id (
             print "ip  --> " + ip
             return (mac, ip, port)
         except :
-            print "Error in address_mapping function, with repair_mac=False!\n"
-            return ("NONE", "NONE")
+            print "Error in address_mapping function!\n"
+            return ("NONE", "NONE", "NONE")
 
 
 def check_flowspace():
@@ -410,23 +421,27 @@ def collect_sflow(flow):
         if sflow['dstMAC'] == 'ff:ff:ff:ff:ff:ff':
             print 'Ignoring broadcast messages...'
             return
-        if sflow['srcIP'][:2] != '10':
+        if sflow['srcMAC'][:8] == 'a4:23:05':
+            tid = sflow['srcMAC'][10:11]
             tmp = sflow['srcIP'] #debug issue
-            (sflow['srcMAC'], sflow['srcIP'], port) = address_mapping(sflow['srcIP'])
-            (sflow['dstMAC'], sflow['dstIP'], prt) = address_mapping(sflow['dstIP'])
+            (sflow['srcMAC'], sflow['srcIP'], port) = address_mapping(sflow['srcIP'], tid)
+            (sflow['dstMAC'], sflow['dstIP'], prt ) = address_mapping(sflow['dstIP'], tid)
             if mac_table[dpid][sflow['srcMAC']] == port:
                 print "Correct port mapping!"
             else:
                 print "Wrong port mapping!"
                 print "Wrong port:  %s" % port
                 print "Correct port:%s" % mac_table[dpid][sflow['srcMAC']]
-        else:
-            if sflow['srcMAC'][:8] == 'a4:23:05':
-                tid = sflow['srcMAC'][10:11]
-                sflow['srcMAC'] = address_mapping(sflow['srcIP'], True, tid)
-                sflow['dstMAC'] = address_mapping(sflow['dstIP'], True, tid)
+        #else:
+         #   if sflow['srcMAC'][:8] == 'a4:23:05':
+          #      tid = sflow['srcMAC'][10:11]
+           #     sflow['srcMAC'] = address_mapping(sflow['srcIP'], True, tid)
+            #    sflow['dstMAC'] = address_mapping(sflow['dstIP'], True, tid)
         if sflow['dstIP'] == "NONE":
             print "No mapping found for dstIP"
+            if sflow['srcIP'] == "NONE":
+                print "No mapping found for srcIP"
+                return
             return
         if sflow['srcIP'] == "NONE":
             print "No mapping found for srcIP"
