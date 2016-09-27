@@ -38,10 +38,36 @@ mapper = {'inputPort': 'in_port',
 #List of network known addresses
 #known_addresses = ['10.0.0.30', '10.0.0.25', '10.0.0.33']
 
-
+def dpid_mapping(dpid, mac):
+    os.chir(HYP_DIR)
+    commands = []
+    commands.append("python ovxctl.py -n getPhysicalHosts\n")
+    tmp = ast.literal_eval(os.popen(commands[0]).read())
+    try:
+        for k in tmp:       #find the tenant id of the flow
+            if 'ipAddress' in k.keys() and k["mac"] == mac:
+                tid = k["ipAddress"][1]
+                break
+        else:
+            return dpid
+        commands.append("python ovxctl.py -n getVirtualSwitchMapping %s\n" % tid)
+        mod_dpid = ""
+        for k in range(0,len(dpid), 2): #modify the dpid to 00:a4:23:05:00:00:00:xx
+            if k==0:
+                mod_dpid+="00:"
+            else:
+                mod_dpid+=":"
+            mod_dpid+=dpid[k]
+            mod_dpid+=dpid[k+1]
+        tmp = ast.literal_eval(os.popen(commands[1]).read()) #find the dpid throught the VirtualSwitchMapping of ovxctl
+        new_dpid = tmp[mod_dpid]['switches'][1]
+        return new_dpid
+    except:
+        print "Error in dpid_mapping function"
+        return dpid
 
 def address_mapping(ten_ip, ten_id): #ten_id --> tenant id (example 1)
-    port=[]
+    #port=[]
     os.chdir(HYP_DIR)   #ten_ip --> IP to be de-virtualized
     commands = []
     if False: #repair_mac: # if repair_mac = true we fix the broken sflow #if False statement instead of commenting out the code
@@ -310,6 +336,9 @@ def construct_new_entry(serialized_match):
     print "dpid "+dpid #temp
     time = float(args[2])
     # print '\n\n___Installing New Entry___'
+    match_dict = construct_dict(match, dpid)
+    dpid = dpid_mapping(dpid, match_dict['dl_src'])
+    print "trandlated dpid " +dpid #temp
 
 	# Construct hashed value based on match
     d = construct_hashed_key(match)
@@ -324,7 +353,7 @@ def construct_new_entry(serialized_match):
 	# if the flow rule is not already in the Active structure
     if d not in active[dpid]:
         active[dpid][d] = {'counters': {'counterX': 1, 'Packet_In': 1, 'mult_Packet_in': 1},
-                           'match': construct_dict(match, dpid),
+                           'match': match_dict,
                            'timestamps': {'start': time, 'end': None},
                            'headers': {},
                            'slice_Owner': None
