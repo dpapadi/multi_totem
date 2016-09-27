@@ -39,7 +39,7 @@ mapper = {'inputPort': 'in_port',
 #known_addresses = ['10.0.0.30', '10.0.0.25', '10.0.0.33']
 
 def dpid_mapping(dpid, mac):
-    os.chir(HYP_DIR)
+    os.chdir(HYP_DIR)
     commands = []
     commands.append("python ovxctl.py -n getPhysicalHosts\n")
     tmp = ast.literal_eval(os.popen(commands[0]).read())
@@ -339,7 +339,7 @@ def construct_new_entry(serialized_match):
     match_dict = construct_dict(match, dpid)
     print match_dict['dl_src']
     dpid = dpid_mapping(dpid, match_dict['dl_src'])
-    print "trandlated dpid " +dpid #temp
+    print "translated dpid " +dpid #temp
 
 	# Construct hashed value based on match
     d = construct_hashed_key(match)
