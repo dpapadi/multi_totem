@@ -75,28 +75,28 @@ def address_mapping(ten_ip, ten_id): #ten_id --> tenant id (example 1)
                 for k in tmp:
                     if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
                         mac = k["mac"]
-                        port=int(k["port"])
+                        #port=int(k["port"])
                         break
                 else:
-                    return ("NONE", "NONE", "NONE")
+                    return ("NONE", "NONE")
                 print "MAC reparation successfull!"
                 print "Tenant ID:     " + ten_id
                 print "IP       :     " + ten_ip
                 print "MAC(repaired): " + mac
-                return (mac, ten_ip, port)
+                return (mac, ten_ip)
             tmp = ast.literal_eval(os.popen(commands[1]).read())
             for k in tmp:
                 if 'ipAddress' in k.keys() and k["mac"] == mac:
                     ip = k["ipAddress"]
-                    port=int(k["port"])
+                    #port=int(k["port"])
                     break
             print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
             print "\nmac --> " + mac
             print "ip  --> " + ip
-            return (mac, ip, port)
+            return (mac, ip)
         except :
             print "Error in address_mapping function!\n"
-            return ("NONE", "NONE", "NONE")
+            return ("NONE", "NONE")
 
 
 def check_flowspace():
@@ -424,14 +424,14 @@ def collect_sflow(flow):
         if sflow['srcMAC'][:8] == 'a4:23:05':
             tid = sflow['srcMAC'][10:11]
             tmp = sflow['srcIP'] #debug issue
-            (sflow['srcMAC'], sflow['srcIP'], port) = address_mapping(sflow['srcIP'], tid)
-            (sflow['dstMAC'], sflow['dstIP'], prt ) = address_mapping(sflow['dstIP'], tid)
-            if mac_table[dpid][sflow['srcMAC']] == port:
-                print "Correct port mapping!"
-            else:
-                print "Wrong port mapping!"
-                print "Wrong port:  %s" % port
-                print "Correct port:%s" % mac_table[dpid][sflow['srcMAC']]
+            (sflow['srcMAC'], sflow['srcIP']) = address_mapping(sflow['srcIP'], tid)
+            (sflow['dstMAC'], sflow['dstIP']) = address_mapping(sflow['dstIP'], tid)
+            #if mac_table[dpid][sflow['srcMAC']] == port:
+             #   print "Correct port mapping!"
+            #else:
+             #   print "Wrong port mapping!"
+              #  print "Wrong port:  %s" % port
+               # print "Correct port:%s" % mac_table[dpid][sflow['srcMAC']]
         #else:
          #   if sflow['srcMAC'][:8] == 'a4:23:05':
           #      tid = sflow['srcMAC'][10:11]
