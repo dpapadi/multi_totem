@@ -46,8 +46,7 @@ def dpid_mapping(dpid, mac):
     try:
         for k in tmp:       #find the tenant id of the flow
             if 'ipAddress' in k.keys() and k["mac"] == mac:
-                tid = k["ipAddress"][1]
-                print ("tid -> %s" %tid)
+                tid = k["ipAddress"][0]
                 break
         else:
             return dpid
