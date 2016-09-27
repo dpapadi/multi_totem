@@ -62,8 +62,7 @@ def dpid_mapping(dpid, mac):
         tmp = ast.literal_eval(os.popen(commands[1]).read()) #find the dpid throught the VirtualSwitchMapping of ovxctl
         new_dpid = tmp[mod_dpid]['switches']
         return new_dpid[0]
-    except Exception, e:
-        print e
+    except Exception:
         print "Error in dpid_mapping function"
         return dpid
 
@@ -340,6 +339,7 @@ def construct_new_entry(serialized_match):
     match_dict = construct_dict(match, dpid)
     print match_dict['dl_src']
     dpid = dpid_mapping(dpid, match_dict['dl_src'])
+    match_dict['dpid']=dpid
     print "translated dpid " +dpid #temp
 
 	# Construct hashed value based on match
