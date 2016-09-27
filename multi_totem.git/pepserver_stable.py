@@ -59,11 +59,9 @@ def dpid_mapping(dpid, mac):
                 mod_dpid+=":"
             mod_dpid+=dpid[k]
             mod_dpid+=dpid[k+1]
-        print mod_dpid #tmp
         tmp = ast.literal_eval(os.popen(commands[1]).read()) #find the dpid throught the VirtualSwitchMapping of ovxctl
         new_dpid = tmp[mod_dpid]['switches']
-        print new_dpid
-        return new_dpid[1]
+        return new_dpid[0]
     except Exception, e:
         print e
         print "Error in dpid_mapping function"
