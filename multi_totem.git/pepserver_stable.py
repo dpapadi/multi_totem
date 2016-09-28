@@ -417,6 +417,7 @@ def move_to_expired(serialized_match):
             expired[dpid] = {}
 
         expired[dpid][d] = found
+        print "move_to_expired function!"
         if active[dpid] == {}:
             del active[dpid]
             print "active entry deleted!"
