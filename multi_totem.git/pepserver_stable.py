@@ -337,7 +337,7 @@ def construct_new_entry(serialized_match):
     time = float(args[2])
     # print '\n\n___Installing New Entry___'
     match_dict = construct_dict(match, dpid)
-    print match_dict['dl_src']
+    print match_dict['dl_src'] #temp
     dpid = dpid_mapping(dpid, match_dict['dl_src'])
     match_dict['dpid']=dpid
     print "translated dpid " +dpid #temp
@@ -397,6 +397,7 @@ def move_to_expired(serialized_match):
     args = pickle.loads(serialized_match)
     match = args[0]
     dpid = args[1]
+    print match.dl_src.toStr() #temp
     dpid = dpid_mapping(dpid, match.dl_src.toStr()) # translate the dpid from a4230500000000xx to 00:00:00:00:00:00:00:xx
     time = float(args[2])
     # print "\n\n___Moving Expired Entry___"
@@ -417,10 +418,10 @@ def move_to_expired(serialized_match):
             expired[dpid] = {}
 
         expired[dpid][d] = found
-        print "move_to_expired function!"
+        print "move_to_expired function!" #temp
         if active[dpid] == {}:
             del active[dpid]
-            print "active entry deleted!"
+            print "active entry deleted!" #temp
 
 
 def collect_sflow(flow):
