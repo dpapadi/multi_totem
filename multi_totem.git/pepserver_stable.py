@@ -397,6 +397,7 @@ def move_to_expired(serialized_match):
     args = pickle.loads(serialized_match)
     match = args[0]
     dpid = hex(int(args[1])) #dpid in hex
+    dpid = dpid[2:]
     #print match.dl_src.toStr() #temp
     #print dpid
     dpid = dpid_mapping(dpid, match.dl_src.toStr()) # translate the dpid from a4230500000000xx to 00:00:00:00:00:00:00:xx
