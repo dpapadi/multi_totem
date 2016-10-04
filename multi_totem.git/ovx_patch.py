@@ -1,106 +1,73 @@
+#script with functions necessary for pepserver_stable to work over OpenVirteX
+
 import urllib2
 import json
-
-
-
-
-
+import ast
 
 def confirm_tenant():
     return True
 
-def address_mapping(url, ten_ip, ten_id, pass=""):
+def address_mapping(url, ten_ip, ten_id, passwd=""):
     req = {}
     url = url % "status"
-    result = connect(url, "getPhysicalHosts", data=req) #pass ?
-    tmp = json.dumps(result)
+    result = connect(url, "getPhysicalHosts", data=req, passwd=passwd) #pass ?
+    tmp = ast.literal_eval(json.dumps(result))
+    for k in tmp:
+        if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
+            mac = k["mac"]
+            break
+    else:
+        req = {"tenantId": ten_id}
+        result = connect(url, "getVirtualHosts", data=req, passwd=passwd)
+        tmp = ast.literal_eval(json.dumps(result))
+        for k in tmp:
+            if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
+                mac = k["mac"]
+                break
+        else:
+            return ("NONE", "NONE")
+        print "MAC reparation successfull!"
+        print "Tenant ID:     " + ten_id
+        print "IP       :     " + ten_ip
+        print "MAC(repaired): " + mac
+        return (mac, ten_ip)
+    req = {"tenantId": ten_id}
+    result = connect(url, "getVirtualHosts", data=req, passwd=passwd)
+    tmp = ast.literal_eval(json.dumps(result))
+    for k in tmp:
+        if 'ipAddress' in k.keys() and k["mac"] == mac:
+            ip = k["ipAddress"]
+            break
+    else:
+        return ("NONE", "NONE")
+    print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
+    print "mac --> " + mac
+    print "ip  --> " + ip
+    return (mac, ip)
 
+def dpid_mapping(url, dpid, ten_id, passwd=""):
+    req = {"tenantId": ten_id}
+    url = url % "status"
+    result = connect(url, "getVirtualSwitchMapping", data=req, passwd=passwd)  # pass ?
+    tmp = ast.literal_eval(json.dumps(result))
+    for ovx_dpid, map_dict in tmp.iteritems():
+        if map_dict["switches"][0]==dpid:
+            return ovx_dpid
+    else:
+        print "No dpid mapping for dpid: " + dpid
+        return dpid
 
+def mod_dpid(dpid):
+    mod_dpid = ""
+    for k in range(0, len(dpid), 2):  # modify the dpid to 00:a4:23:05:00:00:00:xx
+        if k == 0:
+            mod_dpid += "00:"
+        else:
+            mod_dpid += ":"
+        mod_dpid += dpid[k]
+        mod_dpid += dpid[k + 1]
+    return mod_dpid
 
-
-
-
-
-    def address_mapping(ten_ip, ten_id):  # ten_id --> tenant id (example 1)
-        # port=[]
-        os.chdir(HYP_DIR)  # ten_ip --> IP to be de-virtualized
-        commands = []
-            # ten_id = ten_ip[0]  # works for 1-9 tenants
-            commands.append("python ovxctl.py -n getPhysicalHosts\n")
-            commands.append("python ovxctl.py -n getVirtualHosts %s\n" % ten_id)
-            tmp = ast.literal_eval(os.popen(commands[0]).read())
-            try:
-                for k in tmp:
-                    if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
-                        mac = k["mac"]
-                        break
-                else:
-                    tmp = ast.literal_eval(os.popen(commands[1]).read())
-                    for k in tmp:
-                        if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
-                            mac = k["mac"]
-                            # port=int(k["port"])
-                            break
-                    else:
-                        return ("NONE", "NONE")
-                    print
-                    "MAC reparation successfull!"
-                    print
-                    "Tenant ID:     " + ten_id
-                    print
-                    "IP       :     " + ten_ip
-                    print
-                    "MAC(repaired): " + mac
-                    return (mac, ten_ip)
-                tmp = ast.literal_eval(os.popen(commands[1]).read())
-                for k in tmp:
-                    if 'ipAddress' in k.keys() and k["mac"] == mac:
-                        ip = k["ipAddress"]
-                        # port=int(k["port"])
-                        break
-                print
-                "For physical ip: " + ten_ip + " from tenant network: " + ten_id
-                print
-                "\nmac --> " + mac
-                print
-                "ip  --> " + ip
-                return (mac, ip)
-            except:
-                print
-                "Error in address_mapping function!\n"
-                return ("NONE", "NONE")
-
-
-def dpid_mapping():
-    def dpid_mapping(dpid, mac):
-        os.chdir(HYP_DIR)
-        commands = []
-        commands.append("python ovxctl.py -n getPhysicalHosts\n")
-        tmp = ast.literal_eval(os.popen(commands[0]).read())
-        try:
-            for k in tmp:  # find the tenant id of the flow
-                if 'ipAddress' in k.keys() and k["mac"] == mac:
-                    tid = k["ipAddress"][0]
-                    break
-            else:
-                return dpid
-            commands.append("python ovxctl.py -n getVirtualSwitchMapping %s\n" % tid)
-            mod_dpid = ""
-            for k in range(0, len(dpid), 2):  # modify the dpid to 00:a4:23:05:00:00:00:xx
-                if k == 0:
-                    mod_dpid += "00:"
-                else:
-                    mod_dpid += ":"
-                mod_dpid += dpid[k]
-                mod_dpid += dpid[k + 1]
-            tmp = ast.literal_eval(
-                os.popen(commands[1]).read())  # find the dpid throught the VirtualSwitchMapping of ovxctl
-            new_dpid = tmp[mod_dpid]['switches']
-            return new_dpid[0]
-        except Exception:
-            print
-            "Error in dpid_mapping function"
-            return dpid
 
 def connect(url, cmd, data=None, passwd=None): #from ovxctl ~minor changes~
     try:

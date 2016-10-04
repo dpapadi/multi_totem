@@ -19,6 +19,9 @@ log2 = core.getLogger("Flow Removed")
 # Create a new jsonrpclib.Server object, bound to an IP
 server = jsonrpclib.Server('http://localhost:8085')
 
+#for OpenVirteX confirmation, tid-->tenant id, passwd--> password
+tid=1
+passwd=""
 
 class CustomEvent(Event):
     """
@@ -61,7 +64,7 @@ class FlowRemovalHandler (EventMixin):
 
         args = ()
         connction = event.connection
-        args = (event.ofp.match, str(connction.dpid), str(time.time()))
+        args = (event.ofp.match, str(connction.dpid), str(time.time(), tid, passwd)) #send tid and passwd for pratical and security issues
         b = pickle.dumps(args)
 
         server.construct_new_entry(b)
@@ -72,7 +75,7 @@ class FlowRemovalHandler (EventMixin):
 
         args = ()
         connection = event.connection
-        args = (event.ofp.match, str(connection.dpid), str(time.time()))
+        args = (event.ofp.match, str(connection.dpid), str(time.time()), tid, passwd) #send tid and passwd for pratical and security issues
         b = pickle.dumps(args)
         a = server.move_to_expired(b)
         #c = pickle.loads(a)

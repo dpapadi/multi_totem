@@ -3,16 +3,17 @@
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 import pickle
 import hashlib
-import os #for address_mapping
 from struct import unpack
 from socket import inet_aton
-import ast
+import ovx_patch.py
 
-#Directory of hypervisor's utils
-
-HYP_DIR = "/home/ovx/OpenVirteX/utils"
+#boolean for OVX
+OVX_enable = False
 
 # Global Dictionaries
+
+#hypervisor dictionary
+hypervisor_var = {}
 
 # Active Flows
 active = {}
@@ -34,95 +35,6 @@ mapper = {'inputPort': 'in_port',
           'IPProtocol': 'nw_proto',
           'srcIP': 'nw_src',
           'dstIP': 'nw_dst'}
-
-#List of network known addresses
-#known_addresses = ['10.0.0.30', '10.0.0.25', '10.0.0.33']
-
-def dpid_mapping(dpid, mac):
-    os.chdir(HYP_DIR)
-    commands = []
-    commands.append("python ovxctl.py -n getPhysicalHosts\n")
-    tmp = ast.literal_eval(os.popen(commands[0]).read())
-    try:
-        for k in tmp:       #find the tenant id of the flow
-            if 'ipAddress' in k.keys() and k["mac"] == mac:
-                tid = k["ipAddress"][0]
-                break
-        else:
-            return dpid
-        commands.append("python ovxctl.py -n getVirtualSwitchMapping %s\n" % tid)
-        mod_dpid = ""
-        for k in range(0,len(dpid), 2): #modify the dpid to 00:a4:23:05:00:00:00:xx
-            if k==0:
-                mod_dpid+="00:"
-            else:
-                mod_dpid+=":"
-            mod_dpid+=dpid[k]
-            mod_dpid+=dpid[k+1]
-        tmp = ast.literal_eval(os.popen(commands[1]).read()) #find the dpid throught the VirtualSwitchMapping of ovxctl
-        new_dpid = tmp[mod_dpid]['switches']
-        return new_dpid[0]
-    except Exception:
-        print "Error in dpid_mapping function"
-        return dpid
-
-def address_mapping(ten_ip, ten_id): #ten_id --> tenant id (example 1)
-    #port=[]
-    os.chdir(HYP_DIR)   #ten_ip --> IP to be de-virtualized
-    commands = []
-    if False: #repair_mac: # if repair_mac = true we fix the broken sflow #if False statement instead of commenting out the code
-        commands.append("python ovxctl.py -n getVirtualHosts %s\n" % ten_id)
-        tmp = ast.literal_eval(os.popen(commands[0]).read())
-        try:
-            for k in tmp:
-                if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
-                    mac = k["mac"]
-                    break
-            print "MAC reparation successfull!"
-            print "Tenant ID:     " + ten_id
-            print "IP       :     " + ten_ip
-            print "MAC(repaired): " + mac
-            return mac
-        except:
-            print "Error in address_mapping function, with repair_mac=True!\n"
-            return "NONE"
-    else:
-        #ten_id = ten_ip[0]  # works for 1-9 tenants
-        commands.append("python ovxctl.py -n getPhysicalHosts\n")
-        commands.append("python ovxctl.py -n getVirtualHosts %s\n" % ten_id)
-        tmp = ast.literal_eval(os.popen(commands[0]).read())
-        try:
-            for k in tmp:
-                if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
-                    mac = k["mac"]
-                    break
-            else:
-                tmp = ast.literal_eval(os.popen(commands[1]).read())
-                for k in tmp:
-                    if 'ipAddress' in k.keys() and k["ipAddress"] == ten_ip:
-                        mac = k["mac"]
-                        #port=int(k["port"])
-                        break
-                else:
-                    return ("NONE", "NONE")
-                print "MAC reparation successfull!"
-                print "Tenant ID:     " + ten_id
-                print "IP       :     " + ten_ip
-                print "MAC(repaired): " + mac
-                return (mac, ten_ip)
-            tmp = ast.literal_eval(os.popen(commands[1]).read())
-            for k in tmp:
-                if 'ipAddress' in k.keys() and k["mac"] == mac:
-                    ip = k["ipAddress"]
-                    #port=int(k["port"])
-                    break
-            print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
-            print "\nmac --> " + mac
-            print "ip  --> " + ip
-            return (mac, ip)
-        except :
-            print "Error in address_mapping function!\n"
-            return ("NONE", "NONE")
 
 
 def check_flowspace():
@@ -622,6 +534,21 @@ def collect_sflow(flow):
 
 
 if __name__ == "__main__":
+    a = len(sys.argv)
+    if a == 2:
+        file_name = sys.argv[1]
+        try:
+            with open(file_name) as f:
+                for line in f:
+                    (key, val) = line.split()
+                    hypervisor_var[key] = val
+        except IOError:
+            print "No such file: \t%s\n" % file_name
+            exit()
+    if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OperVirteX':
+        hypervisor_var['tenants']={}
+        OVX_enable=True
+    print hypervisor_var
     # binding server to port
     server = SimpleJSONRPCServer(('localhost', 8085))
 
