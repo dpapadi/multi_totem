@@ -546,7 +546,7 @@ if __name__ == "__main__":
         except IOError:
             print "No such file: \t%s\n" % file_name
             exit()
-    if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OperVirteX':
+    if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
         OVX_enable=True
     if a == 2:
