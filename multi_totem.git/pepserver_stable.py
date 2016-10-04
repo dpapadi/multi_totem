@@ -6,6 +6,7 @@ import hashlib
 from struct import unpack
 from socket import inet_aton
 import ovx_patch
+import sys
 
 #boolean for OVX
 OVX_enable = False
