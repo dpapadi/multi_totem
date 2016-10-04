@@ -549,7 +549,8 @@ if __name__ == "__main__":
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OperVirteX':
         hypervisor_var['tenants']={}
         OVX_enable=True
-    print hypervisor_var
+    if a == 2:
+        print hypervisor_var
     # binding server to port
     server = SimpleJSONRPCServer(('localhost', 8085))
 
