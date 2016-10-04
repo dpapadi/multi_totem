@@ -4,7 +4,7 @@ import urllib2
 import json
 import ast
 
-def confirm_tenant():
+def confirm_tenant(tid, passwd):
     return True
 
 def address_mapping(url, ten_ip, ten_id, passwd=""):
@@ -54,8 +54,8 @@ def dpid_mapping(url, dpid, ten_id, passwd=""):
         if map_dict["switches"][0]==dpid:
             return ovx_dpid
     else:
-        print "No dpid mapping for dpid: " + dpid
-        return dpid
+        print "No dpid mapping for dpid: " + dpid "froma tenant id: " +ten_id
+        return "NONE"
 
 def mod_dpid(dpid):
     mod_dpid = ""
@@ -68,6 +68,28 @@ def mod_dpid(dpid):
         mod_dpid += dpid[k + 1]
     return mod_dpid
 
+def get_tid(url, mac, passwd=""):
+    req = {}
+    url = url % "status"
+    result = connect(url, "getPhysicalHosts", data=req, passwd=passwd) #pass ?
+    tmp = ast.literal_eval(json.dumps(result))
+    for k in tmp:
+        if 'ipAddress' in k.keys() and k['mac'] == mac:
+            i = 0
+            tid = ""
+            while True:
+                tid += k['ipAddress'][i]
+                i += 1
+                if k['ipAddress'][i] == '.':
+                    return tid
+                if i > 3:
+                    print "Error in while loop from function get_tid!"
+                    break
+    return "NONE"
+
+
+
+#functions from ovxctl to 'talk' to OVX server
 
 def connect(url, cmd, data=None, passwd=None): #from ovxctl ~minor changes~
     try:

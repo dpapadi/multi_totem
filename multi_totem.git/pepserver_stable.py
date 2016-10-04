@@ -245,56 +245,55 @@ def construct_new_entry(serialized_match):
     args = pickle.loads(serialized_match)
     match = args[0]
     dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
-    dpid = dpid[2:]
-    print "dpid "+dpid #temp
+    dpid = ovx_patch.mod_dpid(dpid[2:])
+    print "mod_dpid "+dpid #temp
+    tid=args[3] #get the tid and passwd from the controller
+    if tid not in hypervisor_var['tenants']:
+        hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
+    passwd=args[4]
+    if not ovx_patch.confirm_tenant(tid, passwd):
+        print "Tenant Id confirmation failed. Id: %s" %tid
+        return
     time = float(args[2])
     # print '\n\n___Installing New Entry___'
-    match_dict = construct_dict(match, dpid)
-    print match_dict['dl_src'] #temp
-    dpid = dpid_mapping(dpid, match_dict['dl_src'])
-    match_dict['dpid']=dpid
-    print "translated dpid " +dpid #temp
+    #match_dict = construct_dict(match, dpid)
 
-	# Construct hashed value based on match
+    # Construct hashed value based on match
     d = construct_hashed_key(match)
 
     # print ("Switch: %s,\t Flow(Hash): %s" % (dpid, d))
 
     # Check if the dpid entry has been initialized
-    if dpid not in active:
-        active[dpid] = {}
+    if tid not in active:
+        active[tid] = {}
+    if dpid not in active[tid]:
+        active[tid][dpid] = {}
 
     # Creating the Flow Entry
 	# if the flow rule is not already in the Active structure
-    if d not in active[dpid]:
-        active[dpid][d] = {'counters': {'counterX': 1, 'Packet_In': 1, 'mult_Packet_in': 1},
-                           'match': match_dict,
+    if d not in active[tid][dpid]:
+        active[tid][dpid][d] = {'counters': {'counterX': 1, 'Packet_In': 1, 'mult_Packet_in': 1},
+                           'match': construct_dict(match, dpid),
                            'timestamps': {'start': time, 'end': None},
                            'headers': {},
                            'slice_Owner': None
                            }
-        hlp = active[dpid][d]['match']
-
-        if dpid not in mac_table:
-            mac_table[dpid] = {}
-            mac_table[dpid][hlp['dl_src']] = hlp['in_port']
-        else:
-            mac_table[dpid][hlp['dl_src']] = hlp['in_port']
-
+        hlp = active[tid][dpid][d]['match']
         # assign the flow entry to a flowspace
         # assign_flowspace(d, dpid)
 	# else increment a counter measuring multiple packetIns
     else:
-        active[dpid][d]['counters']['mult_Packet_in'] += 1
-        hlp = active[dpid][d]['match']
-
+        active[tid][dpid][d]['counters']['mult_Packet_in'] += 1
+        hlp = active[tid][dpid][d]['match']
 
     # MAC Table
-    if dpid not in mac_table:
-        mac_table[dpid] = {}
-        mac_table[dpid][hlp['dl_src']] = hlp['in_port']
+    if tid not in mac_table:
+        mac_table[tid] = {}
+    if dpid not in mac_table[tid]:
+        mac_table[tid][dpid] = {}
+        mac_table[tid][dpid][hlp['dl_src']] = hlp['in_port']
     else:
-        mac_table[dpid][hlp['dl_src']] = hlp['in_port']
+        mac_table[tid][dpid][hlp['dl_src']] = hlp['in_port']
 
 
     #print mac_table
@@ -310,10 +309,12 @@ def move_to_expired(serialized_match):
     args = pickle.loads(serialized_match)
     match = args[0]
     dpid = hex(int(args[1])) #dpid in hex
-    dpid = dpid[2:]
-    #print match.dl_src.toStr() #temp
-    #print dpid
-    dpid = dpid_mapping(dpid, match.dl_src.toStr()) # translate the dpid from a4230500000000xx to 00:00:00:00:00:00:00:xx
+    dpid = ovx_patch.mod_dpid(dpid[2:])
+    tid = args[3]
+    passwd = args[4]
+    if not ovx_patch.confirm_tenant(tid, passwd):
+        print "Tenant Id confirmation failed. Id: %s" % tid
+        return
     time = float(args[2])
     # print "\n\n___Moving Expired Entry___"
 
@@ -321,21 +322,23 @@ def move_to_expired(serialized_match):
     e = construct_hashed_key(match)
 
     # if there is such a flow
-    if e in active[dpid]:
+    if e in active[tid][dpid]:
         # remove the flow
-        found = active[dpid].pop(e)
+        found = active[tid][dpid].pop(e)
         found['timestamps']['end'] = time
 
         # now create another hashed value, including timestamp
         d = construct_hashed_key(match, found['timestamps']['start'], 0)
 
-        if dpid not in expired:
-            expired[dpid] = {}
+        if tid not in expired:
+            expired[tid] = {}
+        if dpid not in expired[tid]:
+            expired[tid][dpid] = {}
 
-        expired[dpid][d] = found
+        expired[tid][dpid][d] = found
         print "move_to_expired function!" #temp
-        if active[dpid] == {}:
-            del active[dpid]
+        if active[tid][dpid] == {}:
+            del active[tid][dpid]
             print "active entry deleted!" #temp
 
 
@@ -358,10 +361,6 @@ def collect_sflow(flow):
     match = {}
 
     # convert dl_type
-    dpid = sflow.pop('dpid')
-    #print dpid
-    #dpid = '256'
-    #print dpid
     match['dl_type'] = sflow.pop('dl_type')
 
     if 'srcIP' not in sflow.keys():
@@ -373,35 +372,44 @@ def collect_sflow(flow):
             return
         if sflow['srcMAC'][:8] == 'a4:23:05':
             tid = sflow['srcMAC'][10:11]
-            tmp = sflow['srcIP'] #debug issue
-            (sflow['srcMAC'], sflow['srcIP']) = address_mapping(sflow['srcIP'], tid)
-            (sflow['dstMAC'], sflow['dstIP']) = address_mapping(sflow['dstIP'], tid)
-            #if mac_table[dpid][sflow['srcMAC']] == port:
-             #   print "Correct port mapping!"
-            #else:
-             #   print "Wrong port mapping!"
-              #  print "Wrong port:  %s" % port
-               # print "Correct port:%s" % mac_table[dpid][sflow['srcMAC']]
-        #else:
-         #   if sflow['srcMAC'][:8] == 'a4:23:05':
-          #      tid = sflow['srcMAC'][10:11]
-           #     sflow['srcMAC'] = address_mapping(sflow['srcIP'], True, tid)
-            #    sflow['dstMAC'] = address_mapping(sflow['dstIP'], True, tid)
 
-        if sflow['dstIP'] == "NONE":
-            print "No mapping found for dstIP"
-            if sflow['srcIP'] == "NONE":
-                print "No mapping found for srcIP"
-                return
-            return
-        if sflow['srcIP'] == "NONE":
-            print "No mapping found for srcIP"
-            return
-        #else:
-         #   if sflow['srcMAC'][:8] == 'a4:23:05':
-          #      print 'Error within the sflow!' #??
-           #     raw_input()
-            #    return
+            sflow_dpid = sflow.pop('dpid')
+            if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
+                dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+                if dpid == "NONE":
+                    return
+                hypervisor_var['tenants'][tid]['dpid'][sflow_dpid] = dpid
+            else:
+                dpid = hypervisor_var['tenants'][tid]['dpid'][sflow_dpid]
+
+            tmp = sflow['srcIP'] #debug issue
+
+            sflow_ip = sflow['srcIP']
+            if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                (sflow['srcMAC'], sflow['srcIP']) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
+                if sflow['srcIP'] == "NONE":
+                    print "No mapping found for srcIP"
+                    return
+                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
+                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
+            else:
+                sflow['srcIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
+                sflow['srcMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
+
+            sflow_ip = sflow['dstIP']
+            if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                (sflow['dstMAC'], sflow['dstIP']) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, passwd="")
+                if sflow['dstIP'] == "NONE":
+                    print "No mapping found for dstIP"
+                    return
+                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
+                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
+            else:
+                sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
+                sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
+        else:
+            tid = ovx_patch.get_tid(hypervisor_var, sflow['srcMAC'], passwd="")
+            dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow.pop('dpid'), tid, passwd="")
 
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
@@ -442,30 +450,27 @@ def collect_sflow(flow):
     #print 'mac_table[dpid]: '
     #print mac_table[dpid][match['dl_src']]
     try:
-        match['in_port'] = mac_table[dpid][match['dl_src']]
-    except Exception,g:
-        print 'hi ' + str(g)
+        match['in_port'] = mac_table[tid][dpid][match['dl_src']]
+    except Exception as g:
+        print 'hi ' + g
         match['in_port'] = 0
-
-
 
     # print 'OpenFlow Match:'
     # print match
-
     try:
         d = construct_hashed_sflow(match)
 
-        print 'Printing Hash: %d\n\n' % d
+        print 'Printing Hash: %d\n' % d
         # print 'Printing of all flows of the DPID: %s' % dpid
         print'this active: '
-        print active[dpid]
+        print active[tid][dpid]
         try:
             print tmp
         except:
             print 'No need!'
-        if d in active[dpid]:
+        if d in active[tid][dpid]:
             print 'Hash Found'
-            active[dpid][d]['counters']['counterX'] += 1
+            active[tid][dpid][d]['counters']['counterX'] += 1
             # adding headers of packet
 
             # f = match['headerBytes']
@@ -483,9 +488,8 @@ def collect_sflow(flow):
             print
             print
             print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            raw_input()
             # same functionality as in assign_flowspace()
-            for kk, vv in active[dpid].iteritems():
+            for kk, vv in active[tid][dpid].iteritems():
                 for ll, ww in vv['match'].iteritems():
                     if ww is None:
                         # can continue with next iteration
@@ -519,12 +523,12 @@ def collect_sflow(flow):
                             break
                 else:
                     # if loop is completed with no breaks this value under investigation should be incremented
-                    active[dpid][kk]['counters']['counterX'] += 1
+                    active[tid][dpid][kk]['counters']['counterX'] += 1
                     print 'Flow Reconstructed'
                     break
             else:
                 print 'Hash Reconstrution failed.\n'
-    except Exception,sd:
+    except Exception as sd:
         print 'bad dpid ' + dpid
         print sd
         print 'Error caught.\nPrinting match field'
@@ -536,7 +540,7 @@ def collect_sflow(flow):
 
 if __name__ == "__main__":
     a = len(sys.argv)
-    if a == 2:
+    if a == 2:          #input for configuring a hypervisor
         file_name = sys.argv[1]
         try:
             with open(file_name) as f:
