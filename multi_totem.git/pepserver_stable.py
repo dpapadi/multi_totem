@@ -5,7 +5,7 @@ import pickle
 import hashlib
 from struct import unpack
 from socket import inet_aton
-import ovx_patch.py
+import ovx_patch
 
 #boolean for OVX
 OVX_enable = False
