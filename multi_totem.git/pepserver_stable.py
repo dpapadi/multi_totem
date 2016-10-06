@@ -390,7 +390,7 @@ def collect_sflow(flow):
                 if sflow['srcIP'] == "NONE":
                     print "No mapping found for srcIP"
                     return
-                hypervisor_var['tenants'][tid]['ip'][sflow_ip]={}
+                hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
                 hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
                 hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
             else:
@@ -403,6 +403,7 @@ def collect_sflow(flow):
                 if sflow['dstIP'] == "NONE":
                     print "No mapping found for dstIP"
                     return
+                hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
                 hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
                 hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
             else:
