@@ -46,7 +46,7 @@ def address_mapping(url, ten_ip, ten_id, passwd=""):
     return (mac, ip)
 
 def dpid_mapping(url, dpid, ten_id, passwd=""):
-    req = {"tenantId": int(ten_id)}
+    req = {"tenantId": ten_id}
     url = url % "status"
     result = connect(url, "getVirtualSwitchMapping", data=req, passwd=passwd)  # pass ?
     tmp = ast.literal_eval(json.dumps(result))

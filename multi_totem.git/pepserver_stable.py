@@ -371,7 +371,7 @@ def collect_sflow(flow):
             print 'Ignoring broadcast messages...'
             return
         if sflow['srcMAC'][:8] == 'a4:23:05':
-            tid = sflow['srcMAC'][10:11]
+            tid = int(sflow['srcMAC'][10:11])
 
             sflow_dpid = sflow.pop('dpid')
             if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
@@ -408,7 +408,7 @@ def collect_sflow(flow):
                 sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
                 sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
         else:
-            tid = ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd="")
+            tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
             dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow.pop('dpid'), tid, passwd="")
 
     # manipulate VLAN tag
