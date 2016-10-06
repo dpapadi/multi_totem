@@ -27,7 +27,7 @@ def address_mapping(url, ten_ip, ten_id, passwd=""):
         else:
             return ("NONE", "NONE")
         print "MAC reparation successfull!"
-        print "Tenant ID:     " + ten_id
+        print "Tenant ID:      %s" % ten_id
         print "IP       :     " + ten_ip
         print "MAC(repaired): " + mac
         return (mac, ten_ip)
@@ -40,7 +40,7 @@ def address_mapping(url, ten_ip, ten_id, passwd=""):
             break
     else:
         return ("NONE", "NONE")
-    print "For physical ip: " + ten_ip + " from tenant network: " + ten_id
+    print "For physical ip: " + ten_ip + " from tenant network: %s" % ten_id
     print "mac --> " + mac
     print "ip  --> " + ip
     return (mac, ip)
