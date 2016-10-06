@@ -408,7 +408,7 @@ def collect_sflow(flow):
                 sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
                 sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
         else:
-            tid = ovx_patch.get_tid(hypervisor_var, sflow['srcMAC'], passwd="")
+            tid = ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd="")
             dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow.pop('dpid'), tid, passwd="")
 
     # manipulate VLAN tag
