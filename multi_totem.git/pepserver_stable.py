@@ -386,26 +386,28 @@ def collect_sflow(flow):
 
             sflow_ip = sflow['srcIP']
             if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
-                (sflow['srcMAC'], sflow['srcIP']) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
+                (sflow['srcMAC'], sflow['srcIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
                 if sflow['srcIP'] == "NONE":
                     print "No mapping found for srcIP"
                     return
-                hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
-                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
-                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
+                if not rep_mac:
+                    hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
+                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
             else:
                 sflow['srcIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
                 sflow['srcMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
 
             sflow_ip = sflow['dstIP']
             if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
-                (sflow['dstMAC'], sflow['dstIP']) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, passwd="")
+                (sflow['dstMAC'], sflow['dstIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, passwd="")
                 if sflow['dstIP'] == "NONE":
                     print "No mapping found for dstIP"
                     return
-                hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
-                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
-                hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
+                if not rep_mac:
+                    hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
+                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
             else:
                 sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
                 sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']

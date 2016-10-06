@@ -25,12 +25,12 @@ def address_mapping(url, ten_ip, ten_id, passwd=""):
                 mac = k["mac"]
                 break
         else:
-            return ("NONE", "NONE")
+            return ("NONE", "NONE", False)
         print "MAC reparation successfull!"
         print "Tenant ID:      %s" % ten_id
         print "IP       :     " + ten_ip
         print "MAC(repaired): " + mac
-        return (mac, ten_ip)
+        return (mac, ten_ip, True)
     req = {"tenantId": ten_id}
     result = connect(url, "getVirtualHosts", data=req, passwd=passwd)
     tmp = ast.literal_eval(json.dumps(result))
@@ -39,11 +39,11 @@ def address_mapping(url, ten_ip, ten_id, passwd=""):
             ip = k["ipAddress"]
             break
     else:
-        return ("NONE", "NONE")
+        return ("NONE", "NONE", False)
     print "For physical ip: " + ten_ip + " from tenant network: %s" % ten_id
     print "mac --> " + mac
     print "ip  --> " + ip
-    return (mac, ip)
+    return (mac, ip, False)
 
 def dpid_mapping(url, dpid, ten_id, passwd=""):
     req = {"tenantId": ten_id}
