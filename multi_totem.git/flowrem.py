@@ -64,7 +64,7 @@ class FlowRemovalHandler (EventMixin):
 
         args = ()
         connction = event.connection
-        args = (event.ofp.match, str(connction.dpid), str(time.time(), tid, passwd)) #send tid and passwd for pratical and security issues
+        args = (event.ofp.match, str(connction.dpid), str(time.time()), tid, passwd) #send tid and passwd for pratical and security issues
         b = pickle.dumps(args)
 
         server.construct_new_entry(b)
