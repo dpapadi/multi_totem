@@ -54,7 +54,7 @@ def dpid_mapping(url, dpid, ten_id, passwd=""):
         if map_dict["switches"][0]==dpid:
             return ovx_dpid
     else:
-        print "No dpid mapping for dpid: " + dpid "froma tenant id: " +ten_id
+        print "No dpid mapping for dpid: " + dpid + "froma tenant id: " +ten_id
         return "NONE"
 
 def mod_dpid(dpid):
