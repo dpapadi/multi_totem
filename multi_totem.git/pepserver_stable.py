@@ -347,7 +347,7 @@ def collect_sflow(flow):
     :param match: serialized sflow sample
     :return:
     """
-
+    print "Collect sflow function! " #temp
     # print '\n\n___Incrementing Counter Entry___'
     sflow = {}
 
