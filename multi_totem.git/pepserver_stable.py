@@ -8,6 +8,10 @@ from socket import inet_aton
 import ovx_patch
 import sys
 
+# 2 counters to calculate the "sample with no info" effect
+swni_cntr = 0  #counts the times a sample with no info is collected
+sflow_cntr = 0 #counts the number collect_sflow is used
+
 #boolean for OVX
 OVX_enable = False
 
@@ -348,6 +352,7 @@ def collect_sflow(flow):
     :return:
     """
     print "Collect sflow function! " #temp
+    sflow_cntr += 1
     # print '\n\n___Incrementing Counter Entry___'
     sflow = {}
 
@@ -365,6 +370,7 @@ def collect_sflow(flow):
 
     if 'srcIP' not in sflow.keys():
         print "Sample with no info" #sample due to OpenVirteX internal signals (?)
+        swni_cntr += 1
         return
     else:
         if sflow['dstMAC'] == 'ff:ff:ff:ff:ff:ff':
@@ -541,6 +547,10 @@ def collect_sflow(flow):
         print 'This should not have happened'
     # print ("Switch: %s,\t sFlow(Hash): %s" % (dpid, d))
 
+def get_samplewithnoinforate():
+    rate = swni_cntr / sflow_cntr
+    msg = "We collected %s samples with no info out of @s sflow samples.\n Percentage: %s " % (swni_cntr, sflow_cntr, rate)
+    return msg
 
 if __name__ == "__main__":
     a = len(sys.argv)
