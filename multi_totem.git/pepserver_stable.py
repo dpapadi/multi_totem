@@ -579,6 +579,7 @@ if __name__ == "__main__":
     server.register_function(check_flowspace)
     server.register_function(check2)
     server.register_function(update_flowspace)
+    server.register_function(get_samplewithnoinforate)
 
     # start server
     server.serve_forever()
