@@ -550,8 +550,8 @@ def collect_sflow(flow):
     # print ("Switch: %s,\t sFlow(Hash): %s" % (dpid, d))
 
 def get_samplewithnoinforate():
-    rate = swni_cntr / sflow_cntr
-    msg = "We collected %s samples with no info out of %s sflow samples.\n Percentage: %.2f" % (swni_cntr, sflow_cntr, rate)
+    rate = swni_cntr / (1.0 * sflow_cntr)
+    msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
     return msg
 
 if __name__ == "__main__":
