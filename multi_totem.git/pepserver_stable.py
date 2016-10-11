@@ -251,7 +251,7 @@ def construct_new_entry(serialized_match):
     dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
     dpid = ovx_patch.mod_dpid(dpid[2:])
     print "mod_dpid "+dpid #temp
-    tid=args[3] #get the tid and passwd from the controller
+    tid=int(args[3]) #get the tid and passwd from the controller
     if tid not in hypervisor_var['tenants']:
         hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
     passwd=args[4]
@@ -314,7 +314,7 @@ def move_to_expired(serialized_match):
     match = args[0]
     dpid = hex(int(args[1])) #dpid in hex
     dpid = ovx_patch.mod_dpid(dpid[2:])
-    tid = args[3]
+    tid = int(args[3])
     passwd = args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" % tid
