@@ -352,6 +352,7 @@ def collect_sflow(flow):
     :return:
     """
     print "Collect sflow function! " #temp
+    global sflow_cntr
     sflow_cntr += 1
     # print '\n\n___Incrementing Counter Entry___'
     sflow = {}
@@ -370,6 +371,7 @@ def collect_sflow(flow):
 
     if 'srcIP' not in sflow.keys():
         print "Sample with no info" #sample due to OpenVirteX internal signals (?)
+        global swni_cntr
         swni_cntr += 1
         return
     else:
