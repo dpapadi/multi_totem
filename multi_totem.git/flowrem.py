@@ -20,8 +20,7 @@ log2 = core.getLogger("Flow Removed")
 server = jsonrpclib.Server('http://localhost:8085')
 
 #for OpenVirteX confirmation, tid-->tenant id, passwd--> password
-tid=1
-passwd=""
+OVX_par = {'tid' : 0, 'pass' : ""}
 
 class CustomEvent(Event):
     """
@@ -83,10 +82,12 @@ class FlowRemovalHandler (EventMixin):
         # log2.debug(c)
 
 
-def launch():
+def launch(tid=0, passwd=""):
     """
     Starting the module
     """
+    OVX_par['tid'] = tid
+    OVX_par['pass'] = passwd
     core.registerNew(FlowRemovalHandler)
 
 
