@@ -65,7 +65,7 @@ class FlowRemovalHandler (EventMixin):
 
         args = ()
         connction = event.connection
-        args = ("construct_new_entry", event.ofp.match, str(connction.dpid), str(time.time()), tid, passwd) #send tid and passwd for pratical and security issues
+        args = ("construct_new_entry", event.ofp.match, str(connction.dpid), str(time.time()), OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
         #b = pickle.dumps(args)
         #server.construct_new_entry(b)
         producer.send(args)
@@ -76,7 +76,7 @@ class FlowRemovalHandler (EventMixin):
 
         args = ()
         connection = event.connection
-        args = ("move_to_expired", event.ofp.match, str(connection.dpid), str(time.time()), tid, passwd) #send tid and passwd for pratical and security issues
+        args = ("move_to_expired", event.ofp.match, str(connection.dpid), str(time.time()),OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
         producer.send(args)
         #b = pickle.dumps(args)
         #a = server.move_to_expired(b)
