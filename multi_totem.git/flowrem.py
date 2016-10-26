@@ -23,6 +23,7 @@ log2 = core.getLogger("Flow Removed")
 
 #for OpenVirteX confirmation, tid-->tenant id, passwd--> password
 OVX_par = {'tid' : 0, 'pass' : ""}
+producer = KafkaProducer()
 
 class CustomEvent(Event):
     """
