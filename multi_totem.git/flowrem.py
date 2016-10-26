@@ -6,10 +6,12 @@ from pox.lib.addresses import EthAddr
 from collections import namedtuple
 from pox.openflow import *
 from pox.forwarding import l2_learning
+from kafka import KafkaProducer
 import os
 import pickle
 import jsonrpclib
 import time
+
 
 # Create Loggers
 log = core.getLogger()
@@ -17,7 +19,7 @@ log1 = core.getLogger("Flow Installed")
 log2 = core.getLogger("Flow Removed")
 
 # Create a new jsonrpclib.Server object, bound to an IP
-server = jsonrpclib.Server('http://localhost:8085')
+# server = jsonrpclib.Server('http://localhost:8085')
 
 #for OpenVirteX confirmation, tid-->tenant id, passwd--> password
 OVX_par = {'tid' : 0, 'pass' : ""}
@@ -63,10 +65,10 @@ class FlowRemovalHandler (EventMixin):
 
         args = ()
         connction = event.connection
-        args = (event.ofp.match, str(connction.dpid), str(time.time()), tid, passwd) #send tid and passwd for pratical and security issues
-        b = pickle.dumps(args)
-
-        server.construct_new_entry(b)
+        args = ("construct_new_entry", event.ofp.match, str(connction.dpid), str(time.time()), tid, passwd) #send tid and passwd for pratical and security issues
+        #b = pickle.dumps(args)
+        #server.construct_new_entry(b)
+        producer.send(args)
         # a = server.construct_new_entry(b)
         # c = pickle.loads(a)
 
@@ -88,6 +90,7 @@ def launch(tid=0, passwd=""):
     """
     OVX_par['tid'] = tid
     OVX_par['pass'] = passwd
+    producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
     core.registerNew(FlowRemovalHandler)
 
 
