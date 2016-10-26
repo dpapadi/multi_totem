@@ -23,7 +23,7 @@ log2 = core.getLogger("Flow Removed")
 
 #for OpenVirteX confirmation, tid-->tenant id, passwd--> password
 OVX_par = {'tid' : 0, 'pass' : ""}
-producer = KafkaProducer()
+producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
 
 class CustomEvent(Event):
     """
@@ -92,7 +92,7 @@ def launch(tid=0, passwd=""):
     """
     OVX_par['tid'] = tid
     OVX_par['pass'] = passwd
-    producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
+    #producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
     core.registerNew(FlowRemovalHandler)
 
 
