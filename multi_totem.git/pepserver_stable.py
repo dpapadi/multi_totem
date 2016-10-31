@@ -594,9 +594,9 @@ if __name__ == "__main__":
         print hypervisor_var
 
     #get input from queue
+    msg_cnt = 0
     while True:
         try:
-            msg_cnt=0
             for message in consumer:
                 get_input_from_queue(message.message.value)
         except:
