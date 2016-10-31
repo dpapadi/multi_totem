@@ -2,6 +2,8 @@
 
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 import pickle
+from kafka.client import SimpleClient
+from kafka.consumer import SimpleConsumer
 import hashlib
 from struct import unpack
 from socket import inet_aton
@@ -12,6 +14,9 @@ import sys
 swni_cntr = 0  #counts the times a sample with no info is collected
 sflow_cntr = 0 #counts the number collect_sflow is used
 
+#client and consumer for kafka queue
+kafka = SimpleClient("localhost:9092")
+consumer = SimpleConsumer(kafka, "gid", "test1")
 #boolean for OVX
 OVX_enable = False
 
@@ -242,23 +247,23 @@ def construct_dict(match, dpid):
     return di
 
 
-def construct_new_entry(serialized_match):
+def construct_new_entry(args):
     """
     :param match: serialized OpenFlow match
     """
-    args = pickle.loads(serialized_match)
-    match = args[0]
-    dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
+    #args = pickle.loads(serialized_match)
+    match = args[1]
+    dpid = hex(int(args[2])) #converts the decimal of the dpid to the actual value
     dpid = ovx_patch.mod_dpid(dpid[2:])
     print "mod_dpid "+dpid #temp
-    tid=int(args[3]) #get the tid and passwd from the controller
+    tid=int(args[4]) #get the tid and passwd from the controller
     if tid not in hypervisor_var['tenants']:
         hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
-    passwd=args[4]
+    passwd=args[5]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" %tid
         return
-    time = float(args[2])
+    time = float(args[3])
     # print '\n\n___Installing New Entry___'
     #match_dict = construct_dict(match, dpid)
 
@@ -305,21 +310,21 @@ def construct_new_entry(serialized_match):
     # assign_flowspace(d, dpid)
 
 
-def move_to_expired(serialized_match):
+def move_to_expired(args):
     """
     :param match: serialized OpenFlow match
     :return:
     """
-    args = pickle.loads(serialized_match)
-    match = args[0]
-    dpid = hex(int(args[1])) #dpid in hex
+    #args = pickle.loads(serialized_match)
+    match = args[1]
+    dpid = hex(int(args[2])) #dpid in hex
     dpid = ovx_patch.mod_dpid(dpid[2:])
-    tid = int(args[3])
-    passwd = args[4]
+    tid = int(args[4])
+    passwd = args[5]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" % tid
         return
-    time = float(args[2])
+    time = float(args[3])
     # print "\n\n___Moving Expired Entry___"
 
 	# create a hash value for the expired flow (not including timestamp)
@@ -357,10 +362,10 @@ def collect_sflow(flow):
     # print '\n\n___Incrementing Counter Entry___'
     sflow = {}
 
-    b = pickle.loads(flow)
+    #b = pickle.loads(flow)
 
     # TODO will try with sflow = b
-    for kk, vv in b.iteritems():
+    for kk, vv in flow.iteritems():
         sflow[kk] = vv
 
     # transition from sflow fields {} to, openflow match {}
@@ -554,6 +559,22 @@ def get_samplewithnoinforate():
     msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
     return msg
 
+def get_input_from_queue(serialized_request):
+    args = pickle.loads(serialized_request)
+    func = args[0]
+    if funct = "move_to_expired":
+        move_to_expired(args)
+    elif func = "construct_new_entry":
+        construct_dict(args)
+    elif func = "collect_sflow":
+        collect_sflow(args)
+    else:
+        print "Error with serialized request!"
+    print "Correct input from queue!"
+    return
+
+
+
 if __name__ == "__main__":
     a = len(sys.argv)
     if a == 2:          #input for configuring a hypervisor
@@ -571,6 +592,10 @@ if __name__ == "__main__":
         OVX_enable=True
     if a == 2:
         print hypervisor_var
+
+    #get input from queue
+    for message in consumer:
+        get_input_from_queue(message.message.value)
     # binding server to port
     server = SimpleJSONRPCServer(('localhost', 8085))
 

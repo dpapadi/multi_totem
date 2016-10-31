@@ -6,7 +6,8 @@ from pox.lib.addresses import EthAddr
 from collections import namedtuple
 from pox.openflow import *
 from pox.forwarding import l2_learning
-from kafka import KafkaProducer
+from kafka.Client import SimpleClient
+from kafka.producer import SimpleProducer
 import os
 import pickle
 import jsonrpclib
@@ -23,7 +24,8 @@ log2 = core.getLogger("Flow Removed")
 
 #for OpenVirteX confirmation, tid-->tenant id, passwd--> password
 OVX_par = {'tid' : 0, 'pass' : ""}
-producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
+kafka = SimpleClient("localhost:9092")
+producer = SimpleProducer(kafka)
 
 class CustomEvent(Event):
     """
@@ -67,9 +69,9 @@ class FlowRemovalHandler (EventMixin):
         args = ()
         connction = event.connection
         args = ("construct_new_entry", event.ofp.match, str(connction.dpid), str(time.time()), OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
-        #b = pickle.dumps(args)
+        b = pickle.dumps(args)
         #server.construct_new_entry(b)
-        producer.send(args)
+        producer.send_messages("test1", b)
         # a = server.construct_new_entry(b)
         # c = pickle.loads(a)
 
@@ -78,8 +80,8 @@ class FlowRemovalHandler (EventMixin):
         args = ()
         connection = event.connection
         args = ("move_to_expired", event.ofp.match, str(connection.dpid), str(time.time()),OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
-        producer.send(args)
-        #b = pickle.dumps(args)
+        b = pickle.dumps(args)
+        producer.send_messages("test1", b)
         #a = server.move_to_expired(b)
         #c = pickle.loads(a)
         log2.debug('Flow Removed from switch: %s', event.connection)
