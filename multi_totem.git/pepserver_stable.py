@@ -565,7 +565,7 @@ def get_input_from_queue(serialized_request):
     if func == "move_to_expired":
         move_to_expired(args)
     elif func == "construct_new_entry":
-        construct_dict(args)
+        construct_new_entry(args)
     elif func == "collect_sflow":
         collect_sflow(args)
     else:
