@@ -562,11 +562,11 @@ def get_samplewithnoinforate():
 def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
     func = args[0]
-    if funct = "move_to_expired":
+    if funct == "move_to_expired":
         move_to_expired(args)
-    elif func = "construct_new_entry":
+    elif func == "construct_new_entry":
         construct_dict(args)
-    elif func = "collect_sflow":
+    elif func == "collect_sflow":
         collect_sflow(args)
     else:
         print "Error with serialized request!"
