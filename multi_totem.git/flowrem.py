@@ -6,7 +6,7 @@ from pox.lib.addresses import EthAddr
 from collections import namedtuple
 from pox.openflow import *
 from pox.forwarding import l2_learning
-from kafka.Client import SimpleClient
+from kafka.client import SimpleClient
 from kafka.producer import SimpleProducer
 import os
 import pickle
@@ -102,6 +102,7 @@ def launch(tid=0, passwd="", queue="localhost:9092"):
             tryagain = False
         except KafkaUnavailableError:
             print "Kafka is unavailable at the moment."
+            time.sleep(2)
     #producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
     core.registerNew(FlowRemovalHandler)
 
