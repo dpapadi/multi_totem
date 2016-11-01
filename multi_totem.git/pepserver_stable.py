@@ -9,6 +9,7 @@ from struct import unpack
 from socket import inet_aton
 import ovx_patch
 import sys
+import time
 
 # 2 counters to calculate the "sample with no info" effect
 swni_cntr = 0  #counts the times a sample with no info is collected
@@ -594,6 +595,7 @@ if __name__ == "__main__":
             tryagain = False
         except:
             print "Queuing system not ready yet."
+            time.sleep(5)
 
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
