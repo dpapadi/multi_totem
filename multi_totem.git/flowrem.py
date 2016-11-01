@@ -70,7 +70,7 @@ class FlowRemovalHandler (EventMixin):
         args = ("construct_new_entry", event.ofp.match, str(connction.dpid), str(time.time()), OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
         b = pickle.dumps(args)
         #server.construct_new_entry(b)
-        producer.send_messages("test1", b)
+        producer.send_messages(tpc, b)
         # a = server.construct_new_entry(b)
         # c = pickle.loads(a)
 
@@ -80,20 +80,22 @@ class FlowRemovalHandler (EventMixin):
         connection = event.connection
         args = ("move_to_expired", event.ofp.match, str(connection.dpid), str(time.time()),OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
         b = pickle.dumps(args)
-        producer.send_messages("test1", b)
+        producer.send_messages(tpc, b)
         #a = server.move_to_expired(b)
         #c = pickle.loads(a)
         log2.debug('Flow Removed from switch: %s', event.connection)
         # log2.debug(c)
 
 
-def launch(tid=0, passwd="", queue="localhost:9092"):
+def launch(tid=0, passwd="", queue="localhost:9092", topic="test1"):
     """
     Starting the module
     """
     tryagain = True
     OVX_par['tid'] = tid
     OVX_par['pass'] = passwd
+    global tpc
+    tpc = topic
     while tryagain:
         try:
             kafka = SimpleClient(queue)
