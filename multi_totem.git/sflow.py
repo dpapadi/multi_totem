@@ -14,8 +14,6 @@ sflow_dpid = {}
 # Crate a new object of class jsonrpclib.Server
 server = jsonrpclib.Server('http://localhost:8085')
 
-global producer
-
 # https://stackoverflow.com/questions/1283061/python-capture-popen-stdout-and-display-on-console
 def call_and_peek_output(cmd, shell=False):
     import pty
@@ -153,6 +151,7 @@ def sflowParser():
 if __name__ == "__main__":
     a = len(sys.argv)
     tryagain = True
+    global producer
     if a == 2 or a==3:
         print "Wrong Usage: Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
         exit()
