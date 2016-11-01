@@ -15,8 +15,6 @@ sflow_dpid = {}
 server = jsonrpclib.Server('http://localhost:8085')
 
 global producer
-producer = SimpleProducer()
-
 
 # https://stackoverflow.com/questions/1283061/python-capture-popen-stdout-and-display-on-console
 def call_and_peek_output(cmd, shell=False):
@@ -162,7 +160,6 @@ if __name__ == "__main__":
         while tryagain:
             try:
                 kafka = SimpleClient(sys.argv[2])
-                global producer
                 producer = SimpleProducer(kafka)
                 tryagain = False
             except Exception:
@@ -184,7 +181,6 @@ if __name__ == "__main__":
         while tryagain:
             try:
                 kafka = SimpleClient(sys.argv[2])
-                global producer
                 producer = SimpleProducer(kafka)
                 tryagain = False
             except Exception:
