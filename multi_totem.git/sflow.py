@@ -135,7 +135,7 @@ def sflowParser():
             # The above is used not to double-count the flows, since counter is initialized in one
             # The above has to be modified since in our case we drop traffic
 
-            producer.send_messages(sys.argv[3], b)
+            #producer.send_messages(sys.argv[3], b)
             #try:
                 #server.collect_sflow(b)
             #except  Exception,e:
