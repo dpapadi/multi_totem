@@ -587,7 +587,7 @@ if __name__ == "__main__":
 
     kafka = SimpleClient(hypervisor_var['queue'])
     global consumer #consumer for kafka queue
-    consumer = SimpleConsumer(kafka, hypervisor_var['queue_topic'])
+    consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
 
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
