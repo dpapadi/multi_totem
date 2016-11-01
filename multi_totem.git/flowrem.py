@@ -100,7 +100,7 @@ def launch(tid=0, passwd="", queue="localhost:9092"):
             global producer
             producer = SimpleProducer(kafka)
             tryagain = False
-        except KafkaUnavailableError:
+        except Exception:
             print "Kafka is unavailable at the moment."
             time.sleep(2)
     #producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
