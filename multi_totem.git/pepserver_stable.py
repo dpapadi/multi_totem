@@ -584,10 +584,15 @@ if __name__ == "__main__":
         except IOError:
             print "No such file: \t%s\n" % file_name
             exit()
-
-    kafka = SimpleClient(hypervisor_var['queue'])
-    global consumer #consumer for kafka queue
-    consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
+    tryagain = True
+    while tryagain:
+        try:
+            kafka = SimpleClient(hypervisor_var['queue'])
+            global consumer #consumer for kafka queue
+            consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
+            tryagain = False
+        except:
+            print "Queuing system not ready yet."
 
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
