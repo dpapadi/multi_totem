@@ -590,6 +590,7 @@ if __name__ == "__main__":
             kafka = SimpleClient(hypervisor_var['queue'])
             global consumer #consumer for kafka queue
             consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
+            print "Queuing system is up."
             tryagain = False
         except:
             print "Queuing system not ready yet."
