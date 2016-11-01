@@ -107,8 +107,10 @@ def register_queue(url):
         producer = SimpleProducer(kafka)
         global tryagain
         tryagain = False
+        return
     except Exception:
         print "Kafka is unavailable at the moment."
+        return
 
 
 def launch(tid=0, passwd="", queue="localhost:9092", topic="test1"):

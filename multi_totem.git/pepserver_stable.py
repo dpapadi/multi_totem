@@ -571,6 +571,18 @@ def get_input_from_queue(serialized_request):
     print "Correct input from queue!"
     return
 
+def register_queue():
+    try:
+        kafka = SimpleClient(hypervisor_var['queue'])
+        global consumer  # consumer for kafka queue
+        consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
+        global tryagain
+        tryagain = False
+        print "Queuing system is up."
+        return
+    except Exception:
+        print "Queuing system not ready yet."
+        return
 
 
 if __name__ == "__main__":
@@ -587,15 +599,8 @@ if __name__ == "__main__":
             exit()
     tryagain = True
     while tryagain:
-        try:
-            kafka = SimpleClient(hypervisor_var['queue'])
-            global consumer #consumer for kafka queue
-            consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
-            print "Queuing system is up."
-            tryagain = False
-        except:
-            print "Queuing system not ready yet."
-            time.sleep(5)
+        register_queue()
+        time.sleep(5)
 
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
