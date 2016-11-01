@@ -76,6 +76,8 @@ class FlowRemovalHandler (EventMixin):
             producer.send_messages(tpc, b)
         except:
             print "Queue is not ready yet."
+            global tryagain
+            tryagain = True
         # a = server.construct_new_entry(b)
         # c = pickle.loads(a)
 
@@ -91,21 +93,22 @@ class FlowRemovalHandler (EventMixin):
             producer.send_messages(tpc, b)
         except:
             print "Queue is not ready yet."
+            global tryagain
+            tryagain = True
         #a = server.move_to_expired(b)
         #c = pickle.loads(a)
         log2.debug('Flow Removed from switch: %s', event.connection)
         # log2.debug(c)
 
 def register_queue(url):
-    while tryagain:
-        try:
-            kafka = SimpleClient(url)
-            global producer
-            producer = SimpleProducer(kafka)
-            global tryagain
-            tryagain = False
-        except Exception:
-            print "Kafka is unavailable at the moment."
+    try:
+        kafka = SimpleClient(url)
+        global producer
+        producer = SimpleProducer(kafka)
+        global tryagain
+        tryagain = False
+    except Exception:
+        print "Kafka is unavailable at the moment."
 
 
 def launch(tid=0, passwd="", queue="localhost:9092", topic="test1"):
