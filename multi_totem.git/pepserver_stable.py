@@ -14,9 +14,6 @@ import sys
 swni_cntr = 0  #counts the times a sample with no info is collected
 sflow_cntr = 0 #counts the number collect_sflow is used
 
-#client and consumer for kafka queue
-kafka = SimpleClient("localhost:9092")
-consumer = SimpleConsumer(kafka, "gid", "test1")
 #boolean for OVX
 OVX_enable = False
 
@@ -587,6 +584,11 @@ if __name__ == "__main__":
         except IOError:
             print "No such file: \t%s\n" % file_name
             exit()
+
+    kafka = SimpleClient(hypervisor_var['queue'])
+    global consumer #consumer for kafka queue
+    consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
+
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
         OVX_enable=True
