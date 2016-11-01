@@ -70,7 +70,12 @@ class FlowRemovalHandler (EventMixin):
         args = ("construct_new_entry", event.ofp.match, str(connction.dpid), str(time.time()), OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
         b = pickle.dumps(args)
         #server.construct_new_entry(b)
-        producer.send_messages(tpc, b)
+        if tryagain:
+            register_queue(q)
+        try:
+            producer.send_messages(tpc, b)
+        except:
+            print "Queue is not ready yet."
         # a = server.construct_new_entry(b)
         # c = pickle.loads(a)
 
@@ -80,31 +85,42 @@ class FlowRemovalHandler (EventMixin):
         connection = event.connection
         args = ("move_to_expired", event.ofp.match, str(connection.dpid), str(time.time()),OVX_par['tid'], OVX_par['pass']) #send tid and passwd for pratical and security issues
         b = pickle.dumps(args)
-        producer.send_messages(tpc, b)
+        if tryagain:
+            register_queue(q)
+        try:
+            producer.send_messages(tpc, b)
+        except:
+            print "Queue is not ready yet."
         #a = server.move_to_expired(b)
         #c = pickle.loads(a)
         log2.debug('Flow Removed from switch: %s', event.connection)
         # log2.debug(c)
+
+def register_queue(url):
+    while tryagain:
+        try:
+            kafka = SimpleClient(url)
+            global producer
+            producer = SimpleProducer(kafka)
+            global tryagain
+            tryagain = False
+        except Exception:
+            print "Kafka is unavailable at the moment."
 
 
 def launch(tid=0, passwd="", queue="localhost:9092", topic="test1"):
     """
     Starting the module
     """
+    global tryagain
     tryagain = True
     OVX_par['tid'] = tid
     OVX_par['pass'] = passwd
     global tpc
     tpc = topic
-    while tryagain:
-        try:
-            kafka = SimpleClient(queue)
-            global producer
-            producer = SimpleProducer(kafka)
-            tryagain = False
-        except Exception:
-            print "Kafka is unavailable at the moment."
-            time.sleep(5)
+    global q
+    q = queue
+    register_queue(q)
     #producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
     core.registerNew(FlowRemovalHandler)
 
