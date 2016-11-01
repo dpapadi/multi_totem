@@ -172,19 +172,19 @@ if __name__ == "__main__":
                 for line in f:
                     (key, val) = line.split()
                     sflow_dpid[key] = val
+            while tryagain:
+                try:
+                    kafka = SimpleClient(sys.argv[2])
+                    producer = SimpleProducer(kafka)
+                    tryagain = False
+                except Exception:
+                    print "Kafka is unavailable at the moment."
+                    time.sleep(5)
             sflowParser()
         except IOError:
             print "\nNo such file: \t%s\n" % file_name
             print "Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
             exit()
-        while tryagain:
-            try:
-                kafka = SimpleClient(sys.argv[2])
-                producer = SimpleProducer(kafka)
-                tryagain = False
-            except Exception:
-                print "Kafka is unavailable at the moment."
-                time.sleep(5)
     else:
         print "Wrong Usage: Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
         exit()
