@@ -599,7 +599,7 @@ if __name__ == "__main__":
         try:
             for message in consumer:
                 get_input_from_queue(message.message.value)
-        except:
+        except Exception:
             msg_cnt += 1
             print "Error n%s" % msg_cnt
     # binding server to port

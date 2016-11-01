@@ -102,7 +102,7 @@ def launch(tid=0, passwd="", queue="localhost:9092"):
             tryagain = False
         except Exception:
             print "Kafka is unavailable at the moment."
-            time.sleep(2)
+            time.sleep(5)
     #producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
     core.registerNew(FlowRemovalHandler)
 
