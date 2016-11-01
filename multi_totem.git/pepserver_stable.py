@@ -564,7 +564,7 @@ def get_input_from_queue(serialized_request):
     elif func == "construct_new_entry":
         construct_new_entry(args)
     elif func == "collect_sflow":
-        collect_sflow(args)
+        collect_sflow(args[1])
     else:
         print "Error with serialized request!"
     print "Correct input from queue!"

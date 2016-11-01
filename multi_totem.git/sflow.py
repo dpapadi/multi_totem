@@ -5,6 +5,8 @@ import os
 import sys
 import pickle
 import jsonrpclib
+from kafka.client import SimpleClient
+from kafka.producer import SimpleProducer
 
 # Create a mapping between sflow agent ID and DPID
 sflow_dpid = {}
@@ -124,7 +126,9 @@ def sflowParser():
             print 'flow:'
             print flow
 
-            b = pickle.dumps(flow)
+            args = ("collect_sflow", flow)
+            b = pickle.dumps(args)
+            #b = pickle.dumps(flow)
             #if 'outputPort' in flow:
              #   server.collect_sflow(b)
             #else:
@@ -132,10 +136,11 @@ def sflowParser():
             # The above is used not to double-count the flows, since counter is initialized in one
             # The above has to be modified since in our case we drop traffic
 
-            try:
-                server.collect_sflow(b)
-            except  Exception,e:
-                print   str(e)
+            producer.send_messages(sys.argv[3], b)
+            #try:
+                #server.collect_sflow(b)
+            #except  Exception,e:
+                #print   str(e)
 
         # ---- Condition to split the fields of flowsamples
         if switch == 1:
@@ -146,10 +151,22 @@ def sflowParser():
             
 if __name__ == "__main__":
     a = len(sys.argv)
-    if a == 2:
-        sflowParser()
-    elif a == 3:
-        file_name = sys.argv[2]
+    tryagain = True
+    if a == 2 or a==3:
+        print "Wrong Usage: Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
+        exit()
+    if a == 4:
+        while tryagain:
+            try:
+                kafka = SimpleClient(sys.argv[2])
+                global producer
+                producer = SimpleProducer(kafka)
+                tryagain = False
+            except Exception:
+                print"Kafka is unavailable at the moment."
+                time.sleep(5)
+    elif a == 5:
+        file_name = sys.argv[4]
         try:
             # construct sflow_dpid mapping based on a file
             with open(file_name) as f:
@@ -159,7 +176,17 @@ if __name__ == "__main__":
             sflowParser()
         except IOError:
             print "\nNo such file: \t%s\n" % file_name
-            print "Provide EXACTLY two arguments <target_port> <filename> (JSON Format)\n"
+            print "Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
+            exit()
+        while tryagain:
+            try:
+                kafka = SimpleClient(queue)
+                global producer
+                producer = SimpleProducer(kafka)
+                tryagain = False
+            except Exception:
+                print "Kafka is unavailable at the moment."
+                time.sleep(5)
     else:
-        print "Wrong Usage: Provide EXACTLY two arguments <target_port> <filename> (JSON Format)"
+        print "Wrong Usage: Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
         exit()
