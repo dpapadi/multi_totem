@@ -24,8 +24,7 @@ log2 = core.getLogger("Flow Removed")
 
 #for OpenVirteX confirmation, tid-->tenant id, passwd--> password
 OVX_par = {'tid' : 0, 'pass' : ""}
-kafka = SimpleClient("localhost:9092")
-producer = SimpleProducer(kafka)
+
 
 class CustomEvent(Event):
     """
@@ -88,12 +87,21 @@ class FlowRemovalHandler (EventMixin):
         # log2.debug(c)
 
 
-def launch(tid=0, passwd=""):
+def launch(tid=0, passwd="", queue="localhost:9092"):
     """
     Starting the module
     """
+    tryagain = True
     OVX_par['tid'] = tid
     OVX_par['pass'] = passwd
+    while tryagain:
+        try:
+            kafka = SimpleClient(queue)
+            global producer
+            producer = SimpleProducer(kafka)
+            tryagain = False
+        except KafkaUnavailableError:
+            print "Kafka is unavailable at the moment."
     #producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
     core.registerNew(FlowRemovalHandler)
 
