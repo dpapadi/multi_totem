@@ -14,7 +14,8 @@ sflow_dpid = {}
 # Crate a new object of class jsonrpclib.Server
 server = jsonrpclib.Server('http://localhost:8085')
 
-global producer = SimpleProducer()
+global producer
+producer = SimpleProducer()
 
 
 # https://stackoverflow.com/questions/1283061/python-capture-popen-stdout-and-display-on-console
