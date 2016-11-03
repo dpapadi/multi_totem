@@ -144,7 +144,6 @@ def sflowParser():
                 producer.send_messages(sys.argv[3], b)
             except:
                 print "Error in queue!"
-                global tryagain
                 tryagain = True
             #try:
                 #server.collect_sflow(b)
