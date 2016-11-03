@@ -134,8 +134,14 @@ def sflowParser():
              #   print 'packet in Sampled\n'
             # The above is used not to double-count the flows, since counter is initialized in one
             # The above has to be modified since in our case we drop traffic
-
-            producer.send_messages(sys.argv[3], b)
+            if tryagain:
+                register_queue()
+            try:
+                producer.send_messages(sys.argv[3], b)
+            except:
+                print "Error in queue!"
+                global tryagain
+                tryagain = True
             #try:
                 #server.collect_sflow(b)
             #except  Exception,e:
@@ -147,7 +153,19 @@ def sflowParser():
             if field in tuples:
                 flow[field] = value
 
-            
+def register_queue():
+    try:
+        kafka = SimpleClient(sys.argv[2])
+        global producer
+        producer = SimpleProducer(kafka)
+        global tryagain
+        tryagain = False
+        return
+    except Exception:
+        print "Kafka is unavailable at the moment."
+        return
+
+
 if __name__ == "__main__":
     a = len(sys.argv)
     tryagain = True
@@ -156,14 +174,7 @@ if __name__ == "__main__":
         print "Wrong Usage: Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
         exit()
     if a == 4:
-        while tryagain:
-            try:
-                kafka = SimpleClient(sys.argv[2])
-                producer = SimpleProducer(kafka)
-                tryagain = False
-            except Exception:
-                print"Kafka is unavailable at the moment."
-                time.sleep(5)
+        register_queue()
         sflowParser()
     elif a == 5:
         file_name = sys.argv[4]
@@ -173,14 +184,7 @@ if __name__ == "__main__":
                 for line in f:
                     (key, val) = line.split()
                     sflow_dpid[key] = val
-            while tryagain:
-                try:
-                    kafka = SimpleClient(sys.argv[2])
-                    producer = SimpleProducer(kafka)
-                    tryagain = False
-                except Exception:
-                    print "Kafka is unavailable at the moment."
-                    time.sleep(5)
+            register_queue()
             sflowParser()
         except IOError:
             print "\nNo such file: \t%s\n" % file_name

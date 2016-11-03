@@ -75,7 +75,7 @@ class FlowRemovalHandler (EventMixin):
         try:
             producer.send_messages(tpc, b)
         except:
-            print "Queue is not ready yet."
+            print "Error in queue."
             global tryagain
             tryagain = True
         # a = server.construct_new_entry(b)
@@ -92,7 +92,7 @@ class FlowRemovalHandler (EventMixin):
         try:
             producer.send_messages(tpc, b)
         except:
-            print "Queue is not ready yet."
+            print "Error in queue."
             global tryagain
             tryagain = True
         #a = server.move_to_expired(b)
