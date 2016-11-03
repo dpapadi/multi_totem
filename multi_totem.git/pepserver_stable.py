@@ -560,8 +560,9 @@ def get_samplewithnoinforate():
 def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
     func = args[0]
+    func += "(args[1:])"
     try:
-        exec(func(args[1:]))
+        exec(func)
     except:
         print "Error with serialized request!"
         return
