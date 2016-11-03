@@ -13,6 +13,7 @@ sflow_dpid = {}
 
 #boolean needed to register the queue between sflow - pepserver
 global tryagain
+tryagain = True
 
 # Crate a new object of class jsonrpclib.Server
 server = jsonrpclib.Server('http://localhost:8085')
@@ -171,7 +172,6 @@ def register_queue():
 
 if __name__ == "__main__":
     a = len(sys.argv)
-    tryagain = True
     global producer
     if a == 2 or a==3:
         print "Wrong Usage: Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
