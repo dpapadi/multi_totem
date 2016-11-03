@@ -250,18 +250,18 @@ def construct_new_entry(args):
     :param match: serialized OpenFlow match
     """
     #args = pickle.loads(serialized_match)
-    match = args[1]
-    dpid = hex(int(args[2])) #converts the decimal of the dpid to the actual value
+    match = args[0]
+    dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
     dpid = ovx_patch.mod_dpid(dpid[2:])
     print "mod_dpid "+dpid #temp
-    tid=int(args[4]) #get the tid and passwd from the controller
+    tid=int(args[3]) #get the tid and passwd from the controller
     if tid not in hypervisor_var['tenants']:
         hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
-    passwd=args[5]
+    passwd=args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" %tid
         return
-    time = float(args[3])
+    time = float(args[2])
     # print '\n\n___Installing New Entry___'
     #match_dict = construct_dict(match, dpid)
 
@@ -314,15 +314,15 @@ def move_to_expired(args):
     :return:
     """
     #args = pickle.loads(serialized_match)
-    match = args[1]
-    dpid = hex(int(args[2])) #dpid in hex
+    match = args[0]
+    dpid = hex(int(args[1])) #dpid in hex
     dpid = ovx_patch.mod_dpid(dpid[2:])
-    tid = int(args[4])
-    passwd = args[5]
+    tid = int(args[3])
+    passwd = args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" % tid
         return
-    time = float(args[3])
+    time = float(args[2])
     # print "\n\n___Moving Expired Entry___"
 
 	# create a hash value for the expired flow (not including timestamp)
@@ -560,15 +560,12 @@ def get_samplewithnoinforate():
 def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
     func = args[0]
-    if func == "move_to_expired":
-        move_to_expired(args)
-    elif func == "construct_new_entry":
-        construct_new_entry(args)
-    elif func == "collect_sflow":
-        collect_sflow(args[1])
-    else:
+    try:
+        func(args[1:])
+    except:
         print "Error with serialized request!"
-    print "Correct input from queue!"
+        return
+    print "Correct input from queue!" #temp
     return
 
 def register_queue():
