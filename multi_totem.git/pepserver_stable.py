@@ -561,7 +561,7 @@ def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
     func = args[0]
     try:
-        func(args[1:])
+        exec(func(args[1:]))
     except:
         print "Error with serialized request!"
         return
