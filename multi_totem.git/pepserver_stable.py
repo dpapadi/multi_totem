@@ -582,6 +582,7 @@ def register_queue():
         return
     except Exception:
         print "Queuing system not ready yet."
+        time.sleep(5)
         return
 
 
@@ -600,7 +601,6 @@ if __name__ == "__main__":
     tryagain = True
     while tryagain:
         register_queue()
-        time.sleep(5)
 
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
