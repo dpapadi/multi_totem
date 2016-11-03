@@ -138,6 +138,7 @@ def sflowParser():
              #   print 'packet in Sampled\n'
             # The above is used not to double-count the flows, since counter is initialized in one
             # The above has to be modified since in our case we drop traffic
+            global trygain
             if tryagain:
                 register_queue()
             try:
