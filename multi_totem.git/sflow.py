@@ -11,9 +11,6 @@ from kafka.producer import SimpleProducer
 # Create a mapping between sflow agent ID and DPID
 sflow_dpid = {}
 
-#boolean needed to register the queue between sflow - pepserver
-global tryagain
-tryagain = True
 
 # Crate a new object of class jsonrpclib.Server
 server = jsonrpclib.Server('http://localhost:8085')
@@ -138,7 +135,7 @@ def sflowParser():
              #   print 'packet in Sampled\n'
             # The above is used not to double-count the flows, since counter is initialized in one
             # The above has to be modified since in our case we drop traffic
-            global trygain
+            global tryagain
             if tryagain:
                 register_queue()
             try:
@@ -172,6 +169,8 @@ def register_queue():
 
 if __name__ == "__main__":
     a = len(sys.argv)
+    global trygain
+    tryagain = True
     global producer
     if a == 2 or a==3:
         print "Wrong Usage: Provide EXACTLY four arguments <target_port> <queue_url:port> <queue_topic> <filename>(JSON Format)"
