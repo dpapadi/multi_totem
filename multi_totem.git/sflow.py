@@ -11,6 +11,9 @@ from kafka.producer import SimpleProducer
 # Create a mapping between sflow agent ID and DPID
 sflow_dpid = {}
 
+#boolean needed to register the queue between sflow - pepserver
+global tryagain
+
 # Crate a new object of class jsonrpclib.Server
 server = jsonrpclib.Server('http://localhost:8085')
 
