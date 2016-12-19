@@ -630,8 +630,7 @@ if __name__ == "__main__":
                 get_input_from_queue(message.message.value)
         except Exception:
             msg_cnt += 1
-            print
-            "Error n%s" % msg_cnt
+            print "Error n%s" % msg_cnt
 
     # start server
     server.serve_forever()
