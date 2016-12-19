@@ -354,7 +354,6 @@ def collect_sflow(flow):
     :param match: serialized sflow sample
     :return:
     """
-    print "Collect sflow function! " #temp
     global sflow_cntr
     sflow_cntr += 1
     # print '\n\n___Incrementing Counter Entry___'
@@ -609,15 +608,6 @@ if __name__ == "__main__":
     if a == 2:
         print hypervisor_var
 
-    #get input from queue
-    msg_cnt = 0
-    while True:
-        try:
-            for message in consumer:
-                get_input_from_queue(message.message.value)
-        except Exception:
-            msg_cnt += 1
-            print "Error n%s" % msg_cnt
     # binding server to port
     server = SimpleJSONRPCServer(('localhost', 8085))
 
@@ -629,6 +619,19 @@ if __name__ == "__main__":
     server.register_function(check2)
     server.register_function(update_flowspace)
     server.register_function(get_samplewithnoinforate)
+
+    # get input from queue
+    msg_cnt = 0
+    while True:
+        try:
+            server.handle_request()
+            for message in consumer:
+                server.handle_request()
+                get_input_from_queue(message.message.value)
+        except Exception:
+            msg_cnt += 1
+            print
+            "Error n%s" % msg_cnt
 
     # start server
     server.serve_forever()
