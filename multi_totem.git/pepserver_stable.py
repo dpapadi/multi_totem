@@ -624,9 +624,7 @@ if __name__ == "__main__":
     msg_cnt = 0
     while True:
         try:
-            server.handle_request()
             for message in consumer:
-                server.handle_request()
                 get_input_from_queue(message.message.value)
         except Exception:
             msg_cnt += 1
