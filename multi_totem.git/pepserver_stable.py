@@ -625,9 +625,8 @@ if __name__ == "__main__":
     while True:
         try:
             for message in consumer:
-                if len(server.requests) > 0:
-                    server.handle_request()
                 get_input_from_queue(message.message.value)
+            print "I made it here!"
         except Exception:
             msg_cnt += 1
             print "Error n%s" % msg_cnt
