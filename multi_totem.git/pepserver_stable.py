@@ -624,6 +624,7 @@ if __name__ == "__main__":
     msg_cnt = 0
     while True:
         try:
+            print "will you make it?"
             for message in consumer:
                 get_input_from_queue(message.message.value)
             print "I made it here!"
