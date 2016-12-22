@@ -625,8 +625,9 @@ if __name__ == "__main__":
     while True:
         try:
             print "will you make it?"
-            for message in consumer:
-                get_input_from_queue(message.message.value)
+            msg = consumer.get_message()
+            #for message in consumer:
+             #   get_input_from_queue(message.message.value)
             print "I made it here!"
         except Exception:
             msg_cnt += 1
