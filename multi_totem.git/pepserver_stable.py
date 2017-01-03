@@ -556,6 +556,9 @@ def get_samplewithnoinforate():
     msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
     return msg
 
+def checkout():
+    return
+
 def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
     func = args[0]
@@ -574,8 +577,10 @@ def get_input_from_queue(serialized_request):
 def register_queue():
     try:
         kafka = SimpleClient(hypervisor_var['queue'])
-        global consumer  # consumer for kafka queue
-        consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], hypervisor_var['queue_topic'])
+        global main_consumer  # consumer for kafka queue
+        global client_consumer
+        main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "main")
+        client_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
         global tryagain
         tryagain = False
         print "Queuing system is up."
@@ -625,7 +630,11 @@ if __name__ == "__main__":
     while True:
         try:
             print "will you make it?"
-            msg = consumer.get_message()
+            cl_req = False
+            cl_req = client_consumer.get_message()
+            if cl_req.value:
+                checkout()
+            msg = main_consumer.get_message()
             #for message in consumer:
             get_input_from_queue(msg.message.value)
             print "I made it here!"
