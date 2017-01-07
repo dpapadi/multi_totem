@@ -45,127 +45,6 @@ mapper = {'inputPort': 'in_port',
           'dstIP': 'nw_dst'}
 
 
-def check_flowspace():
-    """
-	:params None
-
-	:rtype : Serialized version of flowspace
-    """
-    # print flowspace
-    a = pickle.dumps(flowspace)
-    return a
-
-
-def check2():
-    """
-	:params None
-	:rtype : Serialized tuple containing active and expired dictionaries
-    """
-    args = (active,expired)
-    b = pickle.dumps(args)
-    return b
-
-
-def update_flowspace(serial):
-    """
-	:params serialized version of flowspace
-    """
-    # TODO delete previous flowspace (or keep a diff)
-    # Update Flowspace
-    print 'Updated'
-    space = pickle.loads(serial)
-    for l in range(0, len(space)):
-        flowspace.append(space[l])
-
-
-def assign_flowspace(hash_val, dpid):
-    """
-	:params hashed value of our flow rule and dpid
-	:rtype
-    """
-
-    flow_fields = ['in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan',
-	               'nw_proto', 'nw_src', 'nw_dst', 'nw_tos', 'tp_src', 'tp_dst']
-
-    # List throught all flowspace rules
-    for a in range(0, len(flowspace)):
-        # if we examine a flowspace rule that refers to another dpid, continue
-        if flowspace[a]['dpid'][-1] != dpid:
-            continue
-        # for every match field
-        for k in flow_fields:
-            if k not in flowspace[a]['match']:
-                # wildcard in flow space so we dont care
-                # print '1'
-                continue
-            elif active[dpid][hash_val]['match'][k] is None:
-                # flowspace field is not a wildcard
-                # if flow space does not  have the same value, break
-                # print '2'
-                break
-            elif flowspace[a]['match'][k] == active[dpid][hash_val]['match'][k]:
-                # if both above conditions are not met, check if their values are identical
-				#print '3'
-                continue
-            else:
-                # special treatment for ip subnets
-                if (k == 'nw_src') or (k == 'nw_dst'):
-                    # split flowspace and openflow rules to A.B.C.D/M format
-                    fsp = flowspace[a]['match'][k].split('/')
-                    frl = active[dpid][hash_val]['match'][k].split('/')
-
-                    if len(fsp) == 1:
-                        # if length is equal to 1 its just an IP ( A.B.C.D ) not a subnet
-                        break
-                    else:
-                        # A.B.C.D/M
-                        tmp = int (fsp[1])
-                        # convert equivalent subnet mask (M)
-                        fsp_mask = int ((tmp* '1' + (32 - tmp) * '0'), 2)
-
-                        if len(frl) == 1:
-                            # check if flow rule is a a.b.c.d
-							# Then Check if (A.B.C.D && M == a.b.c.d)
-                            if (unpack("!L", inet_aton(frl[0]))[0] & fsp_mask) == unpack("!L", inet_aton(fsp[0]))[0]:
-                                continue
-                            else:
-                                break
-                        else:
-                            # flow rule is a.b.c.d/m
-							# do the same but this time check if flow rule refers to a subset of flowspace
-                            tmp = int (frl[1])
-                            frl_mask = int ((tmp * '1' + (32 - tmp) * '0'), 2)
-
-                            if frl_mask > fsp_mask :
-                                break
-                            elif (unpack("!L", inet_aton(frl[0]))[0] & fsp_mask) == unpack("!L", inet_aton(fsp[0]))[0]:
-                                continue
-                            else:
-                                break
-
-                else:
-                    # not same value, (or something else)
-                    # print '4'
-                    break
-
-        else:
-            # exhausted flow rule, so flowspace is found
-            active[dpid][hash_val]['slice_Owner'] = flowspace[a]['slice-action'][0]['slice-name']
-            break
-    else:
-        # not part of any flowspace
-        print 'Not part of any flowspace'
-        active[dpid][hash_val]['slice_Owner'] = None
-
-
-def return_active():
-    pass
-
-
-def return_expired():
-    pass
-
-
 def construct_hashed_key(match, time_s=None, hash_f=1):
     """
 	:params (OpenFlow match, timestamp, flag)
@@ -551,13 +430,6 @@ def collect_sflow(flow):
         print 'This should not have happened'
     # print ("Switch: %s,\t sFlow(Hash): %s" % (dpid, d))
 
-def get_samplewithnoinforate():
-    rate = swni_cntr / (1.0 * sflow_cntr)
-    msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
-    return msg
-
-def checkout():
-    return
 
 def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
@@ -590,6 +462,22 @@ def register_queue():
         time.sleep(5)
         return
 
+def checkout():
+    """
+    :params None
+    :rtype : Serialized tuple containing active and expired dictionaries
+    """
+    #args = (active, expired)
+    #b = pickle.dumps(args)
+    #return b
+    tmp = "Successfull Attempt"
+    b = picle.dumps((True, tmp))
+    return b
+
+def get_samplewithnoinforate():
+    rate = swni_cntr / (1.0 * sflow_cntr)
+    msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
+    return msg
 
 if __name__ == "__main__":
     a = len(sys.argv)
@@ -617,30 +505,23 @@ if __name__ == "__main__":
     server = SimpleJSONRPCServer(('localhost', 8085))
 
     # register functions for usage
-    server.register_function(construct_new_entry)
-    server.register_function(move_to_expired)
-    server.register_function(collect_sflow)
-    server.register_function(check_flowspace)
-    server.register_function(check2)
-    server.register_function(update_flowspace)
+    server.register_function(checkout)
     server.register_function(get_samplewithnoinforate)
 
     # get input from queue
     msg_cnt = 0
+    cl_req = False
     while True:
         try:
-            print "will you make it?"
-            cl_req = False
-            cl_req = client_consumer.get_message()
-            if cl_req.value:
-                checkout()
+            print "will you make it?" #temp
+            cl_req = client_consumer.get_message().message.value
+            if cl_req:
+                server.handle_request()
+                cl_req = False
             msg = main_consumer.get_message()
             #for message in consumer:
             get_input_from_queue(msg.message.value)
-            print "I made it here!"
+            print "I made it here!" #temp
         except Exception:
             msg_cnt += 1
             print "Error n%s" % msg_cnt
-
-    # start server
-    server.serve_forever()
