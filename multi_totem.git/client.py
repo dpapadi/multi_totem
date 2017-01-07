@@ -37,6 +37,7 @@ if __name__ == "__main__":
         print "Error in queue!"
         tryagain = True
     while done:
-        (msg, done) = server.checkout()
+        a = server.checkout()
+        (msg, done) = pickle.loads(a)
     print msg
 
