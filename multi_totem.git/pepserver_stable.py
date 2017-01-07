@@ -471,7 +471,9 @@ def checkout():
     #b = pickle.dumps(args)
     #return b
     tmp = "Successfull Attempt"
-    b = pickle.dumps((True, tmp))
+    args = (tmp, True)
+    b = pickle.dumps(args)
+    print tmp
     return b
 
 def get_samplewithnoinforate():
