@@ -10,7 +10,7 @@ server = jsonrpclib.Server('http://localhost:8085')
 
 def register_queue():
     try:
-        kafka = SimpleClient(sys.argv[2])
+        kafka = SimpleClient("localhost:9092")
         global producer
         producer = SimpleProducer(kafka)
         global tryagain
@@ -23,7 +23,6 @@ def register_queue():
 
 if __name__ == "__main__":
     done = True
-    a = len(sys.argv)
     global trygain
     tryagain = True
     global producer
