@@ -31,11 +31,13 @@ if __name__ == "__main__":
     while tryagain:
         register_queue()
     print "Client is ready."
-    try:
-        producer.send_messages("client", True)
-    except:
-        print "Error in queue!"
-        tryagain = True
+    while tryagain:
+        try:
+            producer.send_messages("client", True)
+            tryagain = False
+        except:
+            print "Error in queue!"
+            tryagain = True
     while done:
         a = server.checkout()
         (msg, done) = pickle.loads(a)
