@@ -41,6 +41,8 @@ if __name__ == "__main__":
             loop = True
     while done:
         a = server.checkout()
-        (msg, done) = pickle.loads(a)
+        args = pickle.loads(a)
+        msg = args[0]
+        done = args[1]
     print msg
 
