@@ -27,17 +27,18 @@ if __name__ == "__main__":
     done = True
     global trygain
     tryagain = True
+    loop = True
     global producer
     while tryagain:
         register_queue()
     print "Client is ready."
-    while tryagain:
+    while loop:
         try:
             producer.send_messages("client", True)
-            tryagain = False
+            loop = False
         except:
             print "Error in queue!"
-            tryagain = True
+            loop = True
     while done:
         a = server.checkout()
         (msg, done) = pickle.loads(a)
