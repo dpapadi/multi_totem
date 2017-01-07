@@ -51,7 +51,7 @@ def activate_server():
         register_queue()
 
 def ret_active():
-    print "active: " + (active)
+    print "active: " + str(active)
     print "\n\n"
     return
 
