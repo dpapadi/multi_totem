@@ -514,7 +514,7 @@ if __name__ == "__main__":
     while True:
         try:
             print "will you make it?" #temp
-            cl_req = client_consumer.get_message().message.value
+            cl_req = client_consumer.get_message()
             print cl_req
             raw_input()
             if cl_req:
