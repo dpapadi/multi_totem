@@ -34,7 +34,7 @@ if __name__ == "__main__":
     print "Client is ready."
     while loop:
         try:
-            producer.send_messages("client", True)
+            producer.send_messages("client", "hi")
             loop = False
         except:
             print "Error in queue!"
