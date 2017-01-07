@@ -74,7 +74,7 @@ if __name__ == "__main__":
         print "\n\n"
         choices = ['1', '2', '3', '4']
         option = {'1': ret_active,
-                  '2': expired,
+                  '2': ret_expired,
                   '3': update_data,
                   '4': sys.exit}
 
