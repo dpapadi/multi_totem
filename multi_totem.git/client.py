@@ -51,12 +51,12 @@ def activate_server():
         register_queue()
 
 def ret_active():
-    print "active: " + active
+    print "active: " + (active)
     print "\n\n"
     return
 
 def ret_expired():
-    print "expired: " + expired
+    print "expired: " + str(expired)
     print "\n\n"
     return
 
