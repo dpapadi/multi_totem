@@ -467,14 +467,14 @@ def checkout():
     :params None
     :rtype : Serialized tuple containing active and expired dictionaries
     """
-    #args = (active, expired)
-    #b = pickle.dumps(args)
-    #return b
-    tmp = "Successfull Attempt"
-    args = (tmp, False)
+    args = (active, expired, False)
     b = pickle.dumps(args)
-    print tmp
     return b
+    #tmp = "Successfull Attempt"
+    #args = (tmp, False)
+    #b = pickle.dumps(args)
+    #print tmp
+    #return b
 
 def get_samplewithnoinforate():
     rate = swni_cntr / (1.0 * sflow_cntr)

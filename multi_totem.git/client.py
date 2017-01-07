@@ -10,39 +10,81 @@ from kafka.producer import SimpleProducer
 
 server = jsonrpclib.Server('http://localhost:8085')
 
+# Active Flows
+active = {}
+
+# Expired Flows
+expired = {}
+
 def register_queue():
-    try:
-        kafka = SimpleClient("localhost:9092")
-        global producer
-        producer = SimpleProducer(kafka)
-        global tryagain
-        tryagain = False
-        return
-    except Exception:
-        print "Kafka is unavailable at the moment."
-        return
-
-
-if __name__ == "__main__":
-    done = True
-    global trygain
     tryagain = True
-    loop = True
-    global producer
     while tryagain:
-        register_queue()
-    print "Client is ready."
-    while loop:
         try:
-            producer.send_messages("client", "hi")
-            loop = False
-        except:
-            print "Error in queue!"
-            loop = True
+            kafka = SimpleClient("localhost:9092")
+            global producer
+            producer = SimpleProducer(kafka)
+            tryagain = False
+        except Exception:
+            print "Kafka is unavailable at the moment."
+            time.sleep(5)
+    return
+
+def update_data():
+    done = True
     while done:
         a = server.checkout()
         args = pickle.loads(a)
-        msg = args[0]
-        done = args[1]
-    print msg
+        global active
+        active = args[0]
+        global expired
+        expired = args[1]
+        done = args[2]
+    print "Data updated"
+    return (active, expired)
+
+def activate_server():
+    try:
+        producer.send_messages("client", "hi")
+    except:
+        print "Error in queue!"
+        register_queue()
+
+def ret_active():
+    print active
+    return
+
+def ret_expired():
+    print expired
+    return
+
+if __name__ == "__main__":
+    global producer
+    register_queue()
+    print "Client is ready."
+    activate_server()
+    update_data()
+    while True:
+        print 'Enter:'
+        print '1:\t for active counters'
+        print '2:\t for expired counters'
+        print '3:\t to update counters'
+        print '4:\t to exit\n\n'
+
+        choice = raw_input("Please Enter a valid option:\t")
+        print "\n\n"
+        choices = ['1', '2', '3', '4']
+        option = {'1': ret_active,
+                  '2': expired,
+                  '3': update_data,
+                  '4': sys.exit}
+
+        while choice not in choices:
+            choice = raw_input("Please Enter a valid option:\t")
+            print "\n\n"
+        activate_server()
+        option[choice]()
+        choice = None
+
+
+
 
