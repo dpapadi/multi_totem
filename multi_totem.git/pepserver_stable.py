@@ -515,6 +515,8 @@ if __name__ == "__main__":
         try:
             print "will you make it?" #temp
             cl_req = client_consumer.get_message().message.value
+            print cl_req
+            raw_input()
             if cl_req:
                 server.handle_request()
                 cl_req = False
