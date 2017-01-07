@@ -5,6 +5,8 @@ import pickle
 import csv
 import time
 import jsonrpclib
+from kafka.client import SimpleClient
+from kafka.producer import SimpleProducer
 
 server = jsonrpclib.Server('http://localhost:8085')
 
