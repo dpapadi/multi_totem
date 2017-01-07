@@ -517,9 +517,9 @@ if __name__ == "__main__":
             cl_req = client_consumer.get_message()
             print cl_req
             raw_input()
-            if cl_req is not None:
-                server.handle_request()
-                cl_req = False
+            #if cl_req is not None:
+             #   server.handle_request()
+              #  cl_req = False
             msg = main_consumer.get_message()
             #for message in consumer:
             get_input_from_queue(msg.message.value)
