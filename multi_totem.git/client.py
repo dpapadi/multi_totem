@@ -40,6 +40,7 @@ def update_data():
         expired = args[1]
         done = args[2]
     print "Data updated"
+    print "\n\n"
     return (active, expired)
 
 def activate_server():
@@ -50,11 +51,13 @@ def activate_server():
         register_queue()
 
 def ret_active():
-    print active
+    print "active: " + active
+    print "\n\n"
     return
 
 def ret_expired():
-    print expired
+    print "expired: " + expired
+    print "\n\n"
     return
 
 if __name__ == "__main__":
