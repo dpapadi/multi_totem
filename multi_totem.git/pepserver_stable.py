@@ -516,12 +516,13 @@ if __name__ == "__main__":
             print "will you make it?" #temp
             cl_req = client_consumer.get_message()
             raw_input()
-            #if cl_req is not None:
-             #   server.handle_request()
-              #  cl_req = False
+            if cl_req is not None:
+                server.handle_request()
+                cl_req = False
             msg = main_consumer.get_message()
             #for message in consumer:
-            #get_input_from_queue(msg.message.value)
+            if msg is not None:
+                get_input_from_queue(msg.message.value)
             print "I made it here!" #temp
         except Exception:
             msg_cnt += 1
