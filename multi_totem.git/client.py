@@ -19,14 +19,14 @@ expired = {}
 def register_queue():
     tryagain = True
     while tryagain:
-        try:
+        while tryagain:
             kafka = KafkaClient(bootstrap_servers="localhost:9092")
             global producer
             producer = SimpleProducer(kafka)
             tryagain = False
-        except Exception:
-            print "Kafka is unavailable at the moment."
-            time.sleep(5)
+        #except Exception:
+         #   print "Kafka is unavailable at the moment."
+          #  time.sleep(5)
     return
 
 def update_data():
