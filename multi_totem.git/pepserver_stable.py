@@ -525,8 +525,8 @@ if __name__ == "__main__":
             cl_req = None
             msg = None
             #print "I made it here!" #temp
-        except Exception:
-            msg_cnt += 1
-            print "Error n%s" % msg_cnt
-            cl_req = None
-            msg = None
+        #except Exception:
+         #   msg_cnt += 1
+          #  print "Error n%s" % msg_cnt
+           # cl_req = None
+            #msg = None
