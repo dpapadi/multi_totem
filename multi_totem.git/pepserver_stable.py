@@ -537,6 +537,8 @@ if __name__ == "__main__":
             print "I made it here!" #temp
         except TimeoutError:
             print
+        except NameError:
+            print
         #except Exception:
          #   msg_cnt += 1
           #  print "Error n%s" % msg_cnt
