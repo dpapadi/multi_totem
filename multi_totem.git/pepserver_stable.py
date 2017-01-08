@@ -451,11 +451,11 @@ def register_queue():
     while tryagain:
         while tryagain:
         #try:
-            kafka = KafkaClient(hypervisor_var['queue'])
+            kafka = KafkaClient('localhost:9092')
             global main_consumer  # consumer for kafka queue
             global client_consumer
-            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers=hypervisor_var['queue'])
-            client_consumer = KafkaConsumer("client", group_id="gid", bootstrap_servers=hypervisor_var['queue'])
+            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092')
+            client_consumer = KafkaConsumer("client", group_id="gid", bootstrap_servers='localhost:9092')
             tryagain = False
             print "Queuing system is up."
         #except Exception:
