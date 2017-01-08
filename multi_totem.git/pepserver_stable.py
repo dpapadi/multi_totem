@@ -528,7 +528,7 @@ if __name__ == "__main__":
              #   get_input_from_queue(msg.message.value)
             #cl_req = {}
             #msg = {}
-            #print "I made it here!" #temp
+            print "I made it here!" #temp
         #except Exception:
          #   msg_cnt += 1
           #  print "Error n%s" % msg_cnt
