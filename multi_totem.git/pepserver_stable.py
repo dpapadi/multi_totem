@@ -467,7 +467,7 @@ def checkout():
     :params None
     :rtype : Serialized tuple containing active and expired dictionaries
     """
-    args = (active, expired, False)
+    args = (active, expired)
     b = pickle.dumps(args)
     return b
     #tmp = "Successfull Attempt"
@@ -511,8 +511,6 @@ if __name__ == "__main__":
 
     # get input from queue
     msg_cnt = 0
-    while True:
-        print 'lol'
     while True:
         while True:
         #try:

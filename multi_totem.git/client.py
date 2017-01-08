@@ -22,7 +22,7 @@ def register_queue():
         try:
             kafka = SimpleClient("localhost:9092")
             global producer
-            producer = SimpleProducer(kafka)
+            producer = SimpleProducer(kafka, "client")
             tryagain = False
         except Exception:
             print "Kafka is unavailable at the moment."
@@ -30,15 +30,12 @@ def register_queue():
     return
 
 def update_data():
-    done = True
-    while done:
         a = server.checkout()
         args = pickle.loads(a)
         global active
         active = args[0]
         global expired
         expired = args[1]
-        done = args[2]
     print "Data updated"
     print "\n\n"
     return (active, expired)
