@@ -20,7 +20,7 @@ def register_queue():
     tryagain = True
     while tryagain:
         try:
-            kafka = KafkaClient("localhost:9092")
+            kafka = KafkaClient(bootstrap_servers="localhost:9092")
             global producer
             producer = SimpleProducer(kafka)
             tryagain = False
