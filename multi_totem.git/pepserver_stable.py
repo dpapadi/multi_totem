@@ -453,9 +453,8 @@ def register_queue():
             kafka = SimpleClient(hypervisor_var['queue'])
             global main_consumer  # consumer for kafka queue
             #global client_consumer
-            main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "main")
-            #main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
-            #client_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
+            main_consumer = SimpleConsumer(kafka, "gid", "main")
+            client_consumer = SimpleConsumer(kafka, "gid2", "client")
             tryagain = False
             print "Queuing system is up."
         except Exception:
@@ -515,9 +514,9 @@ if __name__ == "__main__":
     while True:
         try:
             #print "will you make it?" #temp
-            #cl_req = main_consumer.get_message()
+            cl_req = client_consumer.get_message()
             #raw_input()
-            #if cl_req is not None:
+            if cl_req is not None:
              #   server.handle_request()
             msg = main_consumer.get_message()
             #for message in consumer:
