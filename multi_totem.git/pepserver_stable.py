@@ -517,7 +517,7 @@ if __name__ == "__main__":
         while True:
         #try:
             #print "will you make it?" #temp
-            cl_req = client_consumer.poll(0)
+            cl_req = client_consumer.poll(timeout_ms=0)
             #raw_input()
             if cl_req:
                 server.handle_request()
