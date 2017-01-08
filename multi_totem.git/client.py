@@ -30,12 +30,12 @@ def register_queue():
     return
 
 def update_data():
-        a = server.checkout()
-        args = pickle.loads(a)
-        global active
-        active = args[0]
-        global expired
-        expired = args[1]
+    a = server.checkout()
+    args = pickle.loads(a)
+    global active
+    active = args[0]
+    global expired
+    expired = args[1]
     print "Data updated"
     print "\n\n"
     return (active, expired)
