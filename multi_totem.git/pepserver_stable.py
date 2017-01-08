@@ -520,6 +520,7 @@ if __name__ == "__main__":
                 server.handle_request()
             msg = main_consumer.get_message()
             #for message in consumer:
+            cl_req = None
             if msg is not None:
                 get_input_from_queue(msg.message.value)
             #print "I made it here!" #temp
