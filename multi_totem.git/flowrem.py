@@ -113,7 +113,7 @@ def register_queue(url):
         return
 
 
-def launch(tid=0, passwd="", queue="localhost:9092", topic="test1"):
+def launch(tid=0, passwd="", queue="localhost:9092", topic="main"):
     """
     Starting the module
     """

@@ -51,8 +51,18 @@ def activate_server():
         register_queue()
 
 def ret_active():
-    print "active: " + str(active)
-    print "\n\n"
+    try:
+        tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: \n\n")
+        if tid == "r":
+            return
+        else if tid == 0:
+            print "active: "
+            print active
+        else:
+            print active[tid]
+        print "\n\n"
+    except Exception:
+        print "Something went wrong. Please enter a valid option."
     return
 
 def ret_expired():
