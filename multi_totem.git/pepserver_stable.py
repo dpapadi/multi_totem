@@ -454,7 +454,7 @@ def register_queue():
             global main_consumer  # consumer for kafka queue
             #global client_consumer
             main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "main")
-            main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
+            #main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
             #client_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
             tryagain = False
             print "Queuing system is up."
