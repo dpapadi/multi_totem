@@ -512,7 +512,7 @@ if __name__ == "__main__":
     # get input from queue
     msg_cnt = 0
     while True:
-        print lol
+        print 'lol'
     while True:
         while True:
         #try:
