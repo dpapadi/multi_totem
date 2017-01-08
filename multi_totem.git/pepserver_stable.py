@@ -449,7 +449,8 @@ def get_input_from_queue(serialized_request):
 def register_queue():
     tryagain = True
     while tryagain:
-        try:
+        while tryagain:
+        #try:
             kafka = KafkaClient(hypervisor_var['queue'])
             global main_consumer  # consumer for kafka queue
             global client_consumer
@@ -460,7 +461,7 @@ def register_queue():
         #except Exception:
          #   print "Queuing system not ready yet."
           #  time.sleep(5)
-    #return
+    return
 
 def checkout():
     """
