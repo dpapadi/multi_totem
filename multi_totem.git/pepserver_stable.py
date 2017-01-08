@@ -457,9 +457,9 @@ def register_queue():
             client_consumer = KafkaConsumer("client", group_id="gid", bootstrap_servers=hypervisor_var['queue'])
             tryagain = False
             print "Queuing system is up."
-        except Exception:
-            print "Queuing system not ready yet."
-            time.sleep(5)
+        #except Exception:
+         #   print "Queuing system not ready yet."
+          #  time.sleep(5)
     return
 
 def checkout():
