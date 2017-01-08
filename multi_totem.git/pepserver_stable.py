@@ -519,10 +519,10 @@ if __name__ == "__main__":
             #print "will you make it?" #temp
             cl_req = client_consumer.poll(timeout_ms=0)
             #raw_input()
+            print cl_req
             if bool(cl_req):
                 server.handle_request()
             #msg = main_consumer.next()
-            print cl_req
             raw_input()
             #for message in consumer:
             #if msg:
