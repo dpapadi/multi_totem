@@ -521,13 +521,13 @@ if __name__ == "__main__":
             #raw_input()
             if cl_req:
                 server.handle_request()
-            msg = main_consumer.next()
-            print msg
+            #msg = main_consumer.next()
+            #print msg
             #for message in consumer:
-            if msg:
-                get_input_from_queue(msg.message.value)
-            cl_req = {}
-            msg = {}
+            #if msg:
+             #   get_input_from_queue(msg.message.value)
+            #cl_req = {}
+            #msg = {}
             #print "I made it here!" #temp
         #except Exception:
          #   msg_cnt += 1
