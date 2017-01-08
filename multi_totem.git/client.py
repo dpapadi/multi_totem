@@ -52,17 +52,18 @@ def activate_server():
 
 def ret_active():
     try:
-        tid = int(raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: \n\n"))
+        tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: ")
         if tid == "r":
             return
-        elif tid == 0:
-            print "active: "
+        elif int(tid) == 0:
+            print "\nactive: "
             print active
         else:
-            print active[tid]
+            print "\nactive: "
+            print active[int(tid)]
         print "\n\n"
     except Exception:
-        print "Something went wrong. Please enter a valid option.\n\n"
+        print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         ret_active()
     return
 
