@@ -68,8 +68,20 @@ def ret_active():
     return
 
 def ret_expired():
-    print "expired: " + str(expired)
-    print "\n\n"
+    try:
+        tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: ")
+        if tid == "r":
+            return
+        elif int(tid) == 0:
+            print "\nexpired: "
+            print expired
+        else:
+            print "\nexpired: "
+            print expired[int(tid)]
+        print "\n\n"
+    except Exception:
+        print "\n\nSomething went wrong. Please enter a valid option.\n\n"
+        ret_expired()
     return
 
 if __name__ == "__main__":
