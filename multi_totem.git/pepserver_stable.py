@@ -523,7 +523,6 @@ if __name__ == "__main__":
             if bool(cl_req):
                 server.handle_request()
             #msg = main_consumer.next()
-            raw_input()
             #for message in consumer:
             #if msg:
              #   get_input_from_queue(msg.message.value)
