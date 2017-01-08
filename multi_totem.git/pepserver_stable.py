@@ -521,6 +521,7 @@ if __name__ == "__main__":
             if cl_req is not None:
                 server.handle_request()
             msg = main_consumer.poll()
+            print msg
             #for message in consumer:
             if msg is not None:
                 get_input_from_queue(msg.message.value)
