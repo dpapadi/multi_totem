@@ -515,10 +515,10 @@ if __name__ == "__main__":
     while True:
         try:
             #print "will you make it?" #temp
-            cl_req = main_consumer.get_message()
+            #cl_req = main_consumer.get_message()
             #raw_input()
-            if cl_req is not None:
-                server.handle_request()
+            #if cl_req is not None:
+             #   server.handle_request()
             msg = main_consumer.get_message()
             #for message in consumer:
             if msg is not None:
