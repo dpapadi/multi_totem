@@ -49,6 +49,8 @@ def activate_server():
     except:
         print "Error in queue!"
         register_queue()
+        return
+    return
 
 def ret_active():
     try:
