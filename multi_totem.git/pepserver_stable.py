@@ -528,3 +528,5 @@ if __name__ == "__main__":
         except Exception:
             msg_cnt += 1
             print "Error n%s" % msg_cnt
+            cl_req = None
+            msg = None
