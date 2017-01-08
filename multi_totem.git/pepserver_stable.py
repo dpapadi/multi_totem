@@ -522,7 +522,8 @@ if __name__ == "__main__":
             #if cl_req:
              #   server.handle_request()
             #msg = main_consumer.next()
-            #print msg
+            print cl_req
+            raw_input()
             #for message in consumer:
             #if msg:
              #   get_input_from_queue(msg.message.value)
