@@ -447,20 +447,21 @@ def get_input_from_queue(serialized_request):
     return
 
 def register_queue():
-    try:
-        kafka = SimpleClient(hypervisor_var['queue'])
-        global main_consumer  # consumer for kafka queue
-        global client_consumer
-        main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "main")
-        client_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
-        global tryagain
-        tryagain = False
-        print "Queuing system is up."
-        return
-    except Exception:
-        print "Queuing system not ready yet."
-        time.sleep(5)
-        return
+    tryagain = True
+    while tryagain:
+        try:
+            kafka = SimpleClient(hypervisor_var['queue'])
+            global main_consumer  # consumer for kafka queue
+            global client_consumer
+            main_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "main")
+            client_consumer = SimpleConsumer(kafka, hypervisor_var['queue_gid'], "client")
+            tryagain = False
+            print "Queuing system is up."
+        except Exception:
+            print "Queuing system not ready yet."
+            time.sleep(5)
+            return
+    return
 
 def checkout():
     """
@@ -493,9 +494,8 @@ if __name__ == "__main__":
         except IOError:
             print "No such file: \t%s\n" % file_name
             exit()
-    tryagain = True
-    while tryagain:
-        register_queue()
+
+    register_queue()
 
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
         hypervisor_var['tenants']={}
@@ -512,7 +512,6 @@ if __name__ == "__main__":
 
     # get input from queue
     msg_cnt = 0
-    cl_req = False
     while True:
         try:
             #print "will you make it?" #temp
@@ -520,7 +519,6 @@ if __name__ == "__main__":
             #raw_input()
             if cl_req is not None:
                 server.handle_request()
-                cl_req = False
             msg = main_consumer.get_message()
             #for message in consumer:
             if msg is not None:
