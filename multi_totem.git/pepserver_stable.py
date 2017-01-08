@@ -523,6 +523,7 @@ if __name__ == "__main__":
             if bool(cl_req):
                 server.handle_request()
                 raw_input()
+                cl_req={}
             #msg = main_consumer.next()
             #for message in consumer:
             #if msg:
