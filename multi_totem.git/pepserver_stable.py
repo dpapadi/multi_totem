@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+from timeout import timeout
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 import pickle
 from kafka.client import KafkaClient
@@ -521,6 +521,7 @@ if __name__ == "__main__":
             #raw_input()
             print cl_req
             if bool(cl_req):
+                @timeout(2)
                 server.handle_request()
             #msg = main_consumer.next()
             #for message in consumer:
