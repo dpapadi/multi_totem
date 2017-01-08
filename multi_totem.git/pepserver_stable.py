@@ -460,7 +460,6 @@ def register_queue():
         except Exception:
             print "Queuing system not ready yet."
             time.sleep(5)
-            return
     return
 
 def checkout():
