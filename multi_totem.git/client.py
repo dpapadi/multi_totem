@@ -42,7 +42,7 @@ def update_data():
 
 def activate_server():
     #try:
-    producer.send_messages("client", "hi")
+    producer.send("client", "hi")
     #except:
        # print "Error in queue!"
      #   register_queue()
