@@ -22,7 +22,7 @@ def register_queue():
         while tryagain:
             kafka = KafkaClient(bootstrap_servers="localhost:9092")
             global producer
-            producer = KafkaProducer(kafka)
+            producer = KafkaProducer(bootstrap_servers="localhost:9092")
             tryagain = False
         #except Exception:
          #   print "Kafka is unavailable at the moment."
