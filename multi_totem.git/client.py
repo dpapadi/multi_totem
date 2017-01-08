@@ -30,6 +30,7 @@ def register_queue():
     return
 
 def update_data():
+    time.sleep(3)
     a = server.checkout()
     args = pickle.loads(a)
     global active
