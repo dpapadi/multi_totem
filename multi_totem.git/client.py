@@ -41,12 +41,12 @@ def update_data():
     return (active, expired)
 
 def activate_server():
-    try:
-        producer.send_messages("client", "hi")
-    except:
-        print "Error in queue!"
-        register_queue()
-        return
+    #try:
+    producer.send_messages("client", "hi")
+    #except:
+       # print "Error in queue!"
+     #   register_queue()
+      #  return
     return
 
 def ret_active():
