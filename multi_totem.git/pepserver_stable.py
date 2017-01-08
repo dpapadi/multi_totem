@@ -525,8 +525,8 @@ if __name__ == "__main__":
             #for message in consumer:
             if msg:
                 get_input_from_queue(msg.message.value)
-            cl_req = None
-            msg = None
+            cl_req = {}
+            msg = {}
             #print "I made it here!" #temp
         #except Exception:
          #   msg_cnt += 1
