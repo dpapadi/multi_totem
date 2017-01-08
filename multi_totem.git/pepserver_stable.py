@@ -521,8 +521,7 @@ if __name__ == "__main__":
     msg_cnt = 0
     while True:
         print None
-        while True:
-        #try:
+        try:
             #print "will you make it?" #temp
             cl_req = client_consumer.poll(timeout_ms=0)
             #raw_input()
@@ -536,7 +535,9 @@ if __name__ == "__main__":
             #cl_req = {}
             #msg = {}
             print "I made it here!" #temp
-        #except Exception:
+        except TimeoutError:
+            print
+        except Exception:
          #   msg_cnt += 1
           #  print "Error n%s" % msg_cnt
            # cl_req = None
