@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from timeout import timeout
+import timeout
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 import pickle
 from kafka.client import KafkaClient
