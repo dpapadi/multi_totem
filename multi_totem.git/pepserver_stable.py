@@ -516,11 +516,11 @@ if __name__ == "__main__":
         while True:
         #try:
             #print "will you make it?" #temp
-            cl_req = client_consumer.poll()
+            cl_req = client_consumer.next()
             #raw_input()
             if cl_req:
                 server.handle_request()
-            msg = main_consumer.poll()
+            msg = main_consumer.next()
             print msg
             #for message in consumer:
             if msg:
