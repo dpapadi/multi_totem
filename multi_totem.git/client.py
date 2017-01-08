@@ -55,7 +55,7 @@ def ret_active():
         tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: \n\n")
         if tid == "r":
             return
-        else if tid == 0:
+        elif tid == 0:
             print "active: "
             print active
         else:
