@@ -452,7 +452,7 @@ def register_queue():
         try:
             kafka = SimpleClient(hypervisor_var['queue'])
             global main_consumer  # consumer for kafka queue
-            #global client_consumer
+            global client_consumer
             main_consumer = SimpleConsumer(kafka, "gid", "main")
             client_consumer = SimpleConsumer(kafka, "gid2", "client")
             tryagain = False
