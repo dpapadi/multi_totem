@@ -2,8 +2,8 @@
 
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 import pickle
-from kafka.client import SimpleClient
-from kafka.consumer import SimpleConsumer
+from kafka.client import KafkaClient
+from kafka.consumer import KafkaConsumer
 import hashlib
 from struct import unpack
 from socket import inet_aton
@@ -450,11 +450,11 @@ def register_queue():
     tryagain = True
     while tryagain:
         try:
-            kafka = SimpleClient(hypervisor_var['queue'])
+            kafka = KafkaClient(hypervisor_var['queue'])
             global main_consumer  # consumer for kafka queue
             global client_consumer
-            main_consumer = SimpleConsumer(kafka, "gid", "main")
-            client_consumer = SimpleConsumer(kafka, "gid2", "client")
+            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers=hypervisor_var['queue'])
+            client_consumer = KafkaConsumer("client", group_id="gid", bootstrap_servers=hypervisor_var['queue'])
             tryagain = False
             print "Queuing system is up."
         except Exception:

@@ -104,7 +104,7 @@ def register_queue(url):
     try:
         kafka = SimpleClient(url)
         global producer
-        producer = SimpleProducer(kafka, "main")
+        producer = SimpleProducer(kafka)
         global tryagain
         tryagain = False
         return

@@ -5,7 +5,7 @@ import pickle
 import csv
 import time
 import jsonrpclib
-from kafka.client import SimpleClient
+from kafka.client import KafkaClient
 from kafka.producer import SimpleProducer
 
 server = jsonrpclib.Server('http://localhost:8085')
@@ -20,9 +20,9 @@ def register_queue():
     tryagain = True
     while tryagain:
         try:
-            kafka = SimpleClient("localhost:9092")
+            kafka = KafkaClient("localhost:9092")
             global producer
-            producer = SimpleProducer(kafka, "client")
+            producer = SimpleProducer(kafka)
             tryagain = False
         except Exception:
             print "Kafka is unavailable at the moment."
