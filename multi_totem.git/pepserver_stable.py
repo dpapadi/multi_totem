@@ -521,8 +521,7 @@ if __name__ == "__main__":
             #raw_input()
             print cl_req
             if bool(cl_req):
-                server.handle_get()
-                raw_input()
+                server.handle_request()
                 cl_req={}
             #msg = main_consumer.next()
             #for message in consumer:
