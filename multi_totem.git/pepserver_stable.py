@@ -512,7 +512,8 @@ if __name__ == "__main__":
     # get input from queue
     msg_cnt = 0
     while True:
-        try:
+        while True:
+        #try:
             #print "will you make it?" #temp
             cl_req = client_consumer.get_message()
             #raw_input()
