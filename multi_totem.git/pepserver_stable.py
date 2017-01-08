@@ -518,12 +518,12 @@ if __name__ == "__main__":
             #print "will you make it?" #temp
             cl_req = client_consumer.poll()
             #raw_input()
-            if cl_req is not None:
+            if cl_req:
                 server.handle_request()
             msg = main_consumer.poll()
             print msg
             #for message in consumer:
-            if msg is not None:
+            if msg:
                 get_input_from_queue(msg.message.value)
             cl_req = None
             msg = None
