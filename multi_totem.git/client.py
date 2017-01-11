@@ -26,9 +26,9 @@ def register_queue():
             global producer
             producer = KafkaProducer(bootstrap_servers="localhost:9092")
             tryagain = False
-        #except Exception:
-         #   print "Kafka is unavailable at the moment."
-          #  time.sleep(5)
+        except Exception:
+            print "Kafka is unavailable at the moment."
+            time.sleep(5)
     return
 
 @timeout(1)
@@ -47,16 +47,14 @@ def update_data():
         return (active, expired)
     except TimeoutError:
         update_data()
-    #except NameError:
-     #   print
 
 def activate_server():
-    #try:
-    producer.send("client", "hi")
-    #except:
-       # print "Error in queue!"
-     #   register_queue()
-      #  return
+    try:
+        producer.send("client", "hi")
+    except:
+        print "Error in queue!"
+        register_queue()
+        return
     return
 
 def ret_active():
@@ -92,6 +90,9 @@ def ret_expired():
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         ret_expired()
     return
+def get_samplewithnoinforate():
+    print server.get_samplewithnoinforate()
+    return
 
 if __name__ == "__main__":
     global producer
@@ -103,7 +104,8 @@ if __name__ == "__main__":
         print '1:\t for active counters'
         print '2:\t for expired counters'
         print '3:\t to update counters'
-        print '4:\t to exit\n\n'
+        print '4:\t to get sample with no info rate'
+        print '5:\t to exit\n\n'
 
         choice = raw_input("Please Enter a valid option:\t")
         print "\n\n"
@@ -111,7 +113,8 @@ if __name__ == "__main__":
         option = {'1': ret_active,
                   '2': ret_expired,
                   '3': update_data,
-                  '4': sys.exit}
+                  '4': get_samplewithnoinforate(),
+                  '5': sys.exit}
 
         while choice not in choices:
             choice = raw_input("Please Enter a valid option:\t")

@@ -486,9 +486,12 @@ def checkout():
     #return b
 
 def get_samplewithnoinforate():
-    rate = swni_cntr / (1.0 * sflow_cntr)
-    msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
-    return msg
+    try:
+        rate = swni_cntr / (1.0 * sflow_cntr)
+        msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
+        return msg
+    except:
+        return "Something went wrong with the data collected."
 
 if __name__ == "__main__":
     a = len(sys.argv)
@@ -538,8 +541,6 @@ if __name__ == "__main__":
             print "I made it here!" #temp
         except TimeoutError:
             print "TimeError"
-        #except NameError:
-         #   print
         #except Exception:
          #   msg_cnt += 1
           #  print "Error n%s" % msg_cnt
