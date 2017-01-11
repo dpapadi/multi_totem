@@ -466,7 +466,7 @@ def register_queue():
     return
 
 
-@timeout(3)
+@timeout(2)
 def handle_request():
     server.handle_request()
     return

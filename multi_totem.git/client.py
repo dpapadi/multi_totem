@@ -90,9 +90,16 @@ def ret_expired():
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         ret_expired()
     return
+
+@timeout(1)
 def get_samplewithnoinforate():
-    print server.get_samplewithnoinforate()
-    return
+    try:
+        activate_server()
+        time.sleep(0.5)
+        print server.get_samplewithnoinforate()
+        return
+    except TimeoutError:
+        get_samplewithnoinforate()
 
 if __name__ == "__main__":
     global producer
