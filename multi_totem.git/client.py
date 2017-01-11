@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from timeout import timeout
+from timeout import TimeoutError
 import sys
 import pickle
 import csv
@@ -29,17 +31,23 @@ def register_queue():
           #  time.sleep(5)
     return
 
+@timeout(1)
 def update_data():
-    time.sleep(1)
-    a = server.checkout()
-    args = pickle.loads(a)
-    global active
-    active = args[0]
-    global expired
-    expired = args[1]
-    print "Data updated"
-    print "\n\n"
-    return (active, expired)
+    try:
+        time.sleep(0.5)
+        a = server.checkout()
+        args = pickle.loads(a)
+        global active
+        active = args[0]
+        global expired
+        expired = args[1]
+        print "Data updated"
+        print "\n\n"
+        return (active, expired)
+    except TimeoutError:
+        print
+    except NameError:
+        print
 
 def activate_server():
     #try:
