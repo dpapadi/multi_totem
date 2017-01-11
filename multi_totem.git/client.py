@@ -21,7 +21,7 @@ expired = {}
 def register_queue():
     tryagain = True
     while tryagain:
-        while tryagain:
+        try:
             kafka = KafkaClient(bootstrap_servers="localhost:9092")
             global producer
             producer = KafkaProducer(bootstrap_servers="localhost:9092")
