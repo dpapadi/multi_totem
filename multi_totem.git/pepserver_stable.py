@@ -453,7 +453,7 @@ def register_queue():
     while tryagain:
         while tryagain:
         #try:
-            kafka = KafkaClient(bootstrap_servers='localhost:9092')
+            #kafka = KafkaClient(bootstrap_servers='localhost:9092')
             global main_consumer  # consumer for kafka queue
             global client_consumer
             main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092')
