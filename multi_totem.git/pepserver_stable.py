@@ -471,12 +471,12 @@ def serve():
     msg_cnt=0
     while True:
         try:
-            cl_req = client_consumer.poll(timeout_ms=0)
+            cl_req = client_consumer.poll(timeout_ms=1)
             print "flag1"
             if bool(cl_req):
                 print "handle request"
                 server.handle_request()
-            msg = main_consumer.poll(timeout_ms=0)
+            msg = main_consumer.poll(timeout_ms=1)
             if bool(msg):
                 get_input_from_queue(msg.message.value)
                 # print "I made it here!" #temp
