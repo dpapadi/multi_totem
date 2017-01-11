@@ -524,25 +524,18 @@ if __name__ == "__main__":
     # get input from queue
     msg_cnt = 0
     while True:
-        print None
         try:
-            #print "will you make it?" #temp
             cl_req = client_consumer.poll(timeout_ms=0)
-            #raw_input()
             print cl_req
             if bool(cl_req):
                 handle_request()
-            #msg = main_consumer.next()
-            #for message in consumer:
-            #if msg:
-             #   get_input_from_queue(msg.message.value)
-            #cl_req = {}
-            #msg = {}
+            msg = main_consumer.next()
+            for message in consumer:
+            if msg:
+                get_input_from_queue(msg.message.value)
             print "I made it here!" #temp
         except TimeoutError:
             print "TimeError"
-        #except Exception:
-         #   msg_cnt += 1
-          #  print "Error n%s" % msg_cnt
-           # cl_req = None
-            #msg = None
+        except Exception:
+            msg_cnt += 1
+            print "Error n%s" % msg_cnt
