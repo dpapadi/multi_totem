@@ -528,7 +528,8 @@ if __name__ == "__main__":
     print "Server Ready."
     msg_cnt=0
     while True:
-        try:
+        while True:
+        #try:
             cl_req = client_consumer.poll()
             #print "flag1"
             if bool(cl_req):
@@ -541,7 +542,7 @@ if __name__ == "__main__":
                 get_input_from_queue()
                 # print "I made it here!" #temp
             #print "flag2"
-        except Exception:
-            msg_cnt += 1
-            print "Error n%s" % msg_cnt
+        #except Exception:
+         #   msg_cnt += 1
+          #  print "Error n%s" % msg_cnt
 
