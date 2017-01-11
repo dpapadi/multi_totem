@@ -6,12 +6,12 @@ from pox.lib.addresses import EthAddr
 from collections import namedtuple
 from pox.openflow import *
 from pox.forwarding import l2_learning
-from kafka.client import KafkaClient
-from kafka.producer import KafkaProducer
 import os
 import pickle
 import jsonrpclib
 import time
+from kafka.client import KafkaClient
+from kafka.producer import KafkaProducer
 
 
 # Create Loggers
