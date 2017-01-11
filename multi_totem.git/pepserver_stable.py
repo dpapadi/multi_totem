@@ -471,8 +471,9 @@ def handle_request():
     try:
         server.handle_request()
     except TimeoutError:
-        print "Timeout Error in handle request."
+        print "Timeout Error in handle request.\n\n"
         return
+
 def checkout():
     """
     :params None
@@ -493,7 +494,7 @@ def get_samplewithnoinforate():
         msg = "We collected %s samples with no info out of %s sflow samples.\nPercentage: %.2f" % (swni_cntr, sflow_cntr, rate)
         return msg
     except:
-        return "Something went wrong with the data collected."
+        return "Something went wrong with the data collected.\n\n"
 
 if __name__ == "__main__":
     a = len(sys.argv)
@@ -538,8 +539,6 @@ if __name__ == "__main__":
                 get_input_from_queue(msg.message.value)
                 # print "I made it here!" #temp
             print "flag2"
-        except TimeoutError:
-            print "TimeError"
         except Exception:
             msg_cnt += 1
             print "Error n%s" % msg_cnt
