@@ -476,9 +476,9 @@ def serve():
             if bool(cl_req):
                 print "handle request"
                 server.handle_request()
-            msg = main_consumer.poll()
-            if bool(msg):
-                get_input_from_queue(msg.message.value)
+            #msg = main_consumer.poll()
+            #if bool(msg):
+             #   get_input_from_queue(msg.message.value)
                 # print "I made it here!" #temp
             print "flag2"
         except TimeoutError:
