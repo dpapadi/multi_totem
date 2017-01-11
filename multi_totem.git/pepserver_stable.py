@@ -457,7 +457,7 @@ def register_queue():
             global main_consumer  # consumer for kafka queue
             global client_consumer
             main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
-            client_consumer = KafkaConsumer("client", group_id="gid", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
+            client_consumer = KafkaConsumer("client", group_id="gid2", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
             tryagain = False
             print "Queuing system is up."
         #except Exception:
