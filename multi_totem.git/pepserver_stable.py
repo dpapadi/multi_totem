@@ -466,10 +466,25 @@ def register_queue():
     return
 
 
-@timeout(5)
-def handle_request():
-    server.handle_request()
-    return
+@timeout(2)
+def serve():
+    msg_cnt=0
+    while True:
+        try:
+            cl_req = client_consumer.poll(timeout_ms=0)
+            if bool(cl_req):
+                server.handle_request()
+            msg = main_consumer.poll(timeout_ms=0)
+            if bool(msg):
+                get_input_from_queue(msg.message.value)
+                # print "I made it here!" #temp
+        except TimeoutError:
+            print "TimeError"
+            serve()
+        except Exception:
+            msg_cnt += 1
+            print "Error n%s" % msg_cnt
+            serve()
 
 def checkout():
     """
@@ -521,20 +536,7 @@ if __name__ == "__main__":
     server.register_function(checkout)
     server.register_function(get_samplewithnoinforate)
 
-    # get input from queue
-    msg_cnt = 0
+    # serve_forever
     print "Server Ready."
-    while True:
-        try:
-            cl_req = client_consumer.poll(timeout_ms=0)
-            if bool(cl_req):
-                handle_request()
-            msg = main_consumer.poll(timeout_ms=0)
-            if bool(msg):
-                get_input_from_queue(msg.message.value)
-            #print "I made it here!" #temp
-        except TimeoutError:
-            print "TimeError"
-        except Exception:
-            msg_cnt += 1
-            print "Error n%s" % msg_cnt
+    serve()
+
