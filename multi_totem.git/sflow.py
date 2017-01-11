@@ -5,8 +5,8 @@ import os
 import sys
 import pickle
 import jsonrpclib
-from kafka.client import SimpleClient
-from kafka.producer import SimpleProducer
+from kafka.client import KafkaClient
+from kafka.producer import KafkaProducer
 
 # Create a mapping between sflow agent ID and DPID
 sflow_dpid = {}
@@ -139,7 +139,7 @@ def sflowParser():
             if tryagain:
                 register_queue()
             try:
-                producer.send_messages(sys.argv[3], b)
+                producer.send(sys.argv[3], b)
             except:
                 print "Error in queue!"
                 tryagain = True
@@ -156,9 +156,9 @@ def sflowParser():
 
 def register_queue():
     try:
-        kafka = SimpleClient(sys.argv[2])
+        kafka = KafkaClient(bootstrap_servers="localhost:9092")
         global producer
-        producer = SimpleProducer(kafka)
+        producer = KafkaProducer(bootstrap_servers="localhost:9092")
         global tryagain
         tryagain = False
         return

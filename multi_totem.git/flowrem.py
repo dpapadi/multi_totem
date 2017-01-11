@@ -6,8 +6,8 @@ from pox.lib.addresses import EthAddr
 from collections import namedtuple
 from pox.openflow import *
 from pox.forwarding import l2_learning
-from kafka.client import SimpleClient
-from kafka.producer import SimpleProducer
+from kafka.client import KafkaClient
+from kafka.producer import KafkaProducer
 import os
 import pickle
 import jsonrpclib
@@ -73,7 +73,7 @@ class FlowRemovalHandler (EventMixin):
         if tryagain:
             register_queue(q)
         try:
-            producer.send_messages(tpc, b)
+            producer.send(tpc, b)
         except:
             print "Error in queue."
             global tryagain
@@ -90,7 +90,7 @@ class FlowRemovalHandler (EventMixin):
         if tryagain:
             register_queue(q)
         try:
-            producer.send_messages(tpc, b)
+            producer.send(tpc, b)
         except:
             print "Error in queue."
             global tryagain
@@ -102,9 +102,9 @@ class FlowRemovalHandler (EventMixin):
 
 def register_queue(url):
     try:
-        kafka = SimpleClient(url)
+        kafka = KafkaClient(bootstrap_servers="localhost:9092")
         global producer
-        producer = SimpleProducer(kafka)
+        producer = KafkaProducer(bootstrap_servers="localhost:9092")
         global tryagain
         tryagain = False
         return
@@ -126,7 +126,6 @@ def launch(tid=0, passwd="", queue="localhost:9092", topic="main"):
     global q
     q = queue
     register_queue(q)
-    #producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
     core.registerNew(FlowRemovalHandler)
 
 
