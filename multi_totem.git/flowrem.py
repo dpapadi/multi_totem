@@ -10,8 +10,7 @@ import os
 import pickle
 import jsonrpclib
 import time
-from kafka.client import KafkaClient
-from kafka.producer import KafkaProducer
+
 
 
 # Create Loggers
