@@ -118,11 +118,11 @@ if __name__ == "__main__":
 
         choice = raw_input("Please Enter a valid option:\t")
         print "\n\n"
-        choices = ['1', '2', '3', '4']
+        choices = ['1', '2', '3', '4', '5']
         option = {'1': ret_active,
                   '2': ret_expired,
                   '3': update_data,
-                  '4': get_samplewithnoinforate(),
+                  '4': get_samplewithnoinforate,
                   '5': sys.exit}
 
         while choice not in choices:
