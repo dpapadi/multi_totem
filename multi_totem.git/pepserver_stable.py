@@ -12,6 +12,7 @@ from socket import inet_aton
 import ovx_patch
 import sys
 import time
+import zc.zk
 
 # 2 counters to calculate the "sample with no info" effect
 swni_cntr = 0  #counts the times a sample with no info is collected
@@ -539,6 +540,7 @@ if __name__ == "__main__":
     server.register_function(checkout)
     server.register_function(get_samplewithnoinforate)
 
+    zk.delete_recursive('brokers')
     # serve_forever
     print "Server Ready."
     serve()
