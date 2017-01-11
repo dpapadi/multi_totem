@@ -530,15 +530,17 @@ if __name__ == "__main__":
     while True:
         try:
             cl_req = client_consumer.poll()
-            print "flag1"
+            #print "flag1"
             if bool(cl_req):
                 print "handle request"
                 handle_request()
             msg = main_consumer.poll()
+            print msg
+            raw_input()
             if bool(msg):
                 get_input_from_queue(msg.message.value)
                 # print "I made it here!" #temp
-            print "flag2"
+            #print "flag2"
         except Exception:
             msg_cnt += 1
             print "Error n%s" % msg_cnt
