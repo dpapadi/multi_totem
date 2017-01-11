@@ -534,11 +534,11 @@ if __name__ == "__main__":
             if bool(cl_req):
                 print "handle request"
                 handle_request()
-            msg = main_consumer.poll()
+            msg = main_consumer.next()
             print msg
             raw_input()
             if bool(msg):
-                get_input_from_queue(msg.message.value)
+                get_input_from_queue()
                 # print "I made it here!" #temp
             #print "flag2"
         except Exception:
