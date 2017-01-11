@@ -34,6 +34,7 @@ def register_queue():
 @timeout(1)
 def update_data():
     try:
+        activate_server()
         time.sleep(0.5)
         a = server.checkout()
         args = pickle.loads(a)
@@ -45,9 +46,9 @@ def update_data():
         print "\n\n"
         return (active, expired)
     except TimeoutError:
-        print
-    except NameError:
-        print
+        update_data()
+    #except NameError:
+     #   print
 
 def activate_server():
     #try:
@@ -96,7 +97,6 @@ if __name__ == "__main__":
     global producer
     register_queue()
     print "Client is ready."
-    activate_server()
     update_data()
     while True:
         print 'Enter:'
@@ -116,7 +116,6 @@ if __name__ == "__main__":
         while choice not in choices:
             choice = raw_input("Please Enter a valid option:\t")
             print "\n\n"
-        activate_server()
         option[choice]()
         choice = None
 
