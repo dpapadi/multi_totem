@@ -530,7 +530,7 @@ if __name__ == "__main__":
             cl_req = client_consumer.poll(timeout_ms=0)
             #raw_input()
             print cl_req
-            if not bool(cl_req):
+            if bool(cl_req):
                 handle_request()
             #msg = main_consumer.next()
             #for message in consumer:
