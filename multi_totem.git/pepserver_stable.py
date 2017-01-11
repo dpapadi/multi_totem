@@ -530,7 +530,6 @@ if __name__ == "__main__":
             if bool(cl_req):
                 handle_request()
             msg = main_consumer.next()
-            for message in consumer:
             if bool(msg):
                 get_input_from_queue(msg.message.value)
             print "I made it here!" #temp
