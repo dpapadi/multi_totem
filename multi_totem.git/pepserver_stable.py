@@ -466,29 +466,13 @@ def register_queue():
     return
 
 
-#@timeout(10)
-def serve():
-    msg_cnt=0
-    while True:
-        try:
-            cl_req = client_consumer.poll()
-            print "flag1"
-            if bool(cl_req):
-                print "handle request"
-                server.handle_request()
-            msg = main_consumer.poll()
-            if bool(msg):
-                get_input_from_queue(msg.message.value)
-                # print "I made it here!" #temp
-            print "flag2"
-        except TimeoutError:
-            print "TimeError"
-            serve()
-        except Exception:
-            msg_cnt += 1
-            print "Error n%s" % msg_cnt
-            serve()
-
+@timeout(3)
+def handle_request():
+    try:
+        server.handle_request()
+    except TimeoutError:
+        print "Timeout Error in handle request."
+        return
 def checkout():
     """
     :params None
@@ -541,5 +525,22 @@ if __name__ == "__main__":
 
     # serve_forever
     print "Server Ready."
-    serve()
+    msg_cnt=0
+    while True:
+        try:
+            cl_req = client_consumer.poll()
+            print "flag1"
+            if bool(cl_req):
+                print "handle request"
+                handle_request()
+            msg = main_consumer.poll()
+            if bool(msg):
+                get_input_from_queue(msg.message.value)
+                # print "I made it here!" #temp
+            print "flag2"
+        except TimeoutError:
+            print "TimeError"
+        except Exception:
+            msg_cnt += 1
+            print "Error n%s" % msg_cnt
 
