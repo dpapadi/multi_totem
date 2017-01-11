@@ -12,7 +12,6 @@ from socket import inet_aton
 import ovx_patch
 import sys
 import time
-import zc.zk
 
 # 2 counters to calculate the "sample with no info" effect
 swni_cntr = 0  #counts the times a sample with no info is collected
@@ -457,8 +456,8 @@ def register_queue():
             kafka = KafkaClient(bootstrap_servers='localhost:9092')
             global main_consumer  # consumer for kafka queue
             global client_consumer
-            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092')
-            client_consumer = KafkaConsumer("client", group_id="gid", bootstrap_servers='localhost:9092')
+            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
+            client_consumer = KafkaConsumer("client", group_id="gid", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
             tryagain = False
             print "Queuing system is up."
         #except Exception:
@@ -472,7 +471,7 @@ def serve():
     msg_cnt=0
     while True:
         try:
-            cl_req = client_consumer.poll(timeout_ms=1)
+            cl_req = client_consumer.poll()
             print "flag1"
             if bool(cl_req):
                 print "handle request"
@@ -540,7 +539,6 @@ if __name__ == "__main__":
     server.register_function(checkout)
     server.register_function(get_samplewithnoinforate)
 
-    zk.delete_recursive('brokers')
     # serve_forever
     print "Server Ready."
     serve()
