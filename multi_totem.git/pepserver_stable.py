@@ -472,12 +472,14 @@ def serve():
     while True:
         try:
             cl_req = client_consumer.poll(timeout_ms=0)
+            print "flag1"
             if bool(cl_req):
                 server.handle_request()
             msg = main_consumer.poll(timeout_ms=0)
             if bool(msg):
                 get_input_from_queue(msg.message.value)
                 # print "I made it here!" #temp
+            print "flag2"
         except TimeoutError:
             print "TimeError"
             serve()
