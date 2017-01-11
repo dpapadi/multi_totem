@@ -534,7 +534,7 @@ if __name__ == "__main__":
             if bool(cl_req):
                 print "handle request"
                 handle_request()
-            msg = main_consumer.next()
+            msg = next(main_consumer)
             print msg
             raw_input()
             if bool(msg):
