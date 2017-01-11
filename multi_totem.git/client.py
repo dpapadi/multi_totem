@@ -46,7 +46,7 @@ def update_data():
         print "\n\n"
         return (active, expired)
     except TimeoutError:
-        print "Timeout Error"
+        print "Timeout Error from client's update data."
         update_data()
 
 def activate_server():
@@ -100,7 +100,7 @@ def get_samplewithnoinforate():
         print server.get_samplewithnoinforate()
         return
     except TimeoutError:
-        print "Timeout Error"
+        print "Timeout Error from client's get_samplewithnointrorate."
         get_samplewithnoinforate()
 
 if __name__ == "__main__":

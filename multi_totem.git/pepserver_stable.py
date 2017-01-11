@@ -526,13 +526,12 @@ if __name__ == "__main__":
     while True:
         try:
             cl_req = client_consumer.poll(timeout_ms=0)
-            print cl_req
             if bool(cl_req):
                 handle_request()
             msg = main_consumer.next()
             if bool(msg):
                 get_input_from_queue(msg.message.value)
-            print "I made it here!" #temp
+            #print "I made it here!" #temp
         except TimeoutError:
             print "TimeError"
         except Exception:
