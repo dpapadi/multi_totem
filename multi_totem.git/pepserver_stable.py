@@ -531,7 +531,7 @@ if __name__ == "__main__":
                 handle_request()
             msg = main_consumer.next()
             for message in consumer:
-            if msg:
+            if bool(msg):
                 get_input_from_queue(msg.message.value)
             print "I made it here!" #temp
         except TimeoutError:
