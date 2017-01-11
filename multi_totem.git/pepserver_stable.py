@@ -466,7 +466,7 @@ def register_queue():
     return
 
 
-@timeout(2)
+@timeout(5)
 def serve():
     msg_cnt=0
     while True:
