@@ -24,7 +24,7 @@ def register_queue():
         try:
             kafka = SimpleClient("localhost:9092")
             global producer
-            producer = KafkaProducer(kafka)
+            producer = SimpleProducer(kafka)
             tryagain = False
         except Exception:
             print "Kafka is unavailable at the moment."
