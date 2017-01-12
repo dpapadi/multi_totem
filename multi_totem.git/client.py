@@ -41,24 +41,20 @@ def checkout():
         return 0
 
 def update_data():
-    try:
-        activate_server()
-        time.sleep(0.5)
-        a=checkout()
-        if a:
-            args = pickle.loads(a)
-            global active
-            active = args[0]
-            global expired
-            expired = args[1]
-            print "Data updated"
-            print "\n\n"
-            return (active, expired)
-        else:
-            update_date()
-    except:
-        print "Error in update_data function."
-        update_data()
+    activate_server()
+    time.sleep(0.5)
+    a=checkout()
+    if a:
+        args = pickle.loads(a)
+        global active
+        active = args[0]
+        global expired
+        expired = args[1]
+        print "Data updated"
+        print "\n\n"
+        return (active, expired)
+    else:
+        update_date()
 
 def activate_server():
     try:
