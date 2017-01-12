@@ -50,12 +50,13 @@ def update_data():
         update_data()
 
 def activate_server():
-    try:
+    while True:
+    #try:
         producer.send_message("client", "hi")
-    except:
-        print "Error in queue!"
-        register_queue()
-        return
+    #except:
+     #   print "Error in queue!"
+      #  register_queue()
+       # return
     return
 
 def ret_active():
