@@ -531,7 +531,8 @@ if __name__ == "__main__":
         while True:
         #try:
             cl_req = client_consumer.poll()
-            #print "flag1"
+            print cl_req
+            raw_input()
             if bool(cl_req):
                 print "handle request"
                 handle_request()
