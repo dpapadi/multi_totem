@@ -533,7 +533,8 @@ if __name__ == "__main__":
             cl_req = client_consumer.poll()
             raw_input()
             if bool(cl_req):
-                print str(cl_req.values()).split()[6][6:]
+                i=len(str(cl_req.values()).split()[6])-1
+                print str(cl_req.values()).split()[6][6:i]
                 print "handle request"
                 handle_request()
             msg = main_consumer.poll()
