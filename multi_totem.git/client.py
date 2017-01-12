@@ -31,7 +31,7 @@ def register_queue():
             time.sleep(5)
     return
 
-@timeout(1)
+@timeout(5)
 def update_data():
     try:
         activate_server()
