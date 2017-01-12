@@ -31,23 +31,34 @@ def register_queue():
             time.sleep(5)
     return
 
-@timeout(5)
+@timeout(1)
+def checkout():
+    try:
+        a=server.checkout()
+        return a
+    except TimeoutError:
+        print "Timeout Error in checkout() function"
+        return 0
+
 def update_data():
     try:
         activate_server()
         time.sleep(0.5)
-        a = server.checkout()
-        args = pickle.loads(a)
-        global active
-        active = args[0]
-        global expired
-        expired = args[1]
-        print "Data updated"
-        print "\n\n"
-        return (active, expired)
-    except TimeoutError:
-        print "Timeout Error from client's update data."
-        update_data()
+        a=checkout()
+        if a:
+            args = pickle.loads(a)
+            global active
+            active = args[0]
+            global expired
+            expired = args[1]
+            print "Data updated"
+            print "\n\n"
+            return (active, expired)
+        else:
+            update_date()
+    except:
+        print "Error in update_data function."
+        return
 
 def activate_server():
     try:
