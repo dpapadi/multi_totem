@@ -525,26 +525,18 @@ if __name__ == "__main__":
     server.register_function(get_samplewithnoinforate)
 
     # serve_forever
-    print "Server Ready."
     msg_cnt=0
     while True:
-        while True:
-        #try:
+        try:
             cl_req = client_consumer.poll()
             if bool(cl_req):
-                print "handle request"
+                #print "handle request"
                 handle_request()
             msg = main_consumer.poll()
             if bool(msg):
                 i = len(str(msg.values()).split()[6])-1
-                print str(msg.values()).split()[6][6:i]
                 get_input_from_queue(eval(str(msg.values()).split()[6][6:i]))
-            #raw_input()
-            #if bool(msg):
-                #get_input_from_queue(msg.value)
-                # print "I made it here!" #temp
-            #print "flag2"
-        #except Exception:
-         #   msg_cnt += 1
-          #  print "Error n%s" % msg_cnt
+        except Exception:
+            msg_cnt += 1
+            print "Error n%s" % msg_cnt
 
