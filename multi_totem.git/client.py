@@ -54,7 +54,7 @@ def update_data():
         print "\n\n"
         return (active, expired)
     else:
-        update_date()
+        update_data()
 
 def activate_server():
     try:
