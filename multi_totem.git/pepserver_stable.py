@@ -538,7 +538,7 @@ if __name__ == "__main__":
             msg = main_consumer.poll()
             print msg
             raw_input()
-            if bool(msg):
+            #if bool(msg):
                 #get_input_from_queue(msg.value)
                 # print "I made it here!" #temp
             #print "flag2"
