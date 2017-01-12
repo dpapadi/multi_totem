@@ -536,7 +536,7 @@ if __name__ == "__main__":
                 print "handle request"
                 handle_request()
             msg = main_consumer.poll()
-            print msg
+            print msg.values()
             #raw_input()
             #if bool(msg):
                 #get_input_from_queue(msg.value)
