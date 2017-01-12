@@ -531,14 +531,13 @@ if __name__ == "__main__":
         while True:
         #try:
             cl_req = client_consumer.poll()
-            raw_input()
             if bool(cl_req):
-                i=len(str(cl_req.values()).split()[6])-1
-                print str(cl_req.values()).split()[6][6:i]
                 print "handle request"
                 handle_request()
             msg = main_consumer.poll()
-            print msg.values()
+            if bool(msg):
+                i = len(str(msg.values()).split()[6]) - 1
+                print str(msg.values()).split()[6][6:i]
             #raw_input()
             #if bool(msg):
                 #get_input_from_queue(msg.value)
