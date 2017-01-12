@@ -58,7 +58,7 @@ def update_data():
             update_date()
     except:
         print "Error in update_data function."
-        return
+        update_data()
 
 def activate_server():
     try:
