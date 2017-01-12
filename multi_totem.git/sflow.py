@@ -128,8 +128,6 @@ def sflowParser():
 
             args = ("collect_sflow", flow)
             b = pickle.dumps(args)
-            print b
-            raw_input
             #b = pickle.dumps(flow)
             #if 'outputPort' in flow:
              #   server.collect_sflow(b)
