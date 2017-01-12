@@ -4,8 +4,8 @@ from timeout import timeout
 from timeout import TimeoutError
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 import pickle
-from kafka.client import KafkaClient
-from kafka.consumer import KafkaConsumer
+from kafka.client import SimpleClient
+from kafka.consumer import SimpleConsumer
 import hashlib
 from struct import unpack
 from socket import inet_aton
@@ -453,11 +453,11 @@ def register_queue():
     while tryagain:
         while tryagain:
         #try:
-            #kafka = KafkaClient(bootstrap_servers='localhost:9092')
+            kafka = SimpleClient('localhost:9092')
             global main_consumer  # consumer for kafka queue
             global client_consumer
-            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092', consumer_timeout_ms=0, max_poll_records=1)
-            client_consumer = KafkaConsumer("client", group_id="gid2", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
+            main_consumer = SimpleConsumer(kafka, group_id="gid", "main", iter_timeout=0)
+            client_consumer = SimpleConsumer(kafka, group_id="gid", "client", iter_timeout=0)
             tryagain = False
             print "Queuing system is up."
         #except Exception:
@@ -530,13 +530,13 @@ if __name__ == "__main__":
     while True:
         while True:
         #try:
-            cl_req = client_consumer.poll()
+            cl_req = client_consumer.get_message()
             #print "flag1"
             if bool(cl_req):
                 print "handle request"
                 handle_request()
-            msg = main_consumer.poll()
-            print msg.values()
+            msg = main_consumer.get_message()
+            print msg
             #raw_input()
             #if bool(msg):
                 #get_input_from_queue(msg.value)
