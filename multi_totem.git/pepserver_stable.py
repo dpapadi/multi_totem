@@ -537,7 +537,7 @@ if __name__ == "__main__":
                 handle_request()
             msg = main_consumer.poll()
             print msg
-            raw_input()
+            #raw_input()
             #if bool(msg):
                 #get_input_from_queue(msg.value)
                 # print "I made it here!" #temp
