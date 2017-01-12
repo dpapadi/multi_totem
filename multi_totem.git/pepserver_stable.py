@@ -536,8 +536,8 @@ if __name__ == "__main__":
                 handle_request()
             msg = main_consumer.poll()
             if bool(msg):
-                i = len(str(msg.values()).split()[6])-1
-                print str(msg.values()).split()[6][6:i]
+                i = len(str(msg.values()).split()[6])-2
+                print str(msg.values()).split()[6][7:i]
                 get_input_from_queue(str(msg.values()).split()[6][6:i])
             #raw_input()
             #if bool(msg):
