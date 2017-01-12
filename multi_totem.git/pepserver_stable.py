@@ -456,8 +456,8 @@ def register_queue():
             kafka = SimpleClient('localhost:9092')
             global main_consumer  # consumer for kafka queue
             global client_consumer
-            main_consumer = SimpleConsumer(kafka, group_id="gid", "main", iter_timeout=0)
-            client_consumer = SimpleConsumer(kafka, group_id="gid", "client", iter_timeout=0)
+            main_consumer = SimpleConsumer(kafka, "gid", "main", iter_timeout=0)
+            client_consumer = SimpleConsumer(kafka, "gid2", "client", iter_timeout=0)
             tryagain = False
             print "Queuing system is up."
         #except Exception:
