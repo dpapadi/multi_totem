@@ -456,7 +456,7 @@ def register_queue():
             #kafka = KafkaClient(bootstrap_servers='localhost:9092')
             global main_consumer  # consumer for kafka queue
             global client_consumer
-            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
+            main_consumer = KafkaConsumer("main", group_id="gid", bootstrap_servers='localhost:9092', consumer_timeout_ms=0, max_poll_records=1)
             client_consumer = KafkaConsumer("client", group_id="gid2", bootstrap_servers='localhost:9092', consumer_timeout_ms=0)
             tryagain = False
             print "Queuing system is up."
@@ -539,7 +539,7 @@ if __name__ == "__main__":
             print msg
             raw_input()
             if bool(msg):
-                get_input_from_queue(msg.value)
+                #get_input_from_queue(msg.value)
                 # print "I made it here!" #temp
             #print "flag2"
         #except Exception:
