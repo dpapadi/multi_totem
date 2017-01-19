@@ -451,7 +451,7 @@ def get_input_from_queue(serialized_request):
 def register_queue():
     tryagain = True
     while tryagain:
-        while tryagain:
+        while tryagain:#temp
         #try:
             #kafka = KafkaClient('localhost:9092')
             global main_consumer  # consumer for kafka queue
