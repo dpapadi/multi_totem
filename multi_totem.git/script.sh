@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd ~/kafka
-sh bin/zookeeper-server-start config/zookeeper.properties
-sh bin/kafka-server-start config/server.properties
+sh bin/zookeeper-server-start.sh config/zookeeper.properties
+sh bin/kafka-server-start.sh config/server.properties
