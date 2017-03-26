@@ -440,11 +440,12 @@ def get_input_from_queue(serialized_request):
         func += "(args[1:])"
     else:
         func += "(args[1])"
-    try:
+    #try:temp
+    while True
         exec(func)
-    except:
-        print "Error with serialized request!"
-        return
+    #except:
+     #   print "Error with serialized request!"
+        # return
     print "Correct input from queue!" #temp
     return
 
