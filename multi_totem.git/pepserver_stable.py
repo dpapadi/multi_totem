@@ -528,7 +528,8 @@ if __name__ == "__main__":
     # serve_forever
     msg_cnt=0
     while True:
-        try:
+        while True:
+        #try:temp
             cl_req = client_consumer.poll()
             if bool(cl_req):
                 #print "handle request"
@@ -537,7 +538,7 @@ if __name__ == "__main__":
             if bool(msg):
                 i = len(str(msg.values()).split()[6])-1
                 get_input_from_queue(eval(str(msg.values()).split()[6][6:i]))
-        except Exception:
-            msg_cnt += 1
-            print "Error n%s" % msg_cnt
+        #except Exception:
+         #   msg_cnt += 1
+          #  print "Error n%s" % msg_cnt
 
