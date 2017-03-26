@@ -435,6 +435,7 @@ def collect_sflow(flow):
 
 def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
+    print args
     func = args[0]
     if len(args) > 2:
         func += "(args[1:])"
