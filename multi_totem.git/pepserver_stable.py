@@ -442,8 +442,7 @@ def get_input_from_queue(serialized_request):
     else:
         func += "(args[1])"
     #try:temp
-    while True:
-        exec(func)
+    exec(func)
     #except:
      #   print "Error with serialized request!"
         # return
