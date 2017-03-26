@@ -435,7 +435,7 @@ def collect_sflow(flow):
 
 def get_input_from_queue(serialized_request):
     args = pickle.loads(serialized_request)
-    print args
+    #print args
     func = args[0]
     if len(args) > 2:
         func += "(args[1:])"
@@ -537,7 +537,7 @@ if __name__ == "__main__":
             msg = main_consumer.poll()
             if bool(msg):
                 i = len(str(msg.values()).split()[6])-1
-                print eval(str(msg.values()).split()[6][6:i])
+                #print eval(str(msg.values()).split()[6][6:i])
                 get_input_from_queue(eval(str(msg.values()).split()[6][6:i]))
         #except Exception:
          #   msg_cnt += 1
