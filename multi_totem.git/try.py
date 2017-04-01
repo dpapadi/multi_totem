@@ -51,12 +51,11 @@ if __name__ == "__main__":
         print "map_dict: " + str(map_dict)
         print
         print
-        if len(map_dict["switches"])>1:
-            print "big switch"
-            for k in map_dict["switches"]:
-                if k == "00:00:00:00:00:00:08:00":
-                    print ovx_dpid
-                    break
-            else:
-                print "error"
+        for k in map_dict["switches"]:
+            if k == "00:00:00:00:00:00:08:00":
+                print "big switch"
+                print ovx_dpid
+                break
+        else:
+            print "error"
         i+=1

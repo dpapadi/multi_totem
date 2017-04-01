@@ -51,8 +51,10 @@ def dpid_mapping(url, dpid, ten_id, passwd=""):
     result = connect(url, "getVirtualSwitchMapping", data=req, passwd=passwd)  # pass ?
     tmp = ast.literal_eval(json.dumps(result))
     for ovx_dpid, map_dict in tmp.iteritems():
-        if map_dict["switches"][0]==dpid:
-            return ovx_dpid
+        for k in map_dict["switches"]:
+            if k == dpid:
+                print "big switch"
+                return ovx_dpid
     else:
         print "No dpid mapping for dpid: " + dpid + "from tenant id: " +ten_id
         return "NONE"
