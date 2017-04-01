@@ -48,7 +48,7 @@ if __name__ == "__main__":
     for ovx_dpid, map_dict in tmp.iteritems():
         print "try %s" %i
         print "ovx_dpid: " +ovx_dpid
-        print "map_dict: " +map_dict
+        print "map_dict: " + str(map_dict)
         print
         print
         if len(map_dict["switches"])>1:
