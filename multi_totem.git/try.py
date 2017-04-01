@@ -44,12 +44,19 @@ if __name__ == "__main__":
     url = "http://localhost:8080/status"
     result = connect(url, "getVirtualSwitchMapping", data=req, passwd=passwd)  # pass ?
     tmp = ast.literal_eval(json.dumps(result))
+    i=1
     for ovx_dpid, map_dict in tmp.iteritems():
+        print "try %s" %i
+        print "ovx_dpid: " +ovx_dpid
+        print "map_dict: " +map_dict
+        print
+        print
         if len(map_dict["switches"])>1:
             print "big switch"
             for k in map_dict["switches"]:
                 if k == "00:00:00:00:00:00:08:00":
                     print ovx_dpid
-    else:
-        print "No dpid mapping!"
-        print "NONE"
+                    break
+            else:
+                print "error"
+        i+=1
