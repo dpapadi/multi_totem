@@ -53,9 +53,9 @@ def dpid_mapping(url, dpid, ten_id, passwd=""):
     for ovx_dpid, map_dict in tmp.iteritems():
         if len(map_dict["switches"])>1:
             print "big switch"  # temp
+            raw_input()
         for k in map_dict["switches"]:
             if k == dpid:
-
                 return ovx_dpid
     else:
         print "No dpid mapping for dpid: " + dpid + "from tenant id: " +ten_id
