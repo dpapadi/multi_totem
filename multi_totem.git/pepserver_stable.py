@@ -423,7 +423,8 @@ def collect_sflow(flow):
                     break
             else:
                 print 'Hash Reconstrution failed.\n'
-                print dpid
+                print "dpid" + dpid
+                print "sflow_dpid" + sflow_dpid
     except Exception as sd:
         print 'bad dpid ' + dpid
         print sd
