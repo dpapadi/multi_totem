@@ -251,61 +251,64 @@ def collect_sflow(flow):
 
     # convert dl_type
     match['dl_type'] = sflow.pop('dl_type')
-
-    if 'srcIP' not in sflow.keys():
-        print "Sample with no info" #sample due to OpenVirteX internal signals (?)
-        global swni_cntr
-        swni_cntr += 1
-        return
-    else:
-        if sflow['dstMAC'] == 'ff:ff:ff:ff:ff:ff':
-            print 'Ignoring broadcast messages...'
+    try:
+        if 'srcIP' not in sflow.keys():
+            print "Sample with no info" #sample due to OpenVirteX internal signals (?)
+            global swni_cntr
+            swni_cntr += 1
             return
-        if sflow['srcMAC'][:8] == 'a4:23:05':
-            tid = int(sflow['srcMAC'][10:11])
-
-            sflow_dpid = sflow.pop('dpid')
-            if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
-                dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
-                if dpid == "NONE":
-                    return
-                hypervisor_var['tenants'][tid]['dpid'][sflow_dpid] = dpid
-            else:
-                dpid = hypervisor_var['tenants'][tid]['dpid'][sflow_dpid]
-
-            tmp = sflow['srcIP'] #debug issue
-
-            sflow_ip = sflow['srcIP']
-            if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
-                (sflow['srcMAC'], sflow['srcIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
-                if sflow['srcIP'] == "NONE":
-                    print "No mapping found for srcIP"
-                    return
-                if not rep_mac:
-                    hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
-                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
-                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
-            else:
-                sflow['srcIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
-                sflow['srcMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
-
-            sflow_ip = sflow['dstIP']
-            if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
-                (sflow['dstMAC'], sflow['dstIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, passwd="")
-                if sflow['dstIP'] == "NONE":
-                    print "No mapping found for dstIP"
-                    return
-                if not rep_mac:
-                    hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
-                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
-                    hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
-            else:
-                sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
-                sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
         else:
-            tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
-            dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow.pop('dpid'), tid, passwd="")
+            if sflow['dstMAC'] == 'ff:ff:ff:ff:ff:ff':
+                print 'Ignoring broadcast messages...'
+                return
+            if sflow['srcMAC'][:8] == 'a4:23:05':
+                tid = int(sflow['srcMAC'][10:11])
 
+                sflow_dpid = sflow.pop('dpid')
+                if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
+                    dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+                    if dpid == "NONE":
+                        return
+                    hypervisor_var['tenants'][tid]['dpid'][sflow_dpid] = dpid
+                else:
+                    dpid = hypervisor_var['tenants'][tid]['dpid'][sflow_dpid]
+
+                tmp = sflow['srcIP'] #debug issue
+
+                sflow_ip = sflow['srcIP']
+                if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                    (sflow['srcMAC'], sflow['srcIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
+                    if sflow['srcIP'] == "NONE":
+                        print "No mapping found for srcIP"
+                        return
+                    if not rep_mac:
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
+                else:
+                    sflow['srcIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
+                    sflow['srcMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
+
+                sflow_ip = sflow['dstIP']
+                if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                    (sflow['dstMAC'], sflow['dstIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, passwd="")
+                    if sflow['dstIP'] == "NONE":
+                        print "No mapping found for dstIP"
+                        return
+                    if not rep_mac:
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
+                else:
+                    sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
+                    sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
+            else:
+                tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
+                dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow.pop('dpid'), tid, passwd="")
+    except Exception as e:
+        print e
+        print "error in collect_sflow first try section"
+        return
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
         match['dl_vlan'] = 65535
