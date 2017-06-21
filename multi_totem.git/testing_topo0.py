@@ -22,35 +22,35 @@ class TestingTopo(Topo):
         "Create my testing topology."
 
         # Add default members to class.
-         super(TestingTopo, self).__init__()
+        super(TestingTopo, self).__init__()
 
-         # Add core switches
-         self.cores = {}
-         for switch in CORES:
+        # Add core switches
+        self.cores = {}
+        for switch in CORES:
             self.cores[switch] = self.addSwitch(switch, dpid=(CORES[switch]['dpid'] % '0'))
 
-         #used to customize host ips
-         mycount = 1
+        #used to customize host ips
+        mycount = 1
 
-         # Add hosts and connect them to their core switch
-         for switch in CORES:
-             for count in xrange(1, FANOUT + 1):
-                 # Add hosts
-                 host = '%s_%s' % (switch, count)
-                 ip = '%s.0.0.%s' % (count, mycount)
-                 mac = CORES[switch]['dpid'][4:] % mycount
-                 h = self.addHost(host, ip=ip, mac=mac)
-                 # Connect hosts to core switches
-                 self.addLink(h, self.cores[switch])
-             mycount+=1
+        # Add hosts and connect them to their core switch
+        for switch in CORES:
+            for count in xrange(1, FANOUT + 1):
+                # Add hosts
+                host = '%s_%s' % (switch, count)
+                ip = '%s.0.0.%s' % (count, mycount)
+                mac = CORES[switch]['dpid'][4:] % mycount
+                h = self.addHost(host, ip=ip, mac=mac)
+                # Connect hosts to core switches
+                self.addLink(h, self.cores[switch])
+            mycount+=1
 
              # Connect core switches
-         self.addLink(self.cores['S1'], self.cores['S2'])
-         self.addLink(self.cores['S1'], self.cores['S3'])
-         self.addLink(self.cores['S2'], self.cores['S3'])
-         self.addLink(self.cores['S2'], self.cores['S4'])
-         self.addLink(self.cores['S3'], self.cores['S4'])
-         self.addLink(self.cores['S4'], self.cores['S5'])
+        self.addLink(self.cores['S1'], self.cores['S2'])
+        self.addLink(self.cores['S1'], self.cores['S3'])
+        self.addLink(self.cores['S2'], self.cores['S3'])
+        self.addLink(self.cores['S2'], self.cores['S4'])
+        self.addLink(self.cores['S3'], self.cores['S4'])
+        self.addLink(self.cores['S4'], self.cores['S5'])
 
 if __name__ == '__main__':
     topo = TestingTopo()
