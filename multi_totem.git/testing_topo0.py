@@ -16,13 +16,13 @@ CORES = {
 
 FANOUT = 5
 
-class testingTopo(Topo):
+class TestingTop(Topo):
 
     def __init__(self, enable_all = True):
         "Create my testing topology."
 
     # Add default members to class.
-    super(testingTopo, self).__init__()
+    super(TestingTop, self).__init__()
 
     # Add core switches
     self.cores = {}
@@ -53,7 +53,7 @@ class testingTopo(Topo):
     self.addLink(self.cores['S4'], self.cores['S5'])
 
     if __name__ == '__main__':
-        topo = testingTopo()
+        topo = TestingTop()
         ip = '127.0.0.1'
         port = 6633
         c = RemoteController('c', ip=ip, port=port)
