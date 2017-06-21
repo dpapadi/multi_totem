@@ -37,7 +37,7 @@ class TestingTopo(Topo):
             for count in xrange(1, FANOUT + 1):
                 # Add hosts
                 host = '%s_%s' % (switch, count)
-                ip = '%s.0.0.%s' % (count, mycount)
+                ip = '10.0.%s.%s' % (count, mycount)
                 mac = CORES[switch]['dpid'][4:] % mycount
                 h = self.addHost(host, ip=ip, mac=mac)
                 # Connect hosts to core switches
