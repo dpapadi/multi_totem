@@ -95,7 +95,7 @@ def get_tid(url, mac, passwd=""):
 
 #functions from ovxctl to 'talk' to OVX server
 
-def connect(url, cmd, data=None, passwd=None): #from ovxctl ~minor changes~
+def connect(url, cmd, data=None, passwd=None): #from ovxctl ~minor changes~ tid=None(??)
     try:
         passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
         passman.add_password(None, url, "admin", passwd)

@@ -34,7 +34,7 @@ expired = {}
 # Used as a MAC Table, matching OF ports to MAC addresses
 mac_table = {}
 
-# List to save flowspace
+# List to save
 flowspace = []
 
 # Structure to match sflow fields to OpenFlow fields
