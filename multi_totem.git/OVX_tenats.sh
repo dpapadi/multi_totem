@@ -3,6 +3,7 @@
 if [ $# -lt 2 ]
 then
     echo "$0 needs more arguments. (normal, 2bsw, bsw, vlink, all) controller_port1 etc"
+    exit
 fi
 
 case "$1" in
