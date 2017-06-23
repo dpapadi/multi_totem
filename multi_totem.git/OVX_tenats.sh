@@ -2,4 +2,4 @@
 
 k =$1
 
-print k
+print "k"
