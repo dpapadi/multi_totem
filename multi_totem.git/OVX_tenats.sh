@@ -1,5 +1,5 @@
 #!/bin/bash
 
-k =$1
+k="$1"
 
 print "$k"
