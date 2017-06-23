@@ -10,7 +10,7 @@ then
     fi
 fi
 
-if [[ "$1" -eq "all" && "$#" -ne 5 ]]
+if [[ $1 == "all" && "$#" -ne 5 ]]
 then
     echo "Provide 5 arguments all port1 port2 port3 port4"
     echo "You provided $# arguments"
