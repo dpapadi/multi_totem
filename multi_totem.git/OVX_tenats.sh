@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$1" -eq "normal" ] || [ "$1" -eq "2bsw" ] || [ "$1" -eq "bsw" ] || [ "$1" -eq "vlink" ]] && [ "$#" -ne 2 ]
+if [[ "$1" -eq "normal" ] || [ "$1" -eq "2bsw" ] || [ "$1" -eq "bsw" ] || [ "$1" -eq "vlink" ]]
 then
     echo "Provide 2 arguments (normal, 2bsw, bsw, vlink) port"
     echo "You provided $# arguments"
@@ -9,7 +9,7 @@ fi
 
 if [[ "$1" -eq "all" && "$#" -ne 5 ]]
 then
-    echo "Provide 5 arguments (normal, 2bsw, bsw, vlink) port"
+    echo "Provide 5 arguments all port1 port2 port3 port4"
     echo "You provided $# arguments"
     exit
 fi
