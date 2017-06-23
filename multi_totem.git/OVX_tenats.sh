@@ -1,5 +1,5 @@
 #!/bin/bash
 
-getopts u opt
+getopts u:dpf: opt
 
 print "$opt"
