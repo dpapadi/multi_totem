@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+#testing topology created through Mininet
+
 from mininet.net import Mininet
 from mininet.topo import Topo
 from mininet.log import lg, setLogLevel
@@ -38,7 +40,7 @@ class TestingTopo(Topo):
                 # Add hosts
                 host = '%s_%s' % (switch, count)
                 ip = '10.0.%s.%s' % (count, mycount)
-                mac = CORES[switch]['dpid'][4:] % mycount
+                mac = CORES[switch]['dpid'][4:] % count
                 h = self.addHost(host, ip=ip, mac=mac)
                 # Connect hosts to core switches
                 self.addLink(h, self.cores[switch])
