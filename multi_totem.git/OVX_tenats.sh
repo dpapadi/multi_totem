@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $1 == "normal" ] || [ $1 == "2bsw" ] || [ $1 == "bsw" ] || [ $1 == "vlink" ]
+if [[ $1 == "normal" ] || [ $1 == "2bsw" ] || [ $1 == "bsw" ] || [ $1 == "vlink" ]] && [ $# -ne 2 ]
 then
     echo "Provide 2 arguments (normal, 2bsw, bsw, vlink) port"
     echo "You provided $# arguments"
