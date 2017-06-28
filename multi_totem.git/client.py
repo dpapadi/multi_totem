@@ -103,7 +103,7 @@ def ret_expired():
 def get_samplewithnoinforate():
     try:
         activate_server()
-        time.sleep(0.5)
+        #time.sleep(0.5)
         print server.get_samplewithnoinforate()
         return
     except TimeoutError:
