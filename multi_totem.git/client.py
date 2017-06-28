@@ -31,7 +31,7 @@ def register_queue():
             time.sleep(5)
     return
 
-@timeout(5)
+#@timeout(5)
 def checkout():
     try:
         a=server.checkout()
@@ -99,7 +99,7 @@ def ret_expired():
         ret_expired()
     return
 
-@timeout(1)
+#@timeout(1)
 def get_samplewithnoinforate():
     try:
         activate_server()

@@ -12,6 +12,11 @@ function normal {
     }
 EOF
 
+if [ $# -lt 1 ]
+then
+    echo "Provide arguments: (normal, 2bsw, bsw, vlink, all) port1 (port2 port3 port4)"
+    exit
+fi
 
 if [ $1 == "normal" ] || [ $1 == "2bsw" ] || [ $1 == "bsw" ] || [ $1 == "vlink" ]
 then
