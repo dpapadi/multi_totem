@@ -219,22 +219,22 @@ def move_to_expired(args):
         print "error in first try of move to expired!"
         return
         # now create another hashed value, including timestamp
-        d = construct_hashed_key(match, found['timestamps']['start'], 0)
+    d = construct_hashed_key(match, found['timestamps']['start'], 0)
 
-        if tid not in expired:
-            expired[tid] = {}
-        if dpid not in expired[tid]:
-            expired[tid][dpid] = {}
+    if tid not in expired:
+        expired[tid] = {}
+    if dpid not in expired[tid]:
+        expired[tid][dpid] = {}
 
-        expired[tid][dpid][d] = found
-        print "move_to_expired function!" #temp
-        try:
-            if active[tid][dpid] == {}:
-                del active[tid][dpid]
-                print "active entry deleted!" #temp
-        except:
-            print "error in second try of move to expired!"
-            return
+    expired[tid][dpid][d] = found
+    print "move_to_expired function!" #temp
+    try:
+        if active[tid][dpid] == {}:
+            del active[tid][dpid]
+            print "active entry deleted!" #temp
+    except:
+        print "error in second try of move to expired!"
+        return
 
 def collect_sflow(flow):
     """
