@@ -67,6 +67,7 @@ def ret_active():
         if tid == "r":
             return
         elif int(tid) == 0:
+            output(0, 0)
             print "\nactive: "
             print table[0]
             return
@@ -87,6 +88,7 @@ def ret_expired():
         if tid == "r":
             return
         elif int(tid) == 0:
+            output(0, 1)
             print "\nexpired: "
             print table[1]
         else:
