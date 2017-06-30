@@ -187,7 +187,7 @@ def aggregate():
 
     with open(filename, 'w') as csvfile:
         fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
-                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','Slice_Owner']
+                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','tenant']
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
