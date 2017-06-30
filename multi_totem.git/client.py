@@ -68,11 +68,11 @@ def ret_active():
             return
         elif int(tid) == 0:
             print "\nactive: "
-            print active
+            print table[0]
         else:
             output(int(tid), 0)
             print "\nactive: "
-            print active[int(tid)]
+            print table[0][int(tid)]
         print "\n\n"
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
@@ -86,11 +86,11 @@ def ret_expired():
             return
         elif int(tid) == 0:
             print "\nexpired: "
-            print expired
+            print table[1]
         else:
             output(int(tid), 1)
             print "\nexpired: "
-            print expired[int(tid)]
+            print table[1][int(tid)]
         print "\n\n"
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
