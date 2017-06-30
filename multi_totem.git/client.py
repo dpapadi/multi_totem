@@ -108,18 +108,18 @@ def output(tid, t, start=0, end=float("inf")):
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
-        print table[t][tid]
-        raw_input()
-        for kk, vv in table[t][tid].iteritems():
-            for l, w in vv.iteritems():
-                if w['timestamps']['start'] > start and w['timestamps']['end'] < end:
-                    b = w['match']
-                    b['dpid'] = kk
-                    b['hash'] = l
-                    b['Packet_Counter'] = w['counters']['counterX']
-                    b['Packet_In'] = w['counters']['Packet_In']
-                    b['tenant'] = w['tenant']
-                    writer.writerow(b)
+        for ten_id, fr in table[t].iteritems() :
+            if tid == 0 or ten_id == tid :
+                for kk, vv in fr.iteritems():
+                    for l, w in vv.iteritems():
+                        if w['timestamps']['start'] > start and w['timestamps']['end'] < end:
+                            b = w['match']
+                            b['dpid'] = kk
+                            b['hash'] = l
+                            b['Packet_Counter'] = w['counters']['counterX']
+                            b['Packet_In'] = w['counters']['Packet_gitIn']
+                            b['tenant'] = w['tenant']
+                            writer.writerow(b)
     print '\n\nOutput Successfull!\n\n'
     return
 
