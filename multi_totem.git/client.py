@@ -15,7 +15,6 @@ server = jsonrpclib.Server('http://localhost:8085')
 # Active/Expired Flows
 active = {}
 expired = {}
-table = (active, expired)
 
 def register_queue():
     tryagain = True
@@ -46,8 +45,7 @@ def update_data():
     if a:
         args = pickle.loads(a)
         global table
-        table[0] = args[0]
-        table[1] = args[1]
+        table = args
         print "Data updated"
         print "\n\n"
         return table
