@@ -106,7 +106,8 @@ def output(tid, t, start=0, end=float("inf")):
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
-
+        print table[t][tid]
+        raw_input()
         for kk, vv in table[t][tid].iteritems():
             for l, w in vv.iteritems():
                 if w['timestamps']['start'] > start and w['timestamps']['end'] < end:
