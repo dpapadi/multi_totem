@@ -12,11 +12,10 @@ from kafka.producer import KafkaProducer
 
 server = jsonrpclib.Server('http://localhost:8085')
 
-# Active Flows
+# Active/Expired Flows
 active = {}
-
-# Expired Flows
 expired = {}
+table = (active, expired)
 
 def register_queue():
     tryagain = True
@@ -46,13 +45,12 @@ def update_data():
     a=checkout()
     if a:
         args = pickle.loads(a)
-        global active
-        active = args[0]
-        global expired
-        expired = args[1]
+        global table
+        table[0] = args[0]
+        table[1] = args[1]
         print "Data updated"
         print "\n\n"
-        return (active, expired)
+        return table
     else:
         update_data()
 
@@ -74,6 +72,7 @@ def ret_active():
             print "\nactive: "
             print active
         else:
+            output(int(tid), 0)
             print "\nactive: "
             print active[int(tid)]
         print "\n\n"
@@ -91,12 +90,36 @@ def ret_expired():
             print "\nexpired: "
             print expired
         else:
+            output(int(tid), 1)
             print "\nexpired: "
             print expired[int(tid)]
         print "\n\n"
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         ret_expired()
+    return
+
+def output(tid, t, start=0, end=float("inf")):
+    name = raw_input("Please Enter a file name to print flows to:\t")
+    filename = '%s.csv' %name
+    with open(filename, 'w') as csvfile:
+        fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
+                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','tenant']
+
+        writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
+        writer.writeheader()
+
+        for kk, vv in table[t][tid].iteritems():
+            for l, w in vv.iteritems():
+                if w['timestamps']['start'] > start and w['timestamps']['end'] < end:
+                    b = w['match']
+                    b['dpid'] = kk
+                    b['hash'] = l
+                    b['Packet_Counter'] = w['counters']['counterX']
+                    b['Packet_In'] = w['counters']['PacketIn']
+                    b['tenant'] = w['tenant']
+                    writer.writerow(b)
+    print '\n\nOutput Successfull!\n\n'
     return
 
 @timeout(1)
