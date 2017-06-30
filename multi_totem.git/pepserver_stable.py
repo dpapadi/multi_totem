@@ -164,7 +164,7 @@ def construct_new_entry(args):
                            'match': construct_dict(match, dpid),
                            'timestamps': {'start': time, 'end': None},
                            'headers': {},
-                           'slice_Owner': None
+                           'tenant': tid
                            }
         hlp = active[tid][dpid][d]['match']
         # assign the flow entry to a flowspace
