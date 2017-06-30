@@ -16,6 +16,28 @@ server = jsonrpclib.Server('http://localhost:8085')
 active = {}
 expired = {}
 
+def construct_hashed_sflow(match):
+    """
+    :params: OpenFlow match object
+    :return: hashed value computed on that object
+    """
+    # Constructing key
+    key = (match['in_port'],
+           match['dl_src'],
+           match['dl_dst'],
+           match['dl_type'],
+           match['dl_vlan'],
+           # match['dl_vlan_pcp'],
+           match['nw_proto'],
+           match['nw_src'],
+           match['nw_dst'],
+           match['nw_tos'],
+           match['tp_src'],
+           match['tp_dst']
+           )
+
+    return hash(key)
+
 def register_queue():
     tryagain = True
     while tryagain:
@@ -84,7 +106,7 @@ def ret_active():
 
 def ret_expired():
     try:
-        tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: ")
+        tid = raw_input("\nEnter Tenant ID (0 for all tenant counters) or r to return: ")
         if tid == "r":
             return
         elif int(tid) == 0:
@@ -102,7 +124,7 @@ def ret_expired():
     return
 
 def output(tid, t, start=0, end=float("inf")):
-    name = raw_input("Please Enter a file name to print flows to:\t")
+    name = raw_input("\nPlease Enter a file name to print flows to:\t")
     filename = '%s.csv' %name
     with open(filename, 'w') as csvfile:
         fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
@@ -124,6 +146,56 @@ def output(tid, t, start=0, end=float("inf")):
                             writer.writerow(b)
     print '\n\nOutput Successfull!\n\n'
     return
+
+def aggregate(tid):
+    print '\n\nPrinting Aggregate Counters\n\n'
+    aggr = table[0]
+    for ten_id, fr in table[1].iteritems():
+        if tid == 0 or ten_id == tid:
+            for dpid, rest in fr.iteritems():
+                for hashes, dicts in rest.iteritems():
+                    hk = construct_hashed_sflow(dicts['match'])
+                    print 'Hash Key: %s' % hk
+                if ten_id not in aggr:
+                    aggr[ten_id] = {}
+                if dpid not in aggr[ten_id]:
+                    aggr[ten_id][dpid] = {}
+                    aggr[ten_id][dpid][hk] = dicts
+                    aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
+                elif hk not in aggr[ten_id][dpid]:
+                    aggr[ten_id][dpid][hk] = dicts
+                    aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
+                else:
+                    aggr[ten_id][dpid][hk]['counters']['counterX'] += dicts['counters']['counterX']
+                    try:
+                        aggr[ten_id][dpid][hk]['counters']['Packet_In'] += 1
+                    except KeyError:
+                        aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
+
+    print '\n'
+
+    name = raw_input("Please Enter a file name to print flows to:\t")
+    filename = '%s.csv' % name
+
+    with open(filename, 'w') as csvfile:
+        fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
+                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','Slice_Owner']
+
+        writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
+        writer.writeheader()
+
+        for ten_id, fr in aggr.iteritems():
+            if tid == 0 or ten_id == tid:
+                for kk, vv in fr.iteritems():
+                    for l, w in vv.iteritems():
+                        b = w['match']
+                        b['dpid'] = kk
+                        b['hash'] = l
+                        b['Packet_Counter'] = w['counters']['counterX']
+                        b['Packet_In'] = w['counters']['Packet_In']
+                        b['tenant'] = w['tenant']
+                        writer.writerow(b)
+    print "\n\n Aggregate Successfull!\n\n"
 
 @timeout(1)
 def get_samplewithnoinforate():
@@ -149,7 +221,7 @@ if __name__ == "__main__":
         print '4:\t to get sample with no info rate'
         print '5:\t to exit\n\n'
 
-        choice = raw_input("Please Enter a valid option:\t")
+        choice = raw_input("\nPlease Enter a valid option:\t")
         print "\n\n"
         choices = ['1', '2', '3', '4', '5']
         option = {'1': ret_active,
