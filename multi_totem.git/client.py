@@ -62,7 +62,7 @@ def activate_server():
     return
 
 def ret_active():
-    while TRUE:
+    while True:
         tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: ")
         if tid == "r":
             return
