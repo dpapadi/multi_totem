@@ -117,7 +117,7 @@ def output(tid, t, start=0, end=float("inf")):
                             b['dpid'] = kk
                             b['hash'] = l
                             b['Packet_Counter'] = w['counters']['counterX']
-                            b['Packet_In'] = w['counters']['Packet_gitIn']
+                            b['Packet_In'] = w['counters']['Packet_In']
                             b['tenant'] = w['tenant']
                             writer.writerow(b)
     print '\n\nOutput Successfull!\n\n'
