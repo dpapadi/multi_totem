@@ -147,7 +147,12 @@ def output(tid, t, start=0, end=float("inf")):
     print '\n\nOutput Successfull!\n\n'
     return
 
-def aggregate(tid):
+def aggregate():
+    tid = raw_input("\nEnter Tenant ID (0 for all tenant counters) or r to return: ")
+    if tid == 'r':
+        return
+    tid = int(tid)
+
     print '\n\nPrinting Aggregate Counters\n\n'
     aggr = table[0]
     for ten_id, fr in table[1].iteritems():
@@ -171,7 +176,10 @@ def aggregate(tid):
                         aggr[ten_id][dpid][hk]['counters']['Packet_In'] += 1
                     except KeyError:
                         aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
-
+    if tid == 0 :
+        print aggr
+    else:
+        print aggr[tid]
     print '\n'
 
     name = raw_input("Please Enter a file name to print flows to:\t")
@@ -219,16 +227,18 @@ if __name__ == "__main__":
         print '2:\t for expired counters'
         print '3:\t to update counters'
         print '4:\t to get sample with no info rate'
-        print '5:\t to exit\n\n'
+        print '5:\t to aggregate counters'
+        print '6:\t to exit\n\n'
 
         choice = raw_input("\nPlease Enter a valid option:\t")
         print "\n\n"
-        choices = ['1', '2', '3', '4', '5']
+        choices = ['1', '2', '3', '4', '5', '6']
         option = {'1': ret_active,
                   '2': ret_expired,
                   '3': update_data,
                   '4': get_samplewithnoinforate,
-                  '5': sys.exit}
+                  '5': aggregate,
+                  '6': sys.exit}
 
         while choice not in choices:
             choice = raw_input("Please Enter a valid option:\t")
