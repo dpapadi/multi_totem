@@ -40,7 +40,7 @@ class TestingTopo(Topo):
         # Add core switches
         self.cores = {}
         for switch in CORES:
-            self.cores[switch] = self.addSwitch(switch, dpid=(CORES[switch]['dpid'] % '0'))
+            self.cores[switch] = self.addSwitch(switch, dpid=(CORES[switch]['dpid']))
 
 
         # Add hosts and connect them to their core switch
