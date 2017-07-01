@@ -9,12 +9,23 @@ from mininet.cli import CLI
 from mininet.node import RemoteController
 
 CORES = {
-  'S1': {'dpid': '000000000000010%s', 'id': '1'},
-  'S2': {'dpid': '000000000000020%s', 'id': '2'},
-  'S3': {'dpid': '000000000000030%s', 'id': '3'},
-  'S4': {'dpid': '000000000000040%s', 'id': '4'},
-  'S5': {'dpid': '000000000000050%s', 'id': '5'}
+  'S12' : {'dpid': '0000000000000012', 'id': '12' },
+  'S123': {'dpid': '0000000000000123', 'id': '123'},
+  'S13' : {'dpid': '0000000000000013', 'id': '13' },
+  'S23' : {'dpid': '0000000000000023', 'id': '23' },
+  'S34' : {'dpid': '0000000000000034', 'id': '34' }
   }
+
+hosts = {
+    'H11' : {'mac': '000000001211', 'ip': '10.0.1.1', 'switch': 'S12'},
+    'H12' : {'mac': '000000001312', 'ip': '10.0.1.2', 'switch': 'S13'},
+    'H21' : {'mac': '000000001221', 'ip': '10.0.2.1', 'switch': 'S12'},
+    'H22' : {'mac': '000000002322', 'ip': '10.0.2.2', 'switch': 'S23'},
+    'H31' : {'mac': '000000001331', 'ip': '10.0.3.1', 'switch': 'S13'},
+    'H32' : {'mac': '000000003432', 'ip': '10.0.3.2', 'switch': 'S34'},
+    'H41' : {'mac': '000000003441', 'ip': '10.0.4.1', 'switch': 'S34'},
+    'H42' : {'mac': '000000003442', 'ip': '10.0.4.2', 'switch': 'S34'}
+}
 
 FANOUT = 5
 
@@ -33,24 +44,26 @@ class TestingTopo(Topo):
 
 
         # Add hosts and connect them to their core switch
-        for switch in CORES:
-            for count in xrange(1, FANOUT + 1):
+        #for switch in CORES:
+         #   for count in xrange(1, FANOUT + 1):
                 # Add hosts
-                host = '%s_%s' % (switch, count)
-                ip = '10.0.%s.%s' % (count, CORES[switch]['id'])
-                mac = CORES[switch]['dpid'][4:] % count
-                h = self.addHost(host, ip=ip, mac=mac)
+          #      host = '%s_%s' % (switch, count)
+           #     ip = '10.0.%s.%s' % (count, CORES[switch]['id'])
+            #    mac = CORES[switch]['dpid'][4:] % count
+             #   h = self.addHost(host, ip=ip, mac=mac)
                 # Connect hosts to core switches
-                self.addLink(h, self.cores[switch])
+              #  self.addLink(h, self.cores[switch])
 
+        #add hosts
+        for host in hosts:
+            h = self.addHost(host, ip=hosts[host]['ip'], mac=hosts[host][mac])
+            self.addLink(h, self.cores[hosts[host]['switch']])
 
              # Connect core switches
-        self.addLink(self.cores['S1'], self.cores['S2'])
-        self.addLink(self.cores['S1'], self.cores['S3'])
-        self.addLink(self.cores['S2'], self.cores['S3'])
-        self.addLink(self.cores['S2'], self.cores['S4'])
-        self.addLink(self.cores['S3'], self.cores['S4'])
-        self.addLink(self.cores['S4'], self.cores['S5'])
+        self.addLink(self.cores['S12'], self.cores['S123'])
+        self.addLink(self.cores['S13'], self.cores['S123'])
+        self.addLink(self.cores['S23'], self.cores['S123'])
+        self.addLink(self.cores['S23'], self.cores['S34'])
 
 if __name__ == '__main__':
     topo = TestingTopo()
