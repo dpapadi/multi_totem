@@ -128,7 +128,7 @@ def output(tid, t, start=0, end=float("inf")):
     filename = '%s.csv' %name
     with open(filename, 'w') as csvfile:
         fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
-                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','tenant']
+                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','tenant', 'physicalDPID']
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
@@ -143,6 +143,7 @@ def output(tid, t, start=0, end=float("inf")):
                             b['Packet_Counter'] = w['counters']['counterX']
                             b['Packet_In'] = w['counters']['Packet_In']
                             b['tenant'] = w['tenant']
+                            b['physicalDPID'] = w['physicalDPID']
                             writer.writerow(b)
     print '\n\nOutput Successfull!\n\n'
     return
@@ -161,21 +162,21 @@ def aggregate():
                 for hashes, dicts in rest.iteritems():
                     hk = construct_hashed_sflow(dicts['match'])
                     print 'Hash Key: %s' % hk
-                if ten_id not in aggr:
-                    aggr[ten_id] = {}
-                if dpid not in aggr[ten_id]:
-                    aggr[ten_id][dpid] = {}
-                    aggr[ten_id][dpid][hk] = dicts
-                    aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
-                elif hk not in aggr[ten_id][dpid]:
-                    aggr[ten_id][dpid][hk] = dicts
-                    aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
-                else:
-                    aggr[ten_id][dpid][hk]['counters']['counterX'] += dicts['counters']['counterX']
-                    try:
-                        aggr[ten_id][dpid][hk]['counters']['Packet_In'] += 1
-                    except KeyError:
+                    if ten_id not in aggr:
+                        aggr[ten_id] = {}
+                    if dpid not in aggr[ten_id]:
+                        aggr[ten_id][dpid] = {}
+                        aggr[ten_id][dpid][hk] = dicts
                         aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
+                    elif hk not in aggr[ten_id][dpid]:
+                        aggr[ten_id][dpid][hk] = dicts
+                        aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
+                    else:
+                        aggr[ten_id][dpid][hk]['counters']['counterX'] += dicts['counters']['counterX']
+                        try:
+                            aggr[ten_id][dpid][hk]['counters']['Packet_In'] += 1
+                        except KeyError:
+                            aggr[ten_id][dpid][hk]['counters']['Packet_In'] = 1
     if tid == 0 :
         print aggr
     else:
