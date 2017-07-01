@@ -187,7 +187,7 @@ def aggregate():
 
     with open(filename, 'w') as csvfile:
         fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
-                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','tenant']
+                      'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','tenant', 'physicalDPID']
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
@@ -202,6 +202,7 @@ def aggregate():
                         b['Packet_Counter'] = w['counters']['counterX']
                         b['Packet_In'] = w['counters']['Packet_In']
                         b['tenant'] = w['tenant']
+                        b['physicalDPID'] = w['physicalDPID']
                         writer.writerow(b)
     print "\n\n Aggregate Successfull!\n\n"
 
