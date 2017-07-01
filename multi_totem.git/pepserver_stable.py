@@ -164,6 +164,7 @@ def construct_new_entry(args):
                            'match': construct_dict(match, dpid),
                            'timestamps': {'start': time, 'end': None},
                            'headers': {},
+                           'physicalDPID': None,
                            'tenant': tid
                            }
         hlp = active[tid][dpid][d]['match']
@@ -259,6 +260,7 @@ def collect_sflow(flow):
 
     # convert dl_type
     match['dl_type'] = sflow.pop('dl_type')
+    sflow_dpid = sflow.pop('dpid')
     try:
         if 'srcIP' not in sflow.keys():
             print "Sample with no info" #sample due to OpenVirteX internal signals (?)
@@ -272,7 +274,6 @@ def collect_sflow(flow):
             if sflow['srcMAC'][:8] == 'a4:23:05':
                 tid = int(sflow['srcMAC'][10:11])
 
-                sflow_dpid = sflow.pop('dpid')
                 if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
                     dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
                     if dpid == "NONE":
@@ -312,7 +313,7 @@ def collect_sflow(flow):
                     sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
             else:
                 tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
-                dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow.pop('dpid'), tid, passwd="")
+                dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
     except Exception as e:
         print e
         print "error in collect_sflow first try section"
@@ -377,6 +378,7 @@ def collect_sflow(flow):
         if d in active[tid][dpid]:
             print 'Hash Found'
             active[tid][dpid][d]['counters']['counterX'] += 1
+            active[tid][dpid][d]['physicalDPID'] = sflow_dpid #maybe temp
             # adding headers of packet
 
             # f = match['headerBytes']
