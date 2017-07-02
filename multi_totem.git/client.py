@@ -155,7 +155,7 @@ def aggregate():
     tid = int(tid)
 
     print '\n\nPrinting Aggregate Counters\n\n'
-    aggr = {}
+    aggr = table[0]
     for ten_id, fr in table[1].iteritems():
         if tid == 0 or ten_id == tid:
             for dpid, rest in fr.iteritems():
