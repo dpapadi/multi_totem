@@ -110,9 +110,9 @@ def ret_expired():
         if tid == "r":
             return
         elif int(tid) == 0:
+            print table[1]
             output(0, 1)
             print "\nexpired: "
-            print table[1]
         else:
             output(int(tid), 1)
             print "\nexpired: "
