@@ -94,7 +94,7 @@ def ret_active():
             print table[0]
             return
         else:
-            output(int(tid), 0)
+            #output(int(tid), 0)
             print "\nactive: "
             print table[0][int(tid)]
             return
