@@ -347,6 +347,7 @@ def collect_sflow(flow):
     else:
         match['tp_src'] = None
         match['tp_dst'] = None
+        raw_input("None tp_src in sflow sample!!")
 
     fields = ['inputPort', 'srcMAC', 'dstMAC',
               'IPProtocol', 'srcIP', 'dstIP', 'IPTOS']
