@@ -239,7 +239,7 @@ def move_to_expired(args):
                 return
         else:
             print "Nothing to move!"
-            print match
+            print construct_dict(match, None)
     except:
         print "error in wide try of move to expired!"
         return
