@@ -132,6 +132,8 @@ def construct_new_entry(args):
     """
     #args = pickle.loads(serialized_match)
     match = args[0]
+    print construct_dict(match)
+    raw_input() #temp
     dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
     dpid = ovx_patch.mod_dpid(dpid[2:])
     print "mod_dpid "+dpid #temp
