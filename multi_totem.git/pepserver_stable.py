@@ -237,6 +237,9 @@ def move_to_expired(args):
             except:
                 print "error in small try of move to expired!"
                 return
+        else:
+            print "Nothing to move!"
+            print match
     except:
         print "error in wide try of move to expired!"
         return
