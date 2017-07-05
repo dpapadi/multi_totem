@@ -111,7 +111,7 @@ def sflowParser():
             flow['srcMAC'] = l[:17]
             flow['dstMAC'] = m[:17]
 
-            print '1st sourceID ' + flow['sourceId']
+            print '1st sourceID ' + flow['sourceId'] #temp
 
             # added dictionary mapping, or default situational mininet support
             if not sflow_dpid:

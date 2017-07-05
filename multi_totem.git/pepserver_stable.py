@@ -122,7 +122,7 @@ def construct_dict(match, dpid):
     di['nw_tos'] = match.nw_tos
     di['tp_src'] = match.tp_src
     di['tp_dst'] = match.tp_dst
-    di['dpid'] = dpid
+    #di['dpid'] = dpid no need, matches sorted by tid, dpid
     return di
 
 
@@ -230,7 +230,10 @@ def move_to_expired(args):
             try:
                 if active[tid][dpid] == {}:
                     del active[tid][dpid]
-                    print "active entry deleted!" #temp
+                    print "active entry (dpid) deleted!" #temp
+                if active[tid] == {}:
+                    del active[tid]
+                    print "active entry (tid) deleted" #temp
             except:
                 print "error in small try of move to expired!"
                 return
@@ -318,6 +321,7 @@ def collect_sflow(flow):
         print e
         print "error in collect_sflow first try section"
         return
+
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
         match['dl_vlan'] = 65535
@@ -432,6 +436,7 @@ def collect_sflow(flow):
                 else:
                     # if loop is completed with no breaks this value under investigation should be incremented
                     active[tid][dpid][kk]['counters']['counterX'] += 1
+                    active[tid][dpid][d]['physicalDPID'] = sflow_dpid  # maybe temp
                     print 'Flow Reconstructed'
                     break
             else:
