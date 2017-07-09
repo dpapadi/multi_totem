@@ -131,19 +131,17 @@ def construct_new_entry(args):
     :param match: serialized OpenFlow match
     """
     #args = pickle.loads(serialized_match)
-    if not OVX_enable:
-        tid=0
-    else:
-        tid = int(args[3])  # get the tid and passwd from the controller
     match = args[0]
     #print construct_dict(match, None)
     #raw_input() #temp
 
     if OVX_enable:
+        tid = int(args[3])  # get the tid and passwd from the controller
         dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
-        dpid= ovx_patch.mod_dpid(dpid[2:])
+        dpid = ovx_patch.mod_dpid(dpid[2:])
     else:
-        dpid=args[1]
+        dpid = hex(int(args[1]))
+        tid = 0
     print "mod_dpid "+dpid #temp
     if OVX_enable and tid not in hypervisor_var['tenants']:
         hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
@@ -205,16 +203,14 @@ def move_to_expired(args, scnd=False):
     :return:
     """
     #args = pickle.loads(serialized_match)
-    if not OVX_enable:
-        tid = 0
-    else:
-        tid = int(args[3])  # get the tid and passwd from the controller
     match = args[0]
     if OVX_enable:
+        tid = int(args[3])  # get the tid and passwd from the controller
         dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
         dpid = ovx_patch.mod_dpid(dpid[2:])
     else:
-        dpid = args[1]
+        dpid = hex(int(args[1]))
+        tid = 0
     passwd = args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" % tid
