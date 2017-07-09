@@ -157,7 +157,7 @@ def aggregate(active, expired):
         tid = int(tid)
     except:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
-        aggregate()
+        aggregate(active, expired)
     print '\n\nPrinting Aggregate Counters\n\n'
     aggr = active
     temp = expired
@@ -192,7 +192,7 @@ def aggregate(active, expired):
     if opt == "Y" or opt == "y":
         print ""
     else:
-        return()
+        return
 
     name = raw_input("Please Enter a file name to print flows to:\t")
     filename = '%s.csv' % name
@@ -215,6 +215,7 @@ def aggregate(active, expired):
                         b['physicalDPID'] = w['physicalDPID']
                         writer.writerow(b)
     print "\n\n Aggregate Successfull!\n\n"
+    return
 
 @timeout(1)
 def get_samplewithnoinforate():
