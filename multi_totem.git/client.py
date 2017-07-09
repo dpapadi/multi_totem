@@ -84,24 +84,26 @@ def activate_server():
     return
 
 def ret_active():
-    while True:
+    #while True:
+    try:
         tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: ")
         if tid == "r":
             return
         elif int(tid) == 0:
-            output(0, 0)
             print "\nactive: "
             print table[0]
             return
         else:
-            #output(int(tid), 0)
             print "\nactive: "
             print table[0][int(tid)]
             return
         print "\n\n"
-    #except Exception:
-     #   print "\n\nSomething went wrong. Please enter a valid option.\n\n"
-      #  ret_active()
+        opt = raw_input("Write expired counters to csv format? Y/N")
+        if opt == "Y":
+            output(int(tid), 1)
+    except Exception:
+        print "\n\nSomething went wrong. Please enter a valid option.\n\n"
+        ret_active()
     return
 
 def ret_expired():
@@ -111,20 +113,21 @@ def ret_expired():
             return
         elif int(tid) == 0:
             print table[1]
-            output(0, 1)
             print "\nexpired: "
         else:
-            output(int(tid), 1)
             print "\nexpired: "
             print table[1][int(tid)]
         print "\n\n"
+        opt = raw_input("Write expired counters to csv format? Y/N")
+        if opt == "Y":
+            output(int(tid), 1)
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         ret_expired()
     return
 
 def output(tid, t, start=0, end=float("inf")):
-    name = raw_input("\nPlease Enter a file name to print flows to:\t")
+    name = raw_input("\n\nPlease Enter a file name to print flows to:\t")
     filename = '%s.csv' %name
     with open(filename, 'w') as csvfile:
         fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
@@ -132,7 +135,8 @@ def output(tid, t, start=0, end=float("inf")):
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
-        for ten_id, fr in table[t].iteritems() :
+        temp=table[t]
+        for ten_id, fr in temp.iteritems() :
             if tid == 0 or ten_id == tid :
                 for kk, vv in fr.iteritems():
                     for l, w in vv.iteritems():
@@ -149,14 +153,18 @@ def output(tid, t, start=0, end=float("inf")):
     return
 
 def aggregate():
-    tid = raw_input("\nEnter Tenant ID (0 for all tenant counters) or r to return: ")
-    if tid == 'r':
-        return
-    tid = int(tid)
-
+    try:
+        tid = raw_input("\nEnter Tenant ID (0 for all tenant counters) or r to return: ")
+        if tid == 'r':
+            return
+        tid = int(tid)
+    except:
+        print "\n\nSomething went wrong. Please enter a valid option.\n\n"
+        aggregate()
     print '\n\nPrinting Aggregate Counters\n\n'
     aggr = table[0]
-    for ten_id, fr in table[1].iteritems():
+    temp = table[1]
+    for ten_id, fr in temp.iteritems():
         if tid == 0 or ten_id == tid:
             for dpid, rest in fr.iteritems():
                 for hashes, dicts in rest.iteritems():
@@ -183,16 +191,20 @@ def aggregate():
         print aggr[tid]
     print '\n'
 
+    opt = raw_input("Write expired counters to csv format? Y/N")
+    if opt == "Y":
+        print ""
+    else:
+        return()
+
     name = raw_input("Please Enter a file name to print flows to:\t")
     filename = '%s.csv' % name
 
     with open(filename, 'w') as csvfile:
         fieldnames = ['dpid', 'hash', 'in_port', 'dl_src', 'dl_dst', 'dl_type', 'dl_vlan', 'nw_proto', 'nw_src',
                       'nw_dst', 'nw_tos', 'tp_src', 'tp_dst', 'Packet_Counter', 'Packet_In','tenant', 'physicalDPID']
-
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
-
         for ten_id, fr in aggr.iteritems():
             if tid == 0 or ten_id == tid:
                 for kk, vv in fr.iteritems():
