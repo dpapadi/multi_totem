@@ -212,7 +212,7 @@ def move_to_expired(args, scnd=False):
 	# create a hash value for the expired flow (not including timestamp)
     e = construct_hashed_key(match)
 
-    while True:
+    #while True:
     try:
     # if there is such a flow
         if e in active[tid][dpid]:
