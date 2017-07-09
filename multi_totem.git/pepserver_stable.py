@@ -348,8 +348,11 @@ def collect_sflow(flow):
             print "error in collect_sflow first try section"
             return
     else:
-        tid=0
-        dpid=hex(int(sflow_dpid))
+        try:
+            tid=0
+            dpid=hex(int(sflow_dpid))
+        except:
+            return
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
         match['dl_vlan'] = 65535
