@@ -91,17 +91,17 @@ def ret_active(active, expired):
             return
         elif int(tid) == 0:
             print "\nactive: "
-            print table[0]
+            print active
         else:
             print "\nactive: "
-            print table[0][int(tid)]
+            print active[int(tid)]
         print "\n\n"
         opt = raw_input("Write active counters to csv format(Y/N) ?  ")
         if opt == "Y" or opt == "y":
-            output(int(tid), 1)
+            output(active, int(tid), 1)
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
-        ret_active()
+        ret_active(active, expired)
     return
 
 def ret_expired(active, expired):
