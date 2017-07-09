@@ -96,10 +96,9 @@ def ret_active():
         else:
             print "\nactive: "
             print table[0][int(tid)]
-            return
         print "\n\n"
-        opt = raw_input("Write expired counters to csv format? Y/N")
-        if opt == "Y":
+        opt = raw_input("Write active counters to csv format(Y/N) ?  ")
+        if opt == "Y" or opt == "y":
             output(int(tid), 1)
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
@@ -118,8 +117,8 @@ def ret_expired():
             print "\nexpired: "
             print table[1][int(tid)]
         print "\n\n"
-        opt = raw_input("Write expired counters to csv format? Y/N")
-        if opt == "Y":
+        opt = raw_input("Write expired counters to csv format(Y/N) ?  ")
+        if opt == "Y" or opt == "y":
             output(int(tid), 1)
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
@@ -191,8 +190,8 @@ def aggregate():
         print aggr[tid]
     print '\n'
 
-    opt = raw_input("Write expired counters to csv format? Y/N")
-    if opt == "Y":
+    opt = raw_input("Write aggregated counters to csv format(Y/N) ?  ")
+    if opt == "Y" or opt == "y":
         print ""
     else:
         return()
