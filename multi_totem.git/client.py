@@ -255,10 +255,10 @@ if __name__ == "__main__":
         while choice not in choices:
             choice = raw_input("Please Enter a valid option:\t")
             print "\n\n"
-            if choice in {'1', '2', '5'}:
-                option[choice](table[0], table[1])
-            else:
-                option[choice]()
+        if choice in {'1', '2', '5'}:
+            option[choice](table[0], table[1])
+        else:
+            option[choice]()
         choice = None
 
 
