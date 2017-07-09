@@ -15,7 +15,7 @@ server = jsonrpclib.Server('http://localhost:8085')
 # Active/Expired Flows
 #active = {}
 #expired = {}
-table={}
+
 def construct_hashed_sflow(match):
     """
     :params: OpenFlow match object
@@ -66,7 +66,6 @@ def update_data():
     a=checkout()
     if a:
         args = pickle.loads(a)
-        global table
         table = args
         print "Data updated"
         print "\n\n"
@@ -232,7 +231,7 @@ if __name__ == "__main__":
     global producer
     register_queue()
     print "Client is ready."
-    update_data()
+    table=update_data()
     while True:
         print 'Enter:'
         print '1:\t for active counters'
