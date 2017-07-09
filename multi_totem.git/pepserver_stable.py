@@ -237,7 +237,7 @@ def move_to_expired(args, scnd=False):
                 if active[tid] == {}:
                     del active[tid]
                     print "active entry (tid) deleted" #temp
-            return
+                return
             except:
                 print "error in small try of move to expired!"
                 return
