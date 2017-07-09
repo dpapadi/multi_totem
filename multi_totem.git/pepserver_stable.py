@@ -249,8 +249,8 @@ def move_to_expired(args, scnd=False):
                 move_to_expired(args, True)
             else:
                 print "FAILED AGAIN!!!!"
-    except e:
-        print e
+    except exception:
+        print exception
         print "error in wide try of move to expired!"
         return
 
