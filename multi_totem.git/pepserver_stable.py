@@ -249,9 +249,10 @@ def move_to_expired(args, scnd=False):
                 match.tp_dst = None
                 args[0]=match
                 move_to_expired(args, True)
+                return
             else:
                 print "FAILED AGAIN!!!!"
-        return
+                return
 
    # except:
     #    print "error in wide try of move to expired!"
