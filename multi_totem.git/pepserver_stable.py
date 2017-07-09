@@ -213,7 +213,7 @@ def move_to_expired(args, scnd=False):
     e = construct_hashed_key(match)
 
     while True:
-    #try:
+    try:
     # if there is such a flow
         if e in active[tid][dpid]:
             # remove the flow
@@ -254,9 +254,9 @@ def move_to_expired(args, scnd=False):
                 print "FAILED AGAIN!!!!"
                 return
 
-   # except:
-    #    print "error in wide try of move to expired!"
-     #   return
+    except:
+        print "error in wide try of move to expired!"
+        return
 
 
 def collect_sflow(flow):
