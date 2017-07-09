@@ -192,7 +192,7 @@ def construct_new_entry(args):
     # assign_flowspace(d, dpid)
 
 
-def move_to_expired(args):
+def move_to_expired(args, scnd=False):
     """
     :param match: serialized OpenFlow match
     :return:
@@ -240,12 +240,15 @@ def move_to_expired(args):
                 print "error in small try of move to expired!"
                 return
         else:
-            print "Nothing to move!"
-            print match
-            match.nw_tos = None
-            match.tp_src = None
-            match.tp_dst = None
-            print match
+            print " ..Move to expired.. else section."
+            if not scnd:
+                match.nw_tos = None
+                match.tp_src = None
+                match.tp_dst = None
+                args[0]=match
+                move_to_expired(args, True)
+            else:
+                print "FAILED AGAIN!!!!"
     except:
         print "error in wide try of move to expired!"
         return
