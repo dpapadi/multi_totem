@@ -242,6 +242,10 @@ def move_to_expired(args):
         else:
             print "Nothing to move!"
             print match
+            match.nw_tos = None
+            match.tp_src = None
+            match.tp_dst = None
+            print match
     except:
         print "error in wide try of move to expired!"
         return
