@@ -212,8 +212,8 @@ def move_to_expired(args, scnd=False):
 	# create a hash value for the expired flow (not including timestamp)
     e = construct_hashed_key(match)
 
-    while True:
-    #try:
+    #while True:
+    try:
     # if there is such a flow
         if e in active[tid][dpid]:
             # remove the flow
@@ -247,16 +247,16 @@ def move_to_expired(args, scnd=False):
                 match.nw_tos = None
                 match.tp_src = None
                 match.tp_dst = None
-                args[0]=match
+                args = (match, args[1], args[2], args[3], args[4])
                 move_to_expired(args, True)
                 return
             else:
                 print "FAILED AGAIN!!!!"
                 return
 
-    #except:
-     #   print "error in wide try of move to expired!"
-      #  return
+    except:
+        print "error in wide try of move to expired!"
+        return
 
 
 def collect_sflow(flow):
