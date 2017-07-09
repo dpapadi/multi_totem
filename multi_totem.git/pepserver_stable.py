@@ -241,7 +241,7 @@ def move_to_expired(args):
                 return
         else:
             print "Nothing to move!"
-            print construct_dict(match, None)
+            print match
     except:
         print "error in wide try of move to expired!"
         return
@@ -347,7 +347,7 @@ def collect_sflow(flow):
     else:
         match['tp_src'] = None
         match['tp_dst'] = None
-        raw_input("None tp_src in sflow sample!!")
+        #raw_input("None tp_src in sflow sample!!")
 
     fields = ['inputPort', 'srcMAC', 'dstMAC',
               'IPProtocol', 'srcIP', 'dstIP', 'IPTOS']
