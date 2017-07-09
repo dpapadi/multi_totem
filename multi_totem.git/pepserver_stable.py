@@ -138,9 +138,12 @@ def construct_new_entry(args):
     match = args[0]
     #print construct_dict(match, None)
     #raw_input() #temp
-    dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
+
     if OVX_enable:
+        dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
         dpid= ovx_patch.mod_dpid(dpid[2:])
+    else:
+        dpid=args[1]
     print "mod_dpid "+dpid #temp
     if OVX_enable and tid not in hypervisor_var['tenants']:
         hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
@@ -207,8 +210,11 @@ def move_to_expired(args, scnd=False):
     else:
         tid = int(args[3])  # get the tid and passwd from the controller
     match = args[0]
-    dpid = hex(int(args[1])) #dpid in hex
-    dpid = ovx_patch.mod_dpid(dpid[2:])
+    if OVX_enable:
+        dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
+        dpid = ovx_patch.mod_dpid(dpid[2:])
+    else:
+        dpid = args[1]
     passwd = args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" % tid
