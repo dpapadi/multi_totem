@@ -139,7 +139,8 @@ def construct_new_entry(args):
     #print construct_dict(match, None)
     #raw_input() #temp
     dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
-    dpid = ovx_patch.mod_dpid(dpid[2:])
+    if OVX_enable:
+        dpid= ovx_patch.mod_dpid(dpid[2:])
     print "mod_dpid "+dpid #temp
     if OVX_enable and tid not in hypervisor_var['tenants']:
         hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
