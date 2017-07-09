@@ -131,14 +131,17 @@ def construct_new_entry(args):
     :param match: serialized OpenFlow match
     """
     #args = pickle.loads(serialized_match)
+    if not OVX_enable:
+        tid=0
+    else:
+        tid = int(args[3])  # get the tid and passwd from the controller
     match = args[0]
     #print construct_dict(match, None)
     #raw_input() #temp
     dpid = hex(int(args[1])) #converts the decimal of the dpid to the actual value
     dpid = ovx_patch.mod_dpid(dpid[2:])
     print "mod_dpid "+dpid #temp
-    tid=int(args[3]) #get the tid and passwd from the controller
-    if tid not in hypervisor_var['tenants']:
+    if OVX_enable and tid not in hypervisor_var['tenants']:
         hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
     passwd=args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
@@ -198,10 +201,13 @@ def move_to_expired(args, scnd=False):
     :return:
     """
     #args = pickle.loads(serialized_match)
+    if not OVX_enable:
+        tid = 0
+    else:
+        tid = int(args[3])  # get the tid and passwd from the controller
     match = args[0]
     dpid = hex(int(args[1])) #dpid in hex
     dpid = ovx_patch.mod_dpid(dpid[2:])
-    tid = int(args[3])
     passwd = args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
         print "Tenant Id confirmation failed. Id: %s" % tid
@@ -280,63 +286,66 @@ def collect_sflow(flow):
     # convert dl_type
     match['dl_type'] = sflow.pop('dl_type')
     sflow_dpid = sflow.pop('dpid')
-    try:
-        if 'srcIP' not in sflow.keys():
-            print "Sample with no info" #sample due to OpenVirteX internal signals (?)
-            global swni_cntr
-            swni_cntr += 1
-            return
-        else:
-            if sflow['dstMAC'] == 'ff:ff:ff:ff:ff:ff':
-                print 'Ignoring broadcast messages...'
+    if OVX_enable:
+        try:
+            if 'srcIP' not in sflow.keys():
+                print "Sample with no info" #sample due to OpenVirteX internal signals (?)
+                global swni_cntr
+                swni_cntr += 1
                 return
-            if sflow['srcMAC'][:8] == 'a4:23:05':
-                tid = int(sflow['srcMAC'][10:11])
-
-                if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
-                    dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
-                    if dpid == "NONE":
-                        return
-                    hypervisor_var['tenants'][tid]['dpid'][sflow_dpid] = dpid
-                else:
-                    dpid = hypervisor_var['tenants'][tid]['dpid'][sflow_dpid]
-
-                tmp = sflow['srcIP'] #debug issue
-
-                sflow_ip = sflow['srcIP']
-                if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
-                    (sflow['srcMAC'], sflow['srcIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
-                    if sflow['srcIP'] == "NONE":
-                        print "No mapping found for srcIP"
-                        return
-                    if not rep_mac:
-                        hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
-                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
-                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
-                else:
-                    sflow['srcIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
-                    sflow['srcMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
-
-                sflow_ip = sflow['dstIP']
-                if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
-                    (sflow['dstMAC'], sflow['dstIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, passwd="")
-                    if sflow['dstIP'] == "NONE":
-                        print "No mapping found for dstIP"
-                        return
-                    if not rep_mac:
-                        hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
-                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
-                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
-                else:
-                    sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
-                    sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
             else:
-                tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
-                dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
-    except Exception as e:
-        print e
-        print "error in collect_sflow first try section"
-        return
+                if sflow['dstMAC'] == 'ff:ff:ff:ff:ff:ff':
+                    print 'Ignoring broadcast messages...'
+                    return
+                if sflow['srcMAC'][:8] == 'a4:23:05':
+                    tid = int(sflow['srcMAC'][10:11])
+
+                    if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
+                        dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+                        if dpid == "NONE":
+                            return
+                        hypervisor_var['tenants'][tid]['dpid'][sflow_dpid] = dpid
+                    else:
+                        dpid = hypervisor_var['tenants'][tid]['dpid'][sflow_dpid]
+
+                    tmp = sflow['srcIP'] #debug issue
+
+                    sflow_ip = sflow['srcIP']
+                    if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                        (sflow['srcMAC'], sflow['srcIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
+                        if sflow['srcIP'] == "NONE":
+                            print "No mapping found for srcIP"
+                            return
+                        if not rep_mac:
+                            hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                            hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
+                            hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
+                    else:
+                        sflow['srcIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
+                        sflow['srcMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
+
+                    sflow_ip = sflow['dstIP']
+                    if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                        (sflow['dstMAC'], sflow['dstIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, passwd="")
+                        if sflow['dstIP'] == "NONE":
+                            print "No mapping found for dstIP"
+                            return
+                        if not rep_mac:
+                            hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                            hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
+                            hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
+                    else:
+                        sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
+                        sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
+                else:
+                    tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
+                    dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+        except Exception as e:
+            print e
+            print "error in collect_sflow first try section"
+            return
+    else:
+        tid=0
 
     # manipulate VLAN tag
     if sflow['in_vlan'] == '0':
@@ -537,6 +546,7 @@ def get_samplewithnoinforate():
 if __name__ == "__main__":
     a = len(sys.argv)
     if a == 2:          #input for configuring a hypervisor
+        print "Running in Hypervisor mode."
         file_name = sys.argv[1]
         try:
             with open(file_name) as f:
@@ -546,7 +556,8 @@ if __name__ == "__main__":
         except IOError:
             print "No such file: \t%s\n" % file_name
             exit()
-
+    else:
+        print "Running in Normal mode."
     register_queue()
 
     if 'name' in hypervisor_var.keys() and hypervisor_var['name']=='OpenVirteX':
