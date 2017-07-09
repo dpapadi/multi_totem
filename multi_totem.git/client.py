@@ -104,27 +104,27 @@ def ret_active():
         ret_active()
     return
 
-def ret_expired():
+def ret_expired(active, expired):
     try:
         tid = raw_input("\nEnter Tenant ID (0 for all tenant counters) or r to return: ")
         if tid == "r":
             return
         elif int(tid) == 0:
-            print table[1]
             print "\nexpired: "
+            print expired
         else:
             print "\nexpired: "
-            print table[1][int(tid)]
+            print expired[int(tid)]
         print "\n\n"
         opt = raw_input("Write expired counters to csv format(Y/N) ?  ")
         if opt == "Y" or opt == "y":
-            output(int(tid), 1)
+            output(expired, int(tid), 1)
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
-        ret_expired()
+        ret_expired(active, expired)
     return
 
-def output(tid, t, start=0, end=float("inf")):
+def output(flowt, tid, t, start=0, end=float("inf")):
     name = raw_input("\n\nPlease Enter a file name to print flows to:\t")
     filename = '%s.csv' %name
     with open(filename, 'w') as csvfile:
@@ -133,7 +133,7 @@ def output(tid, t, start=0, end=float("inf")):
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
         writer.writeheader()
-        temp=table[t]
+        temp=flowt
         for ten_id, fr in temp.iteritems() :
             if tid == 0 or ten_id == tid :
                 for kk, vv in fr.iteritems():
@@ -150,7 +150,7 @@ def output(tid, t, start=0, end=float("inf")):
     print '\n\nOutput Successfull!\n\n'
     return
 
-def aggregate():
+def aggregate(active, expired):
     try:
         tid = raw_input("\nEnter Tenant ID (0 for all tenant counters) or r to return: ")
         if tid == 'r':
@@ -160,8 +160,8 @@ def aggregate():
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         aggregate()
     print '\n\nPrinting Aggregate Counters\n\n'
-    aggr = table[0]
-    temp = table[1]
+    aggr = active
+    temp = expired
     for ten_id, fr in temp.iteritems():
         if tid == 0 or ten_id == tid:
             for dpid, rest in fr.iteritems():
@@ -255,7 +255,10 @@ if __name__ == "__main__":
         while choice not in choices:
             choice = raw_input("Please Enter a valid option:\t")
             print "\n\n"
-        option[choice]()
+            if choice in {'1', '2', '5'}:
+                option[choice](table[0], table[1])
+            else:
+                option[choice]()
         choice = None
 
 
