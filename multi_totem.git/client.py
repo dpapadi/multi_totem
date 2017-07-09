@@ -13,9 +13,9 @@ from kafka.producer import KafkaProducer
 server = jsonrpclib.Server('http://localhost:8085')
 
 # Active/Expired Flows
-active = {}
-expired = {}
-
+#active = {}
+#expired = {}
+table={}
 def construct_hashed_sflow(match):
     """
     :params: OpenFlow match object
@@ -98,7 +98,7 @@ def ret_active(active, expired):
         print "\n\n"
         opt = raw_input("Write active counters to csv format(Y/N) ?  ")
         if opt == "Y" or opt == "y":
-            output(active, int(tid), 1)
+            output(active, int(tid))
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         ret_active(active, expired)
@@ -118,13 +118,13 @@ def ret_expired(active, expired):
         print "\n\n"
         opt = raw_input("Write expired counters to csv format(Y/N) ?  ")
         if opt == "Y" or opt == "y":
-            output(expired, int(tid), 1)
+            output(expired, int(tid))
     except Exception:
         print "\n\nSomething went wrong. Please enter a valid option.\n\n"
         ret_expired(active, expired)
     return
 
-def output(flowt, tid, t, start=0, end=float("inf")):
+def output(flowt, tid, start=0, end=float("inf")):
     name = raw_input("\n\nPlease Enter a file name to print flows to:\t")
     filename = '%s.csv' %name
     with open(filename, 'w') as csvfile:
