@@ -83,7 +83,7 @@ def activate_server():
         return
     return
 
-def ret_active():
+def ret_active(active, expired):
     #while True:
     try:
         tid = raw_input("Enter Tenant ID (0 for all tenant counters) or r to return: ")
