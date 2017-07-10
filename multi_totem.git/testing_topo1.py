@@ -74,6 +74,7 @@ class TestingTopo(Topo):
         print len(hosts2)
         print "\n\n"
 
+
         # add hosts
         for host in hosts2:
             h = self.addHost(host, ip=hosts2[host]['ip'], mac=hosts2[host]['mac'])
