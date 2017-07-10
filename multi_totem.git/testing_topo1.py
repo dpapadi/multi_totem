@@ -30,6 +30,7 @@ hosts = {
     'hgtw'   : {'mac': '00000000088%s', 'ip': '10.0.8.%s', 'switch': 'gtw' , 'nh': 4 }
 }
 
+hosts2 = {}
 
 
 class TestingTopo(Topo):
@@ -57,14 +58,25 @@ class TestingTopo(Topo):
                 # Connect hosts to core switches
               #  self.addLink(h, self.cores[switch])
 
-        #add hosts
+        #create hosts
         for host in hosts:
             for x in range(1, hosts[host]['nh']+1):
                 hst = '%s%s' % (host, str(x))
                 ip = hosts[host]['ip'] % str(x)
                 mac = hosts[host]['mac'] % str(x)
-                h = self.addHost(hst, ip=ip, mac=mac)
-                self.addLink(h, self.cores[hosts[host]['switch']])
+                hosts2[hst] = {
+                    'mac'    : mac,
+                    'ip'     : ip,
+                    'switch' : hosts[host]['switch']
+                }
+
+        print hosts2
+
+        # add hosts
+        for host in hosts2:
+            h = self.addHost(host, ip=hosts2[host]['ip'], mac=hosts2[host]['mac'])
+            self.addLink(h, self.cores[hosts2[host]['switch']])
+
 
              # Connect core switches
         self.addLink(self.cores['int1'], self.cores['s1'])
