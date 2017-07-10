@@ -60,9 +60,9 @@ class TestingTopo(Topo):
         #add hosts
         for host in hosts:
             for x in range(1, hosts[host]['nh']+1):
-                hst = '%s%s' % (host, x)
-                ip = hosts[host]['ip'] % x
-                mac = hosts[host]['mac'] % x
+                hst = '%s%s' % (host, str(x))
+                ip = hosts[host]['ip'] % str(x)
+                mac = hosts[host]['mac'] % str(x)
                 h = self.addHost(hst, ip=ip, mac=mac)
                 self.addLink(h, self.cores[hosts[host]['switch']])
 
