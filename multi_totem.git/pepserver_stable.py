@@ -140,9 +140,7 @@ def construct_new_entry(args):
         dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
         dpid = ovx_patch.mod_dpid(dpid[2:])
     else:
-        print args[1]
-        raw_input()
-        dpid = hex(int(args[1]))
+        dpid = args[1]
         tid = 0
     print "mod_dpid "+dpid #temp
     if OVX_enable and tid not in hypervisor_var['tenants']:
