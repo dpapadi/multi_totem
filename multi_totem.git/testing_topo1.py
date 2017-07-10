@@ -88,7 +88,7 @@ class TestingTopo(Topo):
         self.addLink(self.cores['int1'], self.cores['int3'])
         self.addLink(self.cores['int1'], self.cores['s3'])
         self.addLink(self.cores['int2'], self.cores['s2'])
-        #self.addLink(self.cores['int2'], self.cores['int3'])
+        self.addLink(self.cores['int2'], self.cores['int3'])
         self.addLink(self.cores['int2'], self.cores['gtw'])
         self.addLink(self.cores['int3'], self.cores['s4'])
         self.addLink(self.cores['int3'], self.cores['gtw'])
