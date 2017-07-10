@@ -15,7 +15,7 @@ CORES = {
   's4'   : {'dpid': '0000000000004404'},
   'int1' : {'dpid': '0000000000005505'},
   'int2' : {'dpid': '0000000000006606'},
-  'int3' : {'dpid': '0000000000007707'}#,
+  'int3' : {'dpid': '0000000000007707'},
   'gtw'  : {'dpid': '0000000000008808'}
   }
 
@@ -27,7 +27,7 @@ hosts = {
     'h4'     : {'mac': '00000000044%s', 'ip': '10.0.4.%s', 'switch': 's4'  , 'nh': 4},
     'int1'   : {'mac': '00000000055%s', 'ip': '10.0.5.%s', 'switch': 'int1', 'nh': 1},
     'int2'   : {'mac': '00000000066%s', 'ip': '10.0.6.%s', 'switch': 'int2', 'nh': 1},
-    'int3'   : {'mac': '00000000077%s', 'ip': '10.0.7.%s', 'switch': 'int3', 'nh': 1}#,
+    'int3'   : {'mac': '00000000077%s', 'ip': '10.0.7.%s', 'switch': 'int3', 'nh': 1},
     'hgtw'   : {'mac': '00000000088%s', 'ip': '10.0.8.%s', 'switch': 'gtw' , 'nh': 4 }
 }
 
@@ -88,10 +88,10 @@ class TestingTopo(Topo):
         self.addLink(self.cores['int1'], self.cores['int3'])
         self.addLink(self.cores['int1'], self.cores['s3'])
         self.addLink(self.cores['int2'], self.cores['s2'])
-        self.addLink(self.cores['int2'], self.cores['int3'])
+        #self.addLink(self.cores['int2'], self.cores['int3'])
         self.addLink(self.cores['int2'], self.cores['gtw'])
         self.addLink(self.cores['int3'], self.cores['s4'])
-        self.addLink(self.cores['int3'], self.cores['gtw'])
+        #self.addLink(self.cores['int3'], self.cores['gtw'])
 
 
 if __name__ == '__main__':
