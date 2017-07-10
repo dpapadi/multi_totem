@@ -71,6 +71,7 @@ class TestingTopo(Topo):
                 }
         print "\n\n"
         print hosts2
+        print len(hosts2)
         print "\n\n"
 
         # add hosts
