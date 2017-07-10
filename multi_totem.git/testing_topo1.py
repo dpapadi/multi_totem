@@ -60,7 +60,7 @@ class TestingTopo(Topo):
 
         #create hosts
         for host in hosts:
-            for x in range(1, hosts[host]['nh']+1):
+            for x in range(3, hosts[host]['nh']+1):
                 hst = '%s%s' % (host, str(x))
                 ip = hosts[host]['ip'] % str(x)
                 mac = hosts[host]['mac'] % str(x)
