@@ -70,10 +70,10 @@ class TestingTopo(Topo):
                     'ip'     : ip,
                     'switch' : hosts[host]['switch']
                 }
-        print "\n\n"
-        print hosts2
-        print len(hosts2)
-        print "\n\n"
+        #print "\n\n"
+        #print hosts2
+        #print len(hosts2)
+        #print "\n\n"
 
 
         # add hosts
@@ -85,13 +85,13 @@ class TestingTopo(Topo):
              # Connect core switches
         self.addLink(self.cores['int1'], self.cores['s1'])
         self.addLink(self.cores['int1'], self.cores['int2'])
-        self.addLink(self.cores['int1'], self.cores['int3'])
+        #self.addLink(self.cores['int1'], self.cores['int3'])
         self.addLink(self.cores['int1'], self.cores['s3'])
         self.addLink(self.cores['int2'], self.cores['s2'])
-        #self.addLink(self.cores['int2'], self.cores['int3'])
+        self.addLink(self.cores['int2'], self.cores['int3'])
         self.addLink(self.cores['int2'], self.cores['gtw'])
         self.addLink(self.cores['int3'], self.cores['s4'])
-        self.addLink(self.cores['int3'], self.cores['gtw'])
+        #self.addLink(self.cores['int3'], self.cores['gtw'])
 
 
 if __name__ == '__main__':
