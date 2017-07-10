@@ -11,7 +11,7 @@ from mininet.node import RemoteController
 CORES = {
   's1'   : {'dpid': '0000000000001101'}, #nh --> number of hosts
   's2'   : {'dpid': '0000000000002202'},
-  #'s3'   : {'dpid': '0000000000003303'},
+  's3'   : {'dpid': '0000000000003303'},
   #'s4'   : {'dpid': '0000000000004404'},
   'int1' : {'dpid': '0000000000005505'},
   'int2' : {'dpid': '0000000000006606'},
@@ -23,7 +23,7 @@ CORES = {
 hosts = {
     'h1'     : {'mac': '00000000011%s', 'ip': '10.0.1.%s', 'switch': 's1'  , 'nh': 4},
     'h2'     : {'mac': '00000000022%s', 'ip': '10.0.2.%s', 'switch': 's2'  , 'nh': 4},
-    #'h3'     : {'mac': '00000000033%s', 'ip': '10.0.3.%s', 'switch': 's3'  , 'nh': 4},
+    'h3'     : {'mac': '00000000033%s', 'ip': '10.0.3.%s', 'switch': 's3'  , 'nh': 4},
     #'h4'     : {'mac': '00000000044%s', 'ip': '10.0.4.%s', 'switch': 's4'  , 'nh': 4},
     'int1'   : {'mac': '00000000055%s', 'ip': '10.0.5.%s', 'switch': 'int1', 'nh': 1},
     'int2'   : {'mac': '00000000066%s', 'ip': '10.0.6.%s', 'switch': 'int2', 'nh': 1},
@@ -86,7 +86,7 @@ class TestingTopo(Topo):
         self.addLink(self.cores['int1'], self.cores['s1'])
         self.addLink(self.cores['int1'], self.cores['int2'])
         self.addLink(self.cores['int1'], self.cores['int3'])
-        #self.addLink(self.cores['int1'], self.cores['s3'])
+        self.addLink(self.cores['int1'], self.cores['s3'])
         self.addLink(self.cores['int2'], self.cores['s2'])
         #self.addLink(self.cores['int2'], self.cores['int3'])
         #self.addLink(self.cores['int2'], self.cores['gtw'])
