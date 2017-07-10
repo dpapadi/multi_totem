@@ -54,6 +54,10 @@ class TestingTopo(Topo):
                 # Connect hosts to core switches
               #  self.addLink(h, self.cores[switch])
 
+    print "\n\n"
+    print hosts
+    print "\n\n"
+
         #add hosts
         for host in hosts:
             h = self.addHost(host, ip=hosts[host]['ip'], mac=hosts[host]['mac'])

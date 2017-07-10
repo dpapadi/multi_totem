@@ -69,8 +69,9 @@ class TestingTopo(Topo):
                     'ip'     : ip,
                     'switch' : hosts[host]['switch']
                 }
-
+        print "\n\n"
         print hosts2
+        print "\n\n"
 
         # add hosts
         for host in hosts2:
