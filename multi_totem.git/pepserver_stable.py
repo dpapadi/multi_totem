@@ -344,6 +344,7 @@ def collect_sflow(flow):
                 else:
                     tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
                     dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+                    print "this is it!"
         except Exception as e:
             print e
             print "error in collect_sflow first try section"
