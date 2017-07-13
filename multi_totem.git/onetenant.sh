@@ -78,7 +78,7 @@ python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:08 4 00:00:00:00:08:81
 python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:08 2 00:00:00:00:08:82
 python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:08 1 00:00:00:00:08:83
 python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:08 3 00:00:00:00:08:84
-python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:05 1 00:00:00:00:01:51
+python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:05 1 00:00:00:00:05:51
 python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:06 1 00:00:00:00:06:61
 python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:07 1 00:00:00:00:07:71
 
