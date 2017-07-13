@@ -351,7 +351,7 @@ def collect_sflow(flow):
     else:
         try:
             tid=0
-            dpid=hex(int(sflow_dpid))
+            dpid=sflow_dpid
         except:
             return
     # manipulate VLAN tag
