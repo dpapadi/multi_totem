@@ -140,7 +140,7 @@ def construct_new_entry(args):
         dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
         dpid = ovx_patch.mod_dpid(dpid[2:])
     else:
-        dpid = hex(int(args[1]))
+        dpid = hex(int(args[1]))[2:]
         tid = 0
     print "mod_dpid "+dpid #temp
     if OVX_enable and tid not in hypervisor_var['tenants']:
@@ -209,7 +209,7 @@ def move_to_expired(args, scnd=False):
         dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
         dpid = ovx_patch.mod_dpid(dpid[2:])
     else:
-        dpid = hex(int(args[1]))
+        dpid = hex(int(args[1]))[2:]
         tid = 0
     passwd = args[4]
     if not ovx_patch.confirm_tenant(tid, passwd):
