@@ -34,8 +34,8 @@ expired = {}
 # Used as a MAC Table, matching OF ports to MAC addresses
 mac_table = {}
 
-# List to save
-flowspace = []
+# big switches
+big_switches = {}
 
 # Structure to match sflow fields to OpenFlow fields
 mapper = {'inputPort': 'in_port',
@@ -139,16 +139,24 @@ def construct_new_entry(args):
         tid = int(args[3])  # get the tid and passwd from the controller
         dpid = hex(int(args[1]))  # converts the decimal of the dpid to the actual value
         dpid = ovx_patch.mod_dpid(dpid[2:])
+        passwd = args[4]
+        if ovx_patch.discover_bsw(hypervisor_var['url'], dpid, tid, passwd):
+            big_switches[tid].append(dpid)
+            print "\nbig switches : \n"
+            print big_switches # temp
+            print
+            print
+        if tid not in hypervisor_var['tenants']:
+            hypervisor_var['tenants'][tid] = {'dpid': {}, 'ip': {'IP': {}, 'MAC': {}}}
+        if not ovx_patch.confirm_tenant(tid, passwd):
+            print "Tenant Id confirmation failed. Id: %s" % tid
+            return
     else:
         dpid = hex(int(args[1]))[2:]
         tid = 0
+
     print "mod_dpid "+dpid #temp
-    if OVX_enable and tid not in hypervisor_var['tenants']:
-        hypervisor_var['tenants'][tid]={'dpid':{}, 'ip':{'IP':{}, 'MAC':{}}}
-    passwd=args[4]
-    if not ovx_patch.confirm_tenant(tid, passwd):
-        print "Tenant Id confirmation failed. Id: %s" %tid
-        return
+
     time = float(args[2])
     # print '\n\n___Installing New Entry___'
     #match_dict = construct_dict(match, dpid)
@@ -290,6 +298,7 @@ def collect_sflow(flow):
     # convert dl_type
     match['dl_type'] = sflow.pop('dl_type')
     sflow_dpid = sflow.pop('dpid')
+    #procedure for hypervisor (OVX) mode
     if OVX_enable:
         try:
             if 'srcIP' not in sflow.keys():
@@ -417,9 +426,6 @@ def collect_sflow(flow):
         else:
             match[mapper[a]] = sflow.pop(a)
 
-    # modify ingress port using mac_table
-    #print 'mac_table[dpid]: '
-    #print mac_table[dpid][match['dl_src']]
     try:
         match['in_port'] = mac_table[tid][dpid][match['dl_src']]
     except Exception as g:

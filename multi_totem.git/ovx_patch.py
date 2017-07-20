@@ -7,6 +7,22 @@ import ast
 def confirm_tenant(tid, passwd):
     return True
 
+def discover_bsw(url, dpid, ten_id, passwd=""):
+    req = {"tenantId": ten_id}
+    url = url % "status"
+    result = connect(url, "getVirtualSwitchMapping", data=req, passwd=passwd)  # pass ?
+    tmp = ast.literal_eval(json.dumps(result))
+    for ovx_dpid, map_dict in tmp.iteritems():
+        if ovx_dpid == dpid:
+            if len(map_dict["switches"]) > 1:
+                return True
+        else:
+            return False
+    else:
+        print "Wrong DPID !!"
+        return None
+
+
 def bsw_address_mapping (url, ten_ip, ten_id, mac, passwd=""):
     req = {"tenantId": ten_id}
     url = url % "status"
@@ -68,11 +84,11 @@ def dpid_mapping(url, dpid, ten_id, passwd=""):
     result = connect(url, "getVirtualSwitchMapping", data=req, passwd=passwd)  # pass ?
     tmp = ast.literal_eval(json.dumps(result))
     for ovx_dpid, map_dict in tmp.iteritems():
-        if len(map_dict["switches"])>1:
-            print "big switch"  # temp
-            is_bsw = True
         for k in map_dict["switches"]:
             if k == dpid:
+                if len(map_dict["switches"]) > 1:
+                    print "big switch"  # temp
+                    is_bsw = True
                 return is_bsw,ovx_dpid
     else:
         print "No dpid mapping for dpid: " + dpid + "from tenant id: " +ten_id
