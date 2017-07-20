@@ -357,7 +357,7 @@ def collect_sflow(flow):
 
                         sflow_ip = sflow['dstIP']
                         if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
-                            sflow['dstIP'] = ovx_patch.bsw_address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, sflow['srcMAC'], passwd="")
+                            sflow['dstIP'] = ovx_patch.bsw_address_mapping(hypervisor_var['url'], sflow['dstIP'], tid, sflow['dstMAC'], passwd="")
                             if sflow['dstIP'] == "NONE":
                                 print "No mapping found for dstIP"
                                 return
