@@ -432,13 +432,6 @@ def collect_sflow(flow):
         d = construct_hashed_sflow(match)
 
         print 'Printing Hash: %d\n' % d
-        # print 'Printing of all flows of the DPID: %s' % dpid
-        print'this active: '
-        print active[tid][dpid]
-        try:
-            print tmp
-        except:
-            print 'No need!'
         if d in active[tid][dpid]:
             print 'Hash Found'
             active[tid][dpid][d]['counters']['counterX'] += 1
@@ -452,6 +445,13 @@ def collect_sflow(flow):
 
             # print active
         else:
+            # print 'Printing of all flows of the DPID: %s' % dpid
+            print'this active: '
+            print active[tid][dpid]
+            try:
+                print tmp
+            except:
+                print 'No need!'
             print 'Hash not found'
             print "\n match: "
             print match
