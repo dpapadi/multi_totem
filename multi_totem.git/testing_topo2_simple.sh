@@ -32,7 +32,7 @@ python ovxctl.py -n createPort 1 00:00:00:00:00:00:55:05 3 #(3)
 python ovxctl.py -n connectLink 1 00:a4:23:05:00:00:00:01 3 00:a4:23:05:00:00:00:02 2 spf 1
 python ovxctl.py -n connectLink 1 00:a4:23:05:00:00:00:03 3 00:a4:23:05:00:00:00:02 3 spf 1
 python ovxctl.py -n connectLink 1 00:a4:23:05:00:00:00:04 3 00:a4:23:05:00:00:00:02 4 spf 1
-python ovxctl.py -n connectLink 1 00:a4:23:05:00:00:00:03 3 00:a4:23:05:00:00:00:02 5 spf 1
+python ovxctl.py -n connectLink 1 00:a4:23:05:00:00:00:05 3 00:a4:23:05:00:00:00:02 5 spf 1
 
 python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:01 1 00:00:00:00:01:11
 python ovxctl.py -n connectHost 1 00:a4:23:05:00:00:00:01 2 00:00:00:00:01:12
