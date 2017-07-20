@@ -305,15 +305,14 @@ def collect_sflow(flow):
                     tid = int(sflow['srcMAC'][10:11])
 
                     if sflow_dpid not in hypervisor_var['tenants'][tid]['dpid']:
-                        dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+                        (is_bsw, dpid) = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
                         if dpid == "NONE":
                             return
-                        hypervisor_var['tenants'][tid]['dpid'][sflow_dpid] = dpid
+                        hypervisor_var['tenants'][tid]['dpid'][sflow_dpid] = (is_bsw, dpid)
                     else:
-                        dpid = hypervisor_var['tenants'][tid]['dpid'][sflow_dpid]
+                        dpid = hypervisor_var['tenants'][tid]['dpid'][sflow_dpid][1]
 
                     tmp = sflow['srcIP'] #debug issue
-
                     sflow_ip = sflow['srcIP']
                     if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
                         (sflow['srcMAC'], sflow['srcIP'], rep_mac) = ovx_patch.address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, passwd="")
@@ -342,10 +341,29 @@ def collect_sflow(flow):
                         sflow['dstIP'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP']
                         sflow['dstMAC'] = hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC']
                 else:
-                    print "this is it!"
                     tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
-                    dpid = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+                    (is_bsw, dpid) = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
+                    if is_bsw:
+                        tmp = sflow['srcIP']  # debug issue
+                        sflow_ip = sflow['srcIP']
+                        if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                            sflow['srcIP'] = ovx_patch.bsw_address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, sflow['srcMAC'], passwd="")
+                            if sflow['srcIP'] == "NONE":
+                                print "No mapping found for srcIP"
+                                return
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['srcIP']
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['srcMAC']
 
+                        sflow_ip = sflow['dstIP']
+                        if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
+                            sflow['dstIP'] = ovx_patch.bsw_address_mapping(hypervisor_var['url'], sflow['srcIP'], tid, sflow['srcMAC'], passwd="")
+                            if sflow['dstIP'] == "NONE":
+                                print "No mapping found for dstIP"
+                                return
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip] = {}
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['IP'] = sflow['dstIP']
+                        hypervisor_var['tenants'][tid]['ip'][sflow_ip]['MAC'] = sflow['dstMAC']
         except Exception as e:
             print e
             print "error in collect_sflow first try section"

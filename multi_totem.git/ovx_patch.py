@@ -7,6 +7,22 @@ import ast
 def confirm_tenant(tid, passwd):
     return True
 
+def bsw_address_mapping (url, ten_ip, ten_id, mac, passwd=""):
+    req = {"tenantId": ten_id}
+    url = url % "status"
+    result = connect(url, "getVirtualHosts", data=req, passwd=passwd)
+    tmp = ast.literal_eval(json.dumps(result))
+    for k in tmp:
+        if 'ipAddress' in k.keys() and k["mac"] == mac:
+            ip = k["ipAddress"]
+            break
+    else:
+        return "NONE"
+    print "For physical ip: " + ten_ip + " from tenant network: %s" % ten_id
+    print "mac --> " + mac
+    print "ip  --> " + ip
+    return ip
+
 def address_mapping(url, ten_ip, ten_id, passwd=""):
     req = {}
     url = url % "status"
@@ -46,6 +62,7 @@ def address_mapping(url, ten_ip, ten_id, passwd=""):
     return (mac, ip, False)
 
 def dpid_mapping(url, dpid, ten_id, passwd=""):
+    is_bsw = False
     req = {"tenantId": ten_id}
     url = url % "status"
     result = connect(url, "getVirtualSwitchMapping", data=req, passwd=passwd)  # pass ?
@@ -53,13 +70,13 @@ def dpid_mapping(url, dpid, ten_id, passwd=""):
     for ovx_dpid, map_dict in tmp.iteritems():
         if len(map_dict["switches"])>1:
             print "big switch"  # temp
-            raw_input()
+            is_bsw = True
         for k in map_dict["switches"]:
             if k == dpid:
-                return ovx_dpid
+                return is_bsw,ovx_dpid
     else:
         print "No dpid mapping for dpid: " + dpid + "from tenant id: " +ten_id
-        return "NONE"
+        return is_bsw, "NONE"
 
 def mod_dpid(dpid):
     mod_dpid = ""
