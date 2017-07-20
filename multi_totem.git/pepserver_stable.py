@@ -141,6 +141,8 @@ def construct_new_entry(args):
         dpid = ovx_patch.mod_dpid(dpid[2:])
         passwd = args[4]
         if ovx_patch.discover_bsw(hypervisor_var['url'], dpid, tid, passwd):
+            if tid not in big_switches:
+                big_switches[tid] = []
             big_switches[tid].append(dpid)
             print "\nbig switches : \n"
             print big_switches # temp
