@@ -264,14 +264,15 @@ def move_to_expired(args, scnd=False):
         else:
             print " ..Move to expired.. else section."
             if not scnd:
-                match.nw_tos = None
-                match.tp_src = None
-                match.tp_dst = None
-                args = (match, args[1], args[2], args[3], args[4])
-                move_to_expired(args, True)
-                return
+                if match.nw_tos == 0 and match.tp_src == 0 and match.tp_dst == 0:
+                    match.nw_tos = None
+                    match.tp_src = None
+                    match.tp_dst = None
+                    args = (match, args[1], args[2], args[3], args[4])
+                    move_to_expired(args, True)
+                    return
             else:
-                print "FAILED AGAIN!!!!"
+                print "Move to Expired FAILED!!!!"
                 return
     except Exception as ex:
         print ex
