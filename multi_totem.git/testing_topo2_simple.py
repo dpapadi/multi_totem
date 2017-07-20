@@ -11,14 +11,18 @@ from mininet.node import RemoteController
 CORES = {
   's1'   : {'dpid': '0000000000001101'},
   's2'   : {'dpid': '0000000000002202'},
-  's3'   : {'dpid': '0000000000003303'}
+  's3'   : {'dpid': '0000000000003303'},
+  's4'   : {'dpid': '0000000000004404'},
+  's5'   : {'dpid': '0000000000005505'}
   }
 
 
 hosts = {
-    'h1'     : {'mac': '00000000011%s', 'ip': '10.0.1.%s', 'switch': 's1'  , 'nh': 3},
+    'h1'     : {'mac': '00000000011%s', 'ip': '10.0.1.%s', 'switch': 's1'  , 'nh': 2},
     'h2'     : {'mac': '00000000022%s', 'ip': '10.0.2.%s', 'switch': 's2'  , 'nh': 1},
-    'h3'     : {'mac': '00000000033%s', 'ip': '10.0.3.%s', 'switch': 's3'  , 'nh': 3}
+    'h3'     : {'mac': '00000000033%s', 'ip': '10.0.3.%s', 'switch': 's3'  , 'nh': 2},
+    'h4'     : {'mac': '00000000044%s', 'ip': '10.0.4.%s', 'switch': 's4'  , 'nh': 2},
+    'h5'     : {'mac': '00000000055%s', 'ip': '10.0.5.%s', 'switch': 's5'  , 'nh': 2}
 }
 
 hosts2 = {}
@@ -75,6 +79,9 @@ class TestingTopo(Topo):
              # Connect core switches
         self.addLink(self.cores['s2'], self.cores['s1'])
         self.addLink(self.cores['s2'], self.cores['s3'])
+        self.addLink(self.cores['s2'], self.cores['s4'])
+        self.addLink(self.cores['s2'], self.cores['s5'])
+
 
 
 if __name__ == '__main__':

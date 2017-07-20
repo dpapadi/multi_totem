@@ -145,10 +145,10 @@ def construct_new_entry(args):
                 big_switches[tid] = []
             if dpid not in big_switches[tid]:
                 big_switches[tid].append(dpid)
-            print "\nbig switches : \n"
-            print big_switches # temp
-            print
-            print
+                print "\nbig switches : \n"
+                print big_switches # temp
+                print
+                print
         if tid not in hypervisor_var['tenants']:
             hypervisor_var['tenants'][tid] = {'dpid': {}, 'ip': {'IP': {}, 'MAC': {}}}
         if not ovx_patch.confirm_tenant(tid, passwd):
