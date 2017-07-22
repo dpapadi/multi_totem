@@ -356,6 +356,8 @@ def collect_sflow(flow):
                     tid = int(ovx_patch.get_tid(hypervisor_var['url'], sflow['srcMAC'], passwd=""))
                     (is_bsw, dpid) = ovx_patch.dpid_mapping(hypervisor_var['url'], sflow_dpid, tid, passwd="")
                     if is_bsw:
+                        swni_cntr += 1
+                        return   #ignore samples from the core switdhes of the bsw
                         tmp = sflow['srcIP']  # debug issue
                         sflow_ip = sflow['srcIP']
                         if sflow_ip not in hypervisor_var['tenants'][tid]['ip']:
